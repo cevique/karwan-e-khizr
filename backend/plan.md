@@ -192,6 +192,33 @@ infrastructure that all subsequent phases build on.
 - Logging setup (structured, configurable level)
 - CORS configuration for frontend
 - Docker Compose for local development (PostgreSQL + PostGIS)
+- Python virtual environment (`.venv`) for isolated dependency management
+
+### Development Setup
+
+```bash
+# Create and activate virtual environment
+python -m venv .venv
+.venv/Scripts/activate          # Windows
+# source .venv/bin/activate      # Linux/macOS
+
+# Install dependencies (editable mode with dev extras)
+.venv/Scripts/pip install -e .[dev]
+
+# Start PostgreSQL + PostGIS
+docker-compose up -d
+
+# Run database initialization
+.venv/Scripts/python -c "import asyncio; from app.core.database import init_db; asyncio.run(init_db())"
+
+# Run tests
+.venv/Scripts/python -m pytest tests/ -v
+
+# Start development server
+.venv/Scripts/python -m app.main
+```
+
+All subsequent phases assume commands are run from within the `.venv` environment.
 
 ### Files/Modules Expected
 
@@ -222,6 +249,8 @@ backend/
       base.py                # Declarative base
   docker-compose.yml         # PostgreSQL + PostGIS
   .env.example               # All required env vars documented
+  .venv/                     # Python virtual environment (created at setup)
+  .gitignore                 # Excludes .venv, __pycache__, .env, etc.
 ```
 
 ### Configuration Variables (from `03_BACKEND_ARCHITECTURE.md` §5.1)
@@ -298,12 +327,14 @@ None — this is the first phase.
 
 1. `docker-compose up` starts a PostgreSQL+PostGIS container accepting
    connections on the configured port.
-2. `python -m app.main` starts a FastAPI server with auto-generated
+2. `python -m venv .venv && .venv/Scripts/pip install -e .[dev]` creates an
+   isolated virtual environment with all dependencies.
+3. `.venv/Scripts/python -m app.main` starts a FastAPI server with auto-generated
    OpenAPI docs at `/docs`.
-3. `GET /health` returns HTTP 200 with `{"status": "ok"}`.
-4. All configuration variables are loadable from `.env` with clear
+4. `GET /health` returns HTTP 200 with `{"status": "ok"}`.
+5. All configuration variables are loadable from `.env` with clear
    error messages for missing required vars.
-5. No AI provider credentials are hardcoded — all loaded from
+6. No AI provider credentials are hardcoded — all loaded from
    environment.
 
 ---
