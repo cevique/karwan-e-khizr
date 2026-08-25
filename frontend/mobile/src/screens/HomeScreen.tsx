@@ -4,20 +4,23 @@ import {
   SafeAreaView, FlatList, ActivityIndicator,
 } from 'react-native';
 import MapLibreGL from '@maplibre/maplibre-react-native';
-import { mockBuses } from '../../../shared/mocks/buses';
-import { mockStops } from '../../../shared/mocks/stops';
-import { mockRoutes } from '../../../shared/mocks/routes';
 import { DEFAULT_CENTER, DEFAULT_ZOOM, MAP_STYLE_LIGHT } from '../../../shared/constants';
+import { useTransitData } from '../../../shared/hooks/useTransitData';
 
 MapLibreGL.setAccessToken(null);
 
 export function HomeScreen() {
   const [selectedBus, setSelectedBus] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const { data: transitData, loading, error } = useTransitData();
+
+  const buses = transitData?.vehicles ?? [];
+  const stops = transitData?.stops ?? [];
+  const routes = transitData?.routes ?? [];
 
   const busFeatures: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
-    features: mockBuses.map(bus => ({
+    features: buses.map(bus => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [bus.longitude, bus.latitude] },
       properties: { id: bus.id, routeColor: bus.routeColor, status: bus.status },
@@ -26,7 +29,7 @@ export function HomeScreen() {
 
   const stopFeatures: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
-    features: mockStops.map(stop => ({
+    features: stops.map(stop => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [stop.longitude, stop.latitude] },
       properties: { id: stop.id, type: stop.type },
@@ -70,7 +73,7 @@ export function HomeScreen() {
           />
 
           {/* Route polylines */}
-          {mockRoutes.map(route => (
+          {routes.map(route => (
             <MapLibreGL.ShapeSource
               key={route.id}
               id={route.id}
@@ -128,7 +131,7 @@ export function HomeScreen() {
           <Text style={styles.demoTag}>Demo data</Text>
         </View>
         <FlatList
-          data={mockBuses}
+          data={buses}
           keyExtractor={(item) => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}

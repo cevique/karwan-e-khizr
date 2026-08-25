@@ -4,10 +4,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { initConfig } from '../shared/services/config';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { RoutesScreen } from './src/screens/RoutesScreen';
 import { SavedScreen } from './src/screens/SavedScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
+
+// Initialise shared config for mobile
+initConfig({
+  apiUrl: 'http://localhost:8000/api/v1',
+  useMockData: true, // Backend not yet available; mock data used
+});
 
 const Tab = createBottomTabNavigator();
 

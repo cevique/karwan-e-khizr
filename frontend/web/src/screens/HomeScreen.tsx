@@ -1,10 +1,12 @@
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
-import { Search, Bus, Clock, Gauge, ChevronRight, LocateFixed, Layers } from 'lucide-react';
-import { mockBuses } from '@shared/index';
+import { Search, Bus, Clock, Gauge, ChevronRight, LocateFixed, Layers, Loader2, AlertTriangle } from 'lucide-react';
 
 export function HomeScreen() {
-  const { navigate, state, selectBus, selectStop } = useApp();
+  const { navigate, state, selectBus, selectStop, transit } = useApp();
+  const buses = transit.vehicles;
+  const loading = transit.transitLoading;
+  const error = transit.transitError;
 
   return (
     <div style={styles.container}>
@@ -78,11 +80,37 @@ export function HomeScreen() {
       <div style={styles.sidePanel}>
         <div style={styles.panelHeader}>
           <h2 style={styles.panelTitle}>Nearby Buses</h2>
-          <span style={styles.demoTag}>Demo data</span>
+          {transit.transitError && (
+            <span style={styles.errorTag}>Using offline data</span>
+          )}
+          {!transit.transitError && (
+            <span style={styles.demoTag}>Demo data</span>
+          )}
         </div>
 
+        {loading && buses.length === 0 && (
+          <div style={styles.loadingState}>
+            <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} />
+            <span style={styles.loadingText}>Loading vehicles…</span>
+          </div>
+        )}
+
+        {error && buses.length === 0 && (
+          <div style={styles.errorState}>
+            <AlertTriangle size={20} color="var(--color-warning)" />
+            <span style={styles.errorText}>Could not load transit data</span>
+          </div>
+        )}
+
+        {!loading && !error && buses.length === 0 && (
+          <div style={styles.emptyState}>
+            <Bus size={20} color="var(--color-text-muted)" />
+            <span style={styles.emptyText}>No buses nearby</span>
+          </div>
+        )}
+
         <div style={styles.busList}>
-          {mockBuses.map((bus, i) => (
+          {buses.map((bus, i) => (
             <button
               key={bus.id}
               style={{
@@ -386,5 +414,53 @@ const styles: Record<string, React.CSSProperties> = {
     background: '#FEF3CD',
     borderRadius: 'var(--radius-full)',
     marginLeft: 'auto',
+  },
+  errorTag: {
+    fontSize: 10,
+    fontWeight: 500,
+    color: 'var(--color-warning)',
+    padding: '3px 8px',
+    background: '#FEF3CD',
+    borderRadius: 'var(--radius-full)',
+    letterSpacing: '0.3px',
+    textTransform: 'uppercase' as const,
+  },
+  loadingState: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: '32px 20px',
+    color: 'var(--color-text-muted)',
+  },
+  loadingText: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: 'var(--color-text-muted)',
+  },
+  errorState: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: '32px 20px',
+  },
+  errorText: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: 'var(--color-warning)',
+  },
+  emptyState: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: '32px 20px',
+  },
+  emptyText: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: 'var(--color-text-muted)',
   },
 };

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useApp } from '../App';
-import { Search, ArrowLeft, MapPin, TrainFront, Building2, X, ArrowUpDown, Clock } from 'lucide-react';
+import { Search, ArrowLeft, MapPin, TrainFront, Building2, X, ArrowUpDown, Clock, Loader2 } from 'lucide-react';
 import { mockSearchResults, mockJourneys } from '@shared/index';
+import { useSearchResults } from '@shared/hooks/useTransitData';
 
 export function SearchScreen() {
   const { state, navigate, setSearchOrigin, setSearchDestination, selectJourney } = useApp();
@@ -9,12 +10,10 @@ export function SearchScreen() {
   const [activeField, setActiveField] = useState<'from' | 'to'>('to');
   const [showJourneys, setShowJourneys] = useState(false);
 
-  const filtered = query.length > 0
-    ? mockSearchResults.filter(r =>
-        r.name.toLowerCase().includes(query.toLowerCase()) ||
-        (r.subtitle?.toLowerCase().includes(query.toLowerCase()))
-      )
-    : mockSearchResults;
+  // Use the service layer for search results
+  const { data: searchResults, loading: searchLoading } = useSearchResults(query);
+  // Fall back to full list when query is empty
+  const filtered = query.length > 0 ? searchResults : mockSearchResults;
 
   const handleSelect = (name: string) => {
     if (activeField === 'from') setSearchOrigin(name);
