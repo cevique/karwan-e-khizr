@@ -1,8 +1,16 @@
 import { useState, useCallback, createContext, useContext } from 'react';
-import type { Bus, Stop, Journey } from '@shared/types';
+import type { Bus, Stop, Journey, TransitRoute } from '@shared/types';
+import { initConfig } from '@shared/services/config';
+import { useTransitData } from '@shared/hooks/useTransitData';
 import { DesktopShell } from './components/shell/DesktopShell';
 import { MobileShell } from './components/shell/MobileShell';
 import { useMediaQuery } from './hooks/useMediaQuery';
+
+// ── Initialise shared config from Vite env ──
+initConfig({
+  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
+  useMockData: import.meta.env.VITE_USE_MOCK_DATA !== 'false',
+});
 
 // ── App State ──
 export type Screen = 'home' | 'search' | 'routes' | 'journey-detail' | 'saved' | 'settings';
@@ -17,6 +25,14 @@ export interface AppState {
   searchDestination: string;
 }
 
+interface TransitDataContext {
+  routes: TransitRoute[];
+  stops: Stop[];
+  vehicles: Bus[];
+  transitLoading: boolean;
+  transitError: Error | null;
+}
+
 interface AppContextType {
   state: AppState;
   navigate: (screen: Screen) => void;
@@ -26,6 +42,7 @@ interface AppContextType {
   selectJourney: (journey: Journey | null) => void;
   setSearchOrigin: (origin: string) => void;
   setSearchDestination: (dest: string) => void;
+  transit: TransitDataContext;
 }
 
 const defaultState: AppState = {
@@ -49,6 +66,9 @@ export function useApp() {
 export default function App() {
   const [state, setState] = useState<AppState>(defaultState);
   const isDesktop = useMediaQuery('(min-width: 768px)');
+
+  // Fetch transit data through the service layer
+  const { data: transitData, loading: transitLoading, error: transitError } = useTransitData();
 
   const navigate = useCallback((screen: Screen) => {
     setState((prev) => ({ ...prev, screen, previousScreen: prev.screen }));
@@ -87,6 +107,14 @@ export default function App() {
     setState((prev) => ({ ...prev, searchDestination: dest }));
   }, []);
 
+  const transitContext: TransitDataContext = {
+    routes: transitData?.routes ?? [],
+    stops: transitData?.stops ?? [],
+    vehicles: transitData?.vehicles ?? [],
+    transitLoading,
+    transitError,
+  };
+
   const contextValue: AppContextType = {
     state,
     navigate,
@@ -96,6 +124,7 @@ export default function App() {
     selectJourney,
     setSearchOrigin,
     setSearchDestination,
+    transit: transitContext,
   };
 
   return (

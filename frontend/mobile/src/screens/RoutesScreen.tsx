@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import { mockRoutes } from '../../../shared/mocks/routes';
 import { mockJourneys } from '../../../shared/mocks/journeys';
+import { useTransitData } from '../../../shared/hooks/useTransitData';
 
 export function RoutesScreen() {
+  const { data: transitData } = useTransitData();
+  const routes = transitData?.routes ?? [];
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -13,7 +15,7 @@ export function RoutesScreen() {
         </View>
 
         <Text style={styles.sectionTitle}>TRANSIT LINES</Text>
-        {mockRoutes.map(route => (
+        {routes.map(route => (
           <View key={route.id} style={styles.routeCard}>
             <View style={[styles.badge, { backgroundColor: route.color }]}>
               <Text style={styles.badgeText}>{route.shortName}</Text>

@@ -1,10 +1,11 @@
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
-import { mockRoutes, mockJourneys } from '@shared/index';
+import { mockJourneys } from '@shared/index';
 import { Route, Clock, ArrowRight } from 'lucide-react';
 
 export function RoutesScreen() {
-  const { selectJourney } = useApp();
+  const { selectJourney, transit } = useApp();
+  const routes = transit.routes;
 
   return (
     <div style={styles.container}>
@@ -20,7 +21,7 @@ export function RoutesScreen() {
         <div style={styles.section}>
           <h3 style={styles.sectionTitle}>Transit Lines</h3>
           <div style={styles.routeList}>
-            {mockRoutes.map(route => (
+            {routes.map(route => (
               <div key={route.id} style={styles.routeItem}>
                 <div style={{ ...styles.routeBadge, background: route.color }}>
                   {route.shortName}

@@ -2,7 +2,7 @@ import { useRef, useCallback } from 'react';
 import Map, { Source, Layer, NavigationControl } from 'react-map-gl/maplibre';
 import type { MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { DEFAULT_CENTER, DEFAULT_ZOOM, MAP_STYLE_LIGHT, mockBuses, mockRoutes, mockStops } from '@shared/index';
+import { DEFAULT_CENTER, DEFAULT_ZOOM, MAP_STYLE_LIGHT } from '@shared/index';
 import { useApp } from '../../App';
 
 interface MapViewProps {
@@ -12,25 +12,27 @@ interface MapViewProps {
 
 export function MapView({ style, interactive = true }: MapViewProps) {
   const mapRef = useRef<MapRef>(null);
-  const { selectBus, selectStop, state } = useApp();
+  const { selectBus, selectStop, state, transit } = useApp();
+
+  const { vehicles, stops, routes } = transit;
 
   const handleBusClick = useCallback((e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
     if (!feature?.properties) return;
-    const bus = mockBuses.find(b => b.id === feature.properties?.id);
+    const bus = vehicles.find(b => b.id === feature.properties?.id);
     if (bus) selectBus(bus);
-  }, [selectBus]);
+  }, [selectBus, vehicles]);
 
   const handleStopClick = useCallback((e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
     if (!feature?.properties) return;
-    const stop = mockStops.find(s => s.id === feature.properties?.id);
+    const stop = stops.find(s => s.id === feature.properties?.id);
     if (stop) selectStop(stop);
-  }, [selectStop]);
+  }, [selectStop, stops]);
 
   const busFeatures = {
     type: 'FeatureCollection' as const,
-    features: mockBuses.map(bus => ({
+    features: vehicles.map(bus => ({
       type: 'Feature' as const,
       geometry: { type: 'Point' as const, coordinates: [bus.longitude, bus.latitude] },
       properties: { id: bus.id, routeColor: bus.routeColor, status: bus.status },
@@ -39,7 +41,7 @@ export function MapView({ style, interactive = true }: MapViewProps) {
 
   const stopFeatures = {
     type: 'FeatureCollection' as const,
-    features: mockStops.map(stop => ({
+    features: stops.map(stop => ({
       type: 'Feature' as const,
       geometry: { type: 'Point' as const, coordinates: [stop.longitude, stop.latitude] },
       properties: { id: stop.id, type: stop.type, selected: state.selectedStop?.id === stop.id },
@@ -71,7 +73,7 @@ export function MapView({ style, interactive = true }: MapViewProps) {
       {interactive && <NavigationControl position="bottom-right" showCompass={false} />}
 
       {/* Route polylines */}
-      {mockRoutes.map(route => (
+      {routes.map(route => (
         <Source key={route.id} id={route.id} type="geojson" data={{
           type: 'Feature',
           geometry: { type: 'LineString', coordinates: route.polyline },
