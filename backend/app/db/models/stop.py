@@ -10,6 +10,7 @@ class Stop(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    external_key: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
     location: Mapped[Geometry | None] = mapped_column(Geometry("POINT", srid=4326, spatial_index=False), nullable=True)
     coordinate_source: Mapped[str | None] = mapped_column(SQLEnum("nominatim", "curated", "UNKNOWN", name="coordinate_source_enum"), nullable=True)
     coordinate_confidence: Mapped[str | None] = mapped_column(SQLEnum("HIGH", "APPROXIMATE", "UNKNOWN", name="coordinate_confidence_enum"), nullable=True)

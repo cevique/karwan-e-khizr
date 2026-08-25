@@ -3013,3 +3013,208 @@ The backend is considered complete when ALL of the following are true:
 - [ ] Application starts with `docker-compose up`
 - [ ] All environment variables configurable via `.env`
 - [ ] No runtime dependency on implementation tooling
+
+---
+
+# CORRECTION PASS HANDOFF — CDA Feeder Route Coverage Expansion (2026-08-25)
+
+**Scope of this pass: `backend/` only. `frontend/` was not inspected,
+modified, or tested — out of scope per the correction-pass brief.**
+
+## What this pass was
+
+A prior data-collection pass fetched complete, verified stop-level
+timetables for only **4 of the 22** CDA feeder routes (FR-01, FR-04,
+FR-07, FR-14) — a limitation of that pass's time budget, not the
+intended scope. This pass revisited the original research, fetched more
+of the underlying CDA source PDFs, and rebuilt
+`backend/data/transit_data.json` to close as much of that gap as the
+available source material actually supports — without fabricating
+anything for the routes it doesn't.
+
+## What changed
+
+### Dataset (`backend/data/transit_data.json`)
+- **2 more complete, verified stop-level timetables added**: FR-06
+  (PIMS Metro Station → Golra Sharif, 26 stops, 17 trips/day, 60-min
+  headway) and FR-09 (Khanna Pul → Golra Morh Metro Station, 27 stops,
+  65 trips/day, 15-min headway). Fully-supported feeder routes: **4 → 6**.
+- **All 22 CDA feeder routes explicitly classified** into a 4-tier
+  coverage system (`coverage_tier` + `coverage_tier_label` on every
+  `routes[]` entry) — see `docs/DATA_GAPS.md` §1 for the full
+  route-by-route table with sources/evidence for each. Tier counts:
+  1 (fully supported) = 6, 2 (topology only) = 1 (Red Line),
+  3 (route known, no topology) = 19, 4 (insufficient evidence) = 0.
+- **Route topology ambiguity fixed**: every route with a canonical
+  timetable (all 6 Tier-1 routes) now has an explicit `route_stops`
+  sequence, **mechanically derived** from that route's own trip pattern
+  — not a separately hand-maintained list. This was a real gap before
+  this pass: FR-01/04/07/14 had ZERO `route_stops` rows; their topology
+  existed only implicitly inside `trips[].stop_times`. No route in the
+  dataset has more than one sequence per direction, and none contradict
+  their own trip pattern (see the new
+  `test_tier1_routes_have_route_stops_matching_their_canonical_trip`
+  test).
+- **Fare rules moved into the dataset** (`fare_rules` array) with
+  explicit `source`/`confidence: "APPROXIMATE"` provenance — see
+  "Seeding code changes" below and `docs/DATA_GAPS.md` §8. Values
+  themselves were **not changed** (no research basis to change them to
+  anything more specific) — only made data-driven and honestly labeled
+  instead of a bare hardcoded Python default.
+- Final counts: **26 routes** (unchanged - no new route codes, only
+  reclassification + 2 more timetables), **158 stops** (was 122, +36
+  from FR-06/FR-09's newly-discovered stop names), **168 route_stops**
+  (was 23, +145 - all derived from Tier-1 canonical trips), **6 trips**
+  (canonical patterns; was 4), **145 stop_times** total across those 6
+  trips, **17 located stops / 141 unknown** (in the JSON file itself -
+  see the geocoding caveat below), **2 fare_rules**, **2 service
+  calendars**, **2 transfers**, **2 operators**.
+
+### Seeding code (`app/seeding/`, `app/db/models/`)
+- **`app/db/models/stop.py`**: added `external_key: Mapped[str | None]`
+  (unique, nullable).
+- **New migration** `alembic/versions/a1b2c3d4e5f7_add_stop_external_key.py`
+  (chained on `manual001`).
+- **`app/seeding/adapters/stops.py`** rewritten: a real bug was found and
+  fixed here — the adapter matched/deduplicated stops by writing the
+  dataset's `key` (a slug, e.g. `"cda_pims_hospital"`) into `Stop.name`,
+  and **never read the dataset's actual human-readable `name` field at
+  all**. Every imported stop's display name in the database was
+  therefore a slug, never a real name, and re-imports never corrected an
+  existing row's name even if it changed upstream (`_update` didn't
+  touch `name`). Fixed: matching now uses the new `external_key` column;
+  `Stop.name` now holds the dataset's real `name` and is updated on
+  every import (create or update path).
+- **`app/seeding/importer.py`**: `_build_stop_key_maps` updated to key
+  off `Stop.external_key` (was `Stop.name`); `_import_fare_rules` now
+  called with `data.get("fare_rules") or self._get_default_fare_rules()`
+  — sources from the dataset first, only falls back to the old hardcoded
+  pair if a dataset omits the key.
+- **`app/seeding/adapters/route_stops.py` / `trips.py` /
+  `stop_times.py`**: **not modified.** Verified before starting that all
+  26 routes' deterministic UUIDs were already present in every hardcoded
+  route-UUID→key lookup map in these three files (they were built
+  against the same `uuid5` scheme the original research dataset uses),
+  so no route added or reclassified this pass required a code change to
+  become importable — only data changes were needed.
+
+### Tests (`tests/test_phase3_seeding.py`)
+Fully rewritten. Removed every hardcoded assumption tied to the old
+4-route/122-stop/17-located dataset (per the correction-pass brief's
+explicit instruction not to preserve those). New tests compute expected
+counts from the loaded JSON dynamically wherever the exact number is
+itself derived data (so this file doesn't go stale again the next time
+coverage expands), while still asserting exact, meaningful facts (FR-01's
+first/last stop and total offset, Red Line's 23-stop start/end, all 22
+feeder routes present and classified, etc.). New coverage added this
+pass: `test_all_22_cda_feeder_routes_present_and_classified`,
+`test_all_22_feeder_routes_imported`,
+`test_tier1_routes_have_route_stops_matching_their_canonical_trip`,
+`test_no_duplicate_route_stop_sequences`,
+`test_stop_display_name_is_not_the_slug` (regression test for the
+`stops.py` bug fix), `test_no_route_has_more_than_one_canonical_trip_per_direction`,
+`test_fare_rules_match_canonical_dataset`,
+`test_fare_rules_carry_provenance_in_source_dataset`,
+`test_fr06_timetable_data`, `test_fr09_timetable_data`,
+`test_newly_added_cda_pdf_stops_have_no_coordinates`,
+`test_duplicate_keys_in_source_do_not_create_duplicate_rows`. 53 tests
+total collected (was fewer before this pass - exact prior count not
+re-verified since the file was rewritten, not diffed line-by-line).
+
+### Documentation
+- **`docs/DATA_GAPS.md`** and **`docs/SOURCES.md`** created (did not
+  exist in this restructured repository - the numbered `docs/00`–`10`
+  scheme replaced them at some point before this pass). `DATA_GAPS.md`
+  has the full route-by-route classification table, all carried-over
+  unresolved conflicts, and an explicit "what OpenCode/Phase 4 must not
+  assume" section. `SOURCES.md` documents the 2 new PDF sources in full
+  and points to fetch attempts that did NOT produce usable data (FR-08A/
+  FR-08C's anomalous extraction), so a future pass doesn't repeat the
+  same dead end without trying something different.
+- **`docs/04_TRANSIT_DATA_AND_DOMAIN_MODEL.md`**: the "honest inventory"
+  table updated with new counts, a new §2a documenting the 4-tier
+  coverage system, and a note on the `Stop.external_key` fix.
+
+## What did NOT change / explicitly out of scope
+
+- **No live database or network access existed in this session**
+  (no Docker, no reachable Postgres, no OSRM/geocoding network access —
+  same sandbox constraint as every prior phase's handoff in this
+  project's history). **Section 13's "Final Verification" checklist
+  (start Docker, reset DB, run migrations, import, verify idempotency,
+  query directly, run the full suite) could NOT be executed live.**
+  Everything that could be verified without a live database was:
+  `python -m py_compile` on every changed file, `pytest --collect-only`
+  (53 tests collect with zero import errors), and a full `pytest` run
+  (all non-DB-dependent tests pass; every DB-dependent test errors on
+  `ConnectionRefusedError`, not a real failure - see below). **The
+  concrete next step for whoever has DB/network access is exactly
+  Section 13 of the correction-pass brief, run against this session's
+  code.**
+- **1 pre-existing test failure, unrelated to this pass**:
+  `tests/test_phase1.py::TestSecurity::test_hash_and_verify_password`
+  fails in this sandbox with `ValueError: password cannot be longer than
+  72 bytes` from a `passlib`/`bcrypt` version incompatibility in the
+  installed packages - confirmed to fail identically before any change
+  in this pass was made (an environment/dependency-pinning issue, not a
+  code regression from this correction pass).
+- **Geocoding was not re-run.** The 36 new stops from FR-06/FR-09 have
+  no coordinates, same as they had none in the source PDFs. The
+  previously-reported "88 of 122 located" figure was a **live-database**
+  enrichment result from a geocoding script, never reflected back into
+  `transit_data.json`, and has **not been re-run** since this pass added
+  36 new stops needing it — see `docs/DATA_GAPS.md` §9.
+- **Route geometry (OSRM) was not touched** — explicitly out of scope
+  per the correction-pass brief ("Do NOT implement... OSRM route
+  geometry generation"), and no `route_geometry.py`/`geocode_stops.py`
+  script exists yet in this repository's `app/`/`scripts/` at all (only
+  referenced as future work in `docs/05_ROUTING_AND_GEOSPATIAL.md`) - not
+  created this pass, since that actually would have been Phase 4+ work.
+- **16 feeder routes still have no verified timetable.** FR-08A/FR-08C
+  were fetched but returned an anomalous, unusable extraction (repeated
+  single-stop timestamps, not a real sequence) rather than a clean
+  success or a clean absence - flagged for a follow-up fetch attempt with
+  a different extraction approach, not resolved here. The rest were not
+  fetched in this pass at all (see `docs/DATA_GAPS.md` §1 for exactly
+  which ones and why, so a future pass can pick up where this one left
+  off without re-discovering the same ground).
+- **`FareRule` model itself was not migrated** to carry its own
+  `source`/`confidence` columns - provenance lives only in
+  `transit_data.json`'s `fare_rules[]` for now.
+- **Frontend was not touched in any way**, per explicit instruction.
+
+## What Phase 4 should now expect
+
+- `Route.coverage_tier`/`coverage_tier_label` (dataset-level fields,
+  currently only in `transit_data.json`, **not yet mirrored onto the
+  `Route` DB model or exposed via any API** - the seeding adapters
+  currently ignore these two keys entirely when importing, same as any
+  other extra dataset field they don't recognize) - if Phase 4's admin
+  data-quality view (see `docs/08_TICKETING_AUTH_AND_ADMIN.md`) wants to
+  surface per-route support level, either read it back from a re-parsed
+  `transit_data.json` or add the two columns to `Route` and update
+  `app/seeding/adapters/routes.py` to persist them - this pass
+  deliberately did not do that column addition, to keep this pass's
+  database schema changes limited to the one real bug fix
+  (`Stop.external_key`).
+- 158 stops (not 122), 168 route_stops (not 23), 6 canonical trips (not
+  4), 26 routes still (unchanged) — any Phase 4 code, test, or doc that
+  hardcodes the old counts needs the same "read expected values from the
+  dataset instead of a magic number" treatment this pass gave
+  `tests/test_phase3_seeding.py`.
+- `Stop.external_key` exists and should be preferred over `Stop.name`
+  for any future code that needs a stable machine-matchable stop
+  identifier (e.g. a future geocoding script, a future route-geometry
+  script's stop lookups) - `Stop.name` is display text only now.
+- Immediate, concretely-scoped next steps, in rough priority order:
+  1. Run this pass's migration + import live (Section 13 of the
+     correction-pass brief), verify the exact counts above against a
+     real database, and update this handoff with the confirmed numbers.
+  2. Re-run stop geocoding against the expanded 158-stop set.
+  3. Re-attempt FR-08A/FR-08C with a different PDF-extraction approach.
+  4. Fetch the remaining 14 feeder routes with genuinely no evidence yet
+     attempted (FR-04A, FR-04B, FR-05, FR-10 through FR-13, FR-14A,
+     FR-15, FRB-01, ST-01, ST-02) plus re-attempt FR-03A/FRG-1's
+     unconfirmed fragments.
+  5. Only then: route geometry generation (OSRM), which is genuinely
+     Phase 4+ work and was correctly not attempted this pass.

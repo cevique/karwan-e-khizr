@@ -1,7 +1,7 @@
 {
   "$schema_note": "Canonical machine-readable research dataset for Karwan-e-Khizr. See TRANSIT_RESEARCH.md, SOURCES.md and DATA_GAPS.md for full context. Every record carries 'source' and 'confidence'. Confidence values: OFFICIAL, VERIFIED, OSM-DERIVED, RECONSTRUCTED, INFERRED, APPROXIMATE, UNKNOWN. null fields are deliberate - no field in this file was fabricated to fill a gap.",
   "geographic_scope": "Islamabad + Rawalpindi twin-city corridor only",
-  "generated": "2026-08-16",
+  "generated": "2026-08-25 (correction pass: expanded CDA feeder coverage, route-topology fix, fare provenance)",
   "operators": [
     {
       "id": "357f3aac-1df5-5e69-988c-de1060f37990",
@@ -1244,6 +1244,366 @@
       "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf",
       "confidence": "OFFICIAL",
       "notes": "Stop name and sequence position are OFFICIAL (from CDA's own published stop-level timetable). No coordinate is given by this source - latitude/longitude intentionally left null, not fabricated."
+    },
+    {
+      "id": "f869e025-9d7c-5aae-82df-12635d4da77d",
+      "key": "cda_pims_metro_station",
+      "name": "Pims Metro Station",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "7de2d91e-2d0d-5b1c-8183-5db6c2d95fac",
+      "key": "cda_tipu_market_g_8",
+      "name": "Tipu Market G-8",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "317729cb-6575-5fcd-b5e6-8e7d966c9e7f",
+      "key": "cda_ibn_e_sina_metro_station",
+      "name": "Ibn-e-Sina Metro Station",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "c84a811b-0c78-583b-84f3-b1de9ecb5236",
+      "key": "cda_taqwa_market",
+      "name": "Taqwa Market",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "8ac5478b-09ce-58c3-85d0-9dcaf13d701e",
+      "key": "cda_g_9_4_park",
+      "name": "G-9/4 Park",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "eea28d7b-4100-53a4-81a5-204280851473",
+      "key": "cda_g_9_1_and_g_9_4",
+      "name": "G-9/1 and G-9/4",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "58a6c462-2ab7-5855-b759-00b2e232320b",
+      "key": "cda_g_9_3",
+      "name": "G-9/3",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "e0599e0f-23db-561e-8e28-a0c53409a482",
+      "key": "cda_f_9_park",
+      "name": "F-9 Park",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "09881f67-68c5-5f79-9319-59001ba98501",
+      "key": "cda_shaheen_chowk",
+      "name": "Shaheen Chowk",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "f4a8340a-de48-582c-9281-7aee834f5ee9",
+      "key": "cda_fazaia_housing_scheme",
+      "name": "Fazaia Housing Scheme",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "bbd9cb42-f76f-5021-8a5d-10e353c9cba0",
+      "key": "cda_paf_hospital",
+      "name": "PAF Hospital",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "d75011fa-d2d8-5e58-b210-b7ec854fcc05",
+      "key": "cda_pakistan_gate",
+      "name": "Pakistan Gate",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "44738436-d11b-5b21-9707-da13d11b72cb",
+      "key": "cda_maroof_international_hospital",
+      "name": "Maroof International Hospital",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "34048326-c05c-5572-8129-a6ce911b6810",
+      "key": "cda_f_10_markaz",
+      "name": "F-10 Markaz",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "1cb600f0-87b9-5b7b-bb2f-554fbe1b2626",
+      "key": "cda_imcb_f10_4",
+      "name": "IMCB F10/4",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "294008ee-2f44-5854-a258-24ac776b1b90",
+      "key": "cda_imcg_f_10_2",
+      "name": "IMCG F-10/2",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "c8087ea3-a8ca-5a14-9dd3-53967766d8c2",
+      "key": "cda_f_10_f_11_chowk",
+      "name": "F-10/F-11 Chowk",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "efc51353-ec3b-5aad-abbb-c7ece76e8a3a",
+      "key": "cda_major_road",
+      "name": "Major Road",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "a9624817-c11e-5d66-bfc7-572a0271a84c",
+      "key": "cda_ptcl_f_11",
+      "name": "PTCL F-11",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "d62e75c7-0368-5f33-88b1-af212e86436e",
+      "key": "cda_f_11_markaz",
+      "name": "F-11 Markaz",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "78a2cef5-471b-5ca5-bad4-66153e666530",
+      "key": "cda_opf_girls_college",
+      "name": "OPF Girls College",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "8e3dd477-9b8e-53b0-a472-a9985f1cac0d",
+      "key": "cda_golra_sharif_f_11_3",
+      "name": "Golra Sharif F-11/3",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "0e878e48-cd72-5859-ae5e-63b4b43adf44",
+      "key": "cda_golra_sharif",
+      "name": "Golra Sharif",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "b2f2ab81-2807-52bd-877d-dd661b43b627",
+      "key": "cda_fauji_colony",
+      "name": "Fauji Colony",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "f3ab99d2-f276-5afd-9929-c6a80c451ddf",
+      "key": "cda_carriage_factory",
+      "name": "Carriage Factory",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "fc643baa-6539-5e24-a723-0512ffa3d871",
+      "key": "cda_westridge",
+      "name": "Westridge",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "cdc565aa-437f-5d67-bc21-da0710e0a653",
+      "key": "cda_ctti",
+      "name": "CTTI",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "7c4d1bc7-6ae8-5fd6-9dfc-9b68388ee30d",
+      "key": "cda_social_security_hospital",
+      "name": "Social Security Hospital",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "29227c1d-fea4-5bbc-8759-38854d147ddb",
+      "key": "cda_british_homes",
+      "name": "British Homes",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "441ea968-f529-523a-b25b-22bad6c5bbc5",
+      "key": "cda_pir_wadhai_morh",
+      "name": "Pir Wadhai Morh",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "fe324788-1c1e-5ca8-8730-e5d4b724aebe",
+      "key": "cda_kohinoor_mill_colony",
+      "name": "Kohinoor Mill Colony",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "f9bc7c1f-41e1-5cd2-8d0b-39e87f9a50a7",
+      "key": "cda_kohinoor_mill",
+      "name": "Kohinoor Mill",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "faced772-4655-545e-bdf2-5fdeb18c2aa0",
+      "key": "cda_chishtiabad",
+      "name": "Chishtiabad",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "fd27086d-0132-5b04-bea1-ffca5520f92e",
+      "key": "cda_golra_morh",
+      "name": "Golra Morh",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "ee5b5466-358b-595c-abab-ea056e87595e",
+      "key": "cda_home_of_military_transport",
+      "name": "Home of Military Transport",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
+    },
+    {
+      "id": "ad9bb64b-aad6-54f4-9cda-1c18b40d0b9b",
+      "key": "cda_golra_morh_metro_station",
+      "name": "Golra Morh Metro Station",
+      "latitude": null,
+      "longitude": null,
+      "source": "CDA official per-route timetable PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Stop name and sequence position are OFFICIAL (CDA's own published stop-level timetable). No coordinate given by this source - left null, not fabricated."
     }
   ],
   "routes": [
@@ -1272,7 +1632,9 @@
       "path_wkt": null,
       "source": "Wikipedia: Rawalpindi-Islamabad Metrobus (infobox summary table)",
       "confidence": "VERIFIED",
-      "notes": "23 named stations reconstructed here (rehbar.pk ordered list, cross-checked against Wikipedia's unordered infobox names) against an official count of 24 - see DATA_GAPS.md 'Red Line station count discrepancy'."
+      "notes": "23 named stations reconstructed here (rehbar.pk ordered list, cross-checked against Wikipedia's unordered infobox names) against an official count of 24 - see DATA_GAPS.md 'Red Line station count discrepancy'.",
+      "coverage_tier": 2,
+      "coverage_tier_label": "PARTIALLY_SUPPORTED_TOPOLOGY_ONLY"
     },
     {
       "id": "890d30f3-fc9a-5610-abe4-554545c46b9b",
@@ -1298,7 +1660,9 @@
       "path_wkt": null,
       "source": "Wikipedia: Rawalpindi-Islamabad Metrobus (route table)",
       "confidence": "VERIFIED",
-      "notes": "CONFLICT: Wikipedia's own summary table says 7 stations; several secondary listicles (INCPak, icons.com.pk) say 14. Not resolved - see DATA_GAPS.md. Ordered stop sequence NOT established in this research pass; only endpoints and the Faiz Ahmed Faiz interchange with the Red Line are confirmed."
+      "notes": "CONFLICT: Wikipedia's own summary table says 7 stations; several secondary listicles (INCPak, icons.com.pk) say 14. Not resolved - see DATA_GAPS.md. Ordered stop sequence NOT established in this research pass; only endpoints and the Faiz Ahmed Faiz interchange with the Red Line are confirmed.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "9190205e-cd08-50a0-9fb2-c0fa7f27533b",
@@ -1324,7 +1688,9 @@
       "path_wkt": null,
       "source": "Wikipedia: Rawalpindi-Islamabad Metrobus (route table)",
       "confidence": "VERIFIED",
-      "notes": "Runs in mixed traffic along the Islamabad Expressway (not a dedicated lane) - important for simulation speed assumptions, see SIMULATION_DATA_SPEC.md. Ordered stop sequence not established; only a partial, unordered name list is available (Gulberg, Koral, Gangal, Fazaia, Lehtrar/Khanna, Zia Masjid, Kuri Road, Iqbal Town, Dhoke Kala Khan, Sohan, I-8, H-8, G-7/G-8, PIMS Gate - this is 14 names against an official count of 13, another unresolved count mismatch)."
+      "notes": "Runs in mixed traffic along the Islamabad Expressway (not a dedicated lane) - important for simulation speed assumptions, see SIMULATION_DATA_SPEC.md. Ordered stop sequence not established; only a partial, unordered name list is available (Gulberg, Koral, Gangal, Fazaia, Lehtrar/Khanna, Zia Masjid, Kuri Road, Iqbal Town, Dhoke Kala Khan, Sohan, I-8, H-8, G-7/G-8, PIMS Gate - this is 14 names against an official count of 13, another unresolved count mismatch).",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "51f798dd-bece-53e7-ae87-1f45360ca232",
@@ -1350,7 +1716,9 @@
       "path_wkt": null,
       "source": "Wikipedia: Rawalpindi-Islamabad Metrobus (route table)",
       "confidence": "VERIFIED",
-      "notes": "Runs in mixed traffic along Srinagar Highway. Ordered stop list not established."
+      "notes": "Runs in mixed traffic along Srinagar Highway. Ordered stop list not established.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
@@ -1374,7 +1742,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf. via I-9, I-10 & Police Lines (Sohan to NUST Metro Station variant per Daily Times; the fetched PDF's endpoints are Khanna Pul<->NUST Metro Station)"
+      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf. via I-9, I-10 & Police Lines (Sohan to NUST Metro Station variant per Daily Times; the fetched PDF's endpoints are Khanna Pul<->NUST Metro Station)",
+      "coverage_tier": 1,
+      "coverage_tier_label": "FULLY_SUPPORTED"
     },
     {
       "id": "58e7179b-bcf3-5387-982d-e61cc622d9f7",
@@ -1398,7 +1768,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-03A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-03A_Backward.pdf. via F-8 Markaz & Shaheen Chowk"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-03A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-03A_Backward.pdf. via F-8 Markaz & Shaheen Chowk | Tier note: Partial stop-name fragment seen (PIMS Hospital, PIMS Metro Station, Katchery, F-8 Markaz, F-9 Park, Shaheen Chowk, Bahria University, Naval Complex, Faisal Masjid, Parveen Shakir Road, Kohsar Road, F-7 Markaz, Flower Market) but NOT confirmed complete/ordered end-to-end from a direct fetch - not encoded as route_stops to avoid an unverified sequence.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
@@ -1422,7 +1794,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Backward.pdf. via G-6, G-7 & Abpara"
+      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Backward.pdf. via G-6, G-7 & Abpara",
+      "coverage_tier": 1,
+      "coverage_tier_label": "FULLY_SUPPORTED"
     },
     {
       "id": "8840e4b5-4963-540a-a98a-2eaf5da38e7c",
@@ -1446,7 +1820,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04A_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-04A_Backward.pdf.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "69f9abfe-b4ab-5b1e-982e-1b590325332e",
@@ -1470,7 +1846,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "cd654519-06b3-5ed3-81a4-5899e6fa5456",
@@ -1494,7 +1872,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-05_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-05_Backward.pdf. via G-11, F-11, D-12 & Margalla Road (reported jointly with FR-10)"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-05_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-05_Backward.pdf. via G-11, F-11, D-12 & Margalla Road (reported jointly with FR-10)",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
@@ -1518,7 +1898,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Backward.pdf. via G-9, Shaheen Chowk, F-9, F-10 & F-11 Markaz"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Backward.pdf. via G-9, Shaheen Chowk, F-9, F-10 & F-11 Markaz",
+      "coverage_tier": 1,
+      "coverage_tier_label": "FULLY_SUPPORTED"
     },
     {
       "id": "1ce08d52-fc4c-5537-a10c-788784c25578",
@@ -1542,7 +1924,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Backward.pdf. via G-8, G-9, G-10 & G-11"
+      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Backward.pdf. via G-8, G-9, G-10 & G-11",
+      "coverage_tier": 1,
+      "coverage_tier_label": "FULLY_SUPPORTED"
     },
     {
       "id": "cd9a2844-6fa3-5905-a5b3-a61a159452a9",
@@ -1566,7 +1950,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08A_Backward.pdf. via Abpara"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08A_Backward.pdf. via Abpara | Tier note: Endpoint (Capt. Naeem Tufail Shaheed Chowk), headway (20 min) confirmed official. A direct fetch returned only repeated arrival times at what appears to be the same terminus label across many trips, not a usable ordered stop list - flagged as an anomaly for a follow-up fetch, not resolved here.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "192b7e26-2f5a-55bc-82ac-0510fe82ba51",
@@ -1590,7 +1976,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08C_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08C_Backward.pdf. via Faizabad"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08C_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-08C_Backward.pdf. via Faizabad | Tier note: Same anomaly as FR-08A (repeated single-stop-label timestamps in the fetched extract, not a usable stop sequence) - endpoint/headway (20 min) confirmed official from the index page only.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
@@ -1614,7 +2002,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Backward.pdf. via Faizabad, IJP Road"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Backward.pdf. via Faizabad, IJP Road",
+      "coverage_tier": 1,
+      "coverage_tier_label": "FULLY_SUPPORTED"
     },
     {
       "id": "ae3136b0-74cb-5608-ab5a-e383006f73ac",
@@ -1638,7 +2028,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-10_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-10_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-10_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-10_Backward.pdf.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "fc46dd2c-fa20-5a99-a256-3ae865b71da2",
@@ -1662,7 +2054,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-11_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-11_Backward.pdf. via Motorway Chowk and Golra Morh (Daily Times states endpoint as I-14, differing from the CDA index page's I-16 - see DATA_GAPS.md)"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-11_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-11_Backward.pdf. via Motorway Chowk and Golra Morh (Daily Times states endpoint as I-14, differing from the CDA index page's I-16 - see DATA_GAPS.md)",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "15dd5dd7-1a8c-5fb0-979a-7215a355f37b",
@@ -1686,7 +2080,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-12_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-12_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-12_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-12_Backward.pdf.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "92a77ead-ece0-5f14-b46f-8804533e6435",
@@ -1710,7 +2106,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-13_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-13_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-13_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-13_Backward.pdf.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
@@ -1734,7 +2132,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Backward.pdf. via Faizabad, IJP Road"
+      "notes": "Ordered stop-level timetable data IMPORTED for this route/direction - see `trips` array (kind=CANONICAL_PATTERN). Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Backward.pdf. via Faizabad, IJP Road",
+      "coverage_tier": 1,
+      "coverage_tier_label": "FULLY_SUPPORTED"
     },
     {
       "id": "77f56cb6-75f5-59ab-ada0-cbc9333c3aaf",
@@ -1758,7 +2158,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14A_Backward.pdf. via Murree Road"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14A_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-14A_Backward.pdf. via Murree Road",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "6080bbc9-4bc8-5cbf-a059-bb9c0814afa4",
@@ -1782,7 +2184,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-15_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-15_Backward.pdf. Daily Times describes this as Khanna Pul-Rawat; the CDA index page states Khanna Pul-T-Chowk - see DATA_GAPS.md"
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-15_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FR-15_Backward.pdf. Daily Times describes this as Khanna Pul-Rawat; the CDA index page states Khanna Pul-T-Chowk - see DATA_GAPS.md",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "31ac4417-1273-5f1d-a7e2-561a4710849a",
@@ -1806,7 +2210,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRB-01_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRB-01_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRB-01_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRB-01_Backward.pdf.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "0b8fcfde-7efa-53c9-9c9a-86e8b6098cb1",
@@ -1830,7 +2236,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRG-1_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRG-1_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRG-1_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/FRG-1_Backward.pdf. | Tier note: Partial stop-name fragment seen for the Backward direction (Barakahu, Shahdara, Malpur, Lake View Park, Foreign Affairs Office, Abpara, CDA, TNT, Children Hospital, PIMS Metro Station, Tipu Market G-8, PIMS) but not confirmed complete/ordered from a direct fetch this pass.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "8223da34-d5ae-5606-9ccc-4393a6c7c12a",
@@ -1854,7 +2262,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-01_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-01_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-01_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-01_Backward.pdf.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     },
     {
       "id": "e790a940-c51f-5bc9-af09-664bb857d2a9",
@@ -1878,7 +2288,9 @@
       "path_wkt": null,
       "source": "CDA Transit Map route-index page, https://www.cda.gov.pk/cdaTransitMap (official, tabular 'CDA Transit Map - Route Details' listing every route code, name, direction pair, and headway, each linking to its own stop-level PDF under https://www.cda.gov.pk/Assets/metro_transit_route/)",
       "confidence": "OFFICIAL",
-      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-02_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-02_Backward.pdf."
+      "notes": "Route name, endpoints and headway are OFFICIAL (from the CDA index page). Ordered stop-level timetable NOT fetched in this research pass - see DATA_GAPS.md. Forward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-02_Forward.pdf. Backward PDF: https://www.cda.gov.pk/Assets/metro_transit_route/ST-02_Backward.pdf.",
+      "coverage_tier": 3,
+      "coverage_tier_label": "ROUTE_KNOWN_NO_TOPOLOGY"
     }
   ],
   "route_stops": [
@@ -2065,6 +2477,1166 @@
       "distance_along_route_m": null,
       "source": "Reconstructed ordering, rehbar.pk table cross-checked against Wikipedia station names",
       "confidence": "RECONSTRUCTED"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "fa79cfdc-3681-5935-91c1-8d5d594870fd",
+      "sequence": 1,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "5d9e6536-f210-520c-9d40-346f43e97cb9",
+      "sequence": 2,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "7fe10313-2cb8-5a2c-863e-6bad193a6d95",
+      "sequence": 3,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "3ca65f28-9656-5d09-b51e-a92a28aa25ee",
+      "sequence": 4,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "bd25671c-5cd4-53d2-b214-7102d9070e8f",
+      "sequence": 5,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "49fba4a8-ffff-5890-9417-1c25931c1bd0",
+      "sequence": 6,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "c0619f9d-4e9c-5b2a-b347-a075d59f4e12",
+      "sequence": 7,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "8916895d-28ea-5bbb-86c5-e29642eae79f",
+      "sequence": 8,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "13ef1d5e-25f5-585c-a2ce-123958cc671b",
+      "sequence": 9,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "2e5a0574-6c11-59a2-a9c6-2f54e7b2fdaf",
+      "sequence": 10,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "f79452ab-2453-53ed-b04a-a53125b60856",
+      "sequence": 11,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "e43812d0-3b0c-58a4-9e8b-903a5d4536c3",
+      "sequence": 12,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "4a1c9d59-c3ef-51c5-ae81-234923338fc4",
+      "sequence": 13,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "bbad7a85-e4fc-56a0-8496-8308de42ee3b",
+      "sequence": 14,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "acb10344-0c6e-5340-8291-db6fc9798650",
+      "sequence": 15,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "e483fb22-a4ac-5864-96f2-4b1ee18d44a1",
+      "sequence": 16,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "4646132a-60ea-592b-a844-74b4403146fb",
+      "sequence": 17,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "57aebdbb-ec5d-5185-8dcf-dda502e8bc87",
+      "sequence": 18,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "bd381069-16d2-5861-b33f-7cb51c0a4dc3",
+      "sequence": 19,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "2103c6d6-c64f-5ee6-a8d6-8719a68b1c5a",
+      "sequence": 20,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "1d1afad2-5ddd-5057-adb4-bfe29b7b6d70",
+      "sequence": 21,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "580306ea-42e2-50ed-b643-507312418cb6",
+      "sequence": 22,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "1184fbd9-00a4-54cd-8dba-70bc7f8bda83",
+      "sequence": 23,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "b7783fda-707f-5d48-aa4b-78739826ad21",
+      "sequence": 24,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "36969e8f-6c58-5e3c-b798-81324b1142dc",
+      "sequence": 25,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "c79d67e2-dfb4-5109-9f40-3c2b26070258",
+      "stop_id": "c46de208-1ceb-5ada-8496-f98e977effc4",
+      "sequence": 26,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-01_Backward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "2ccff938-6448-518b-ba16-eb90fa65d2cf",
+      "sequence": 1,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "098c9839-0582-5673-83da-0fd4b30436c5",
+      "sequence": 2,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "68870edf-7347-512c-b645-2a6f31f175d2",
+      "sequence": 3,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "ea113d71-680a-5543-9b76-98073340a97e",
+      "sequence": 4,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "36c1cbd5-7812-5241-b783-aa59374ba557",
+      "sequence": 5,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "3665df75-ced5-55bb-99c1-f49c3443edc4",
+      "sequence": 6,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "27e00af3-03b4-5581-b453-2bc7e0e1ec3d",
+      "sequence": 7,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "5cc9ab6b-23c9-59d3-b1d0-ae383b6f13dd",
+      "sequence": 8,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "afa17d79-815d-5cd8-8af6-57673aec67fb",
+      "sequence": 9,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "1fd03a94-33a3-5a9a-832d-225a3f1328a4",
+      "sequence": 10,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "fceaa920-7777-57be-b912-971c9f3827de",
+      "sequence": 11,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "cdf509c4-6510-5396-9a95-31b21c1ef15b",
+      "sequence": 12,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "54a302c8-ff6a-5cee-b01f-7a144ffbb5a7",
+      "sequence": 13,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "227e8199-8915-59c1-8525-06f30f32f8b4",
+      "sequence": 14,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "a9b68f7c-a75b-5030-8918-318dad7b741f",
+      "sequence": 15,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "46e3db25-443b-5731-93c2-bcc84eb43122",
+      "sequence": 16,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "72846db0-92a2-52e8-aa6b-97cd09c83956",
+      "sequence": 17,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "39187591-5114-5330-8173-3623c7181a6b",
+      "sequence": 18,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "f60df439-1f76-52a0-9b09-628b73c91d25",
+      "sequence": 19,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "e04c6999-5b1a-5252-a6f4-66e1bf554c7c",
+      "sequence": 20,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "645b095f-c45f-5f6a-9ca3-b8579ac58dce",
+      "sequence": 21,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "faee46e4-2b81-5a35-a465-c1fcea3b124b",
+      "sequence": 22,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "70548d35-a148-5760-9c8d-ecdf58555de2",
+      "sequence": 23,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "29a6d144-5e62-5433-be70-b345857bb5c4",
+      "sequence": 24,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "0a0217f7-3683-5df2-8ef4-8468d5755364",
+      "stop_id": "84ff49f7-6777-53ae-a846-5431f5e6e6b3",
+      "sequence": 25,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-04_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "2ccff938-6448-518b-ba16-eb90fa65d2cf",
+      "sequence": 1,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "098c9839-0582-5673-83da-0fd4b30436c5",
+      "sequence": 2,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "e881fa2b-c63b-5101-8beb-50798ea327e7",
+      "sequence": 3,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "5b00700d-2d47-5a1d-b300-ce4aeb105942",
+      "sequence": 4,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "88b8b763-149c-55c5-9a2a-d659b3a3b29d",
+      "sequence": 5,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "facdba12-84ae-5df5-bc82-3de238c0dd06",
+      "sequence": 6,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "42a5f0f6-82c8-50a0-aa6e-303bb4a66495",
+      "sequence": 7,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "5f8460a6-2ea8-5e13-8555-3aa983d6244f",
+      "sequence": 8,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "524418c1-1f45-594d-9e11-ffcbd5cd5bd1",
+      "sequence": 9,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "82be220b-ef31-552c-99de-1b1b1c693d79",
+      "sequence": 10,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "cfa50cd6-764c-5b98-b958-d2ec3a4d0660",
+      "sequence": 11,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "d0a88f81-81d0-5e2f-9bfb-93993e98dbfe",
+      "sequence": 12,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "72e8bbc1-42bc-5d85-ab0e-babc88a97aee",
+      "sequence": 13,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "a2a2e798-07fa-541e-8776-b746be259cd0",
+      "sequence": 14,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "d9ba95d4-a20b-538b-8210-c49dd683b34d",
+      "sequence": 15,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "566cad4b-37e6-5055-bda2-59509ca25a32",
+      "sequence": 16,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "070305f4-6565-5fad-b136-f8ce5be6b0a9",
+      "sequence": 17,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "0590d806-e74c-5b4e-a689-f752d680dbef",
+      "sequence": 18,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "56ac0440-f061-5efc-9aab-9249a990b9d1",
+      "sequence": 19,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "c46de208-1ceb-5ada-8496-f98e977effc4",
+      "sequence": 20,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "c15457a4-5e26-5db3-831d-00823075992b",
+      "sequence": 21,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "de12ec6f-78aa-5842-9e1a-f71f77f0ab04",
+      "sequence": 22,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "1ce08d52-fc4c-5537-a10c-788784c25578",
+      "stop_id": "36969e8f-6c58-5e3c-b798-81324b1142dc",
+      "sequence": 23,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-07_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "ed3993bf-6dbe-5757-8e5a-b0c1ce9e192f",
+      "sequence": 1,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "aac766f0-ca86-5002-a387-8ccbda5969dc",
+      "sequence": 2,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "77b68057-ab55-5291-885c-d629bbf1f8cb",
+      "sequence": 3,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "5a2eb3f0-caa1-5ddd-906a-aecb0a311b6e",
+      "sequence": 4,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "1af489f8-023d-570d-9225-7444a8ceee84",
+      "sequence": 5,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "967e2bf6-0255-5c08-9b84-1281d5be8fa3",
+      "sequence": 6,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "f0bcb7f0-02f5-5f3a-b661-363528cab0eb",
+      "sequence": 7,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "e02292c8-e19c-51c1-96b4-e06bc836d418",
+      "sequence": 8,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "9ad66849-a6bd-5b20-835a-de16101c2063",
+      "sequence": 9,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "41580978-14f9-5718-9691-0c46c666d3ff",
+      "sequence": 10,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "49fba4a8-ffff-5890-9417-1c25931c1bd0",
+      "sequence": 11,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "97673faf-d1c4-5fb5-bcc7-2b0db3ff5157",
+      "sequence": 12,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "8916895d-28ea-5bbb-86c5-e29642eae79f",
+      "sequence": 13,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "a08198e3-bbb2-5626-9942-879cad59cb2a",
+      "sequence": 14,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "4584de61-d4df-598d-816b-e21a2f7c8865",
+      "sequence": 15,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "928dfbbf-f866-5c62-8cac-a9e792880e49",
+      "sequence": 16,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "901f8784-3b4a-518b-89c8-5fa205564696",
+      "sequence": 17,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "2d82c1c4-c3c7-5267-a454-c096d6bec25c",
+      "stop_id": "4646132a-60ea-592b-a844-74b4403146fb",
+      "sequence": 18,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "f869e025-9d7c-5aae-82df-12635d4da77d",
+      "sequence": 1,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "7de2d91e-2d0d-5b1c-8183-5db6c2d95fac",
+      "sequence": 2,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "317729cb-6575-5fcd-b5e6-8e7d966c9e7f",
+      "sequence": 3,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "42a5f0f6-82c8-50a0-aa6e-303bb4a66495",
+      "sequence": 4,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "c84a811b-0c78-583b-84f3-b1de9ecb5236",
+      "sequence": 5,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "8ac5478b-09ce-58c3-85d0-9dcaf13d701e",
+      "sequence": 6,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "524418c1-1f45-594d-9e11-ffcbd5cd5bd1",
+      "sequence": 7,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "eea28d7b-4100-53a4-81a5-204280851473",
+      "sequence": 8,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "82be220b-ef31-552c-99de-1b1b1c693d79",
+      "sequence": 9,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "58a6c462-2ab7-5855-b759-00b2e232320b",
+      "sequence": 10,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "e0599e0f-23db-561e-8e28-a0c53409a482",
+      "sequence": 11,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "09881f67-68c5-5f79-9319-59001ba98501",
+      "sequence": 12,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "f4a8340a-de48-582c-9281-7aee834f5ee9",
+      "sequence": 13,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "bbd9cb42-f76f-5021-8a5d-10e353c9cba0",
+      "sequence": 14,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "d75011fa-d2d8-5e58-b210-b7ec854fcc05",
+      "sequence": 15,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "44738436-d11b-5b21-9707-da13d11b72cb",
+      "sequence": 16,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "34048326-c05c-5572-8129-a6ce911b6810",
+      "sequence": 17,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "1cb600f0-87b9-5b7b-bb2f-554fbe1b2626",
+      "sequence": 18,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "294008ee-2f44-5854-a258-24ac776b1b90",
+      "sequence": 19,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "c8087ea3-a8ca-5a14-9dd3-53967766d8c2",
+      "sequence": 20,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "efc51353-ec3b-5aad-abbb-c7ece76e8a3a",
+      "sequence": 21,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "a9624817-c11e-5d66-bfc7-572a0271a84c",
+      "sequence": 22,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "d62e75c7-0368-5f33-88b1-af212e86436e",
+      "sequence": 23,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "78a2cef5-471b-5ca5-bad4-66153e666530",
+      "sequence": 24,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "8e3dd477-9b8e-53b0-a472-a9985f1cac0d",
+      "sequence": 25,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "stop_id": "0e878e48-cd72-5859-ae5e-63b4b43adf44",
+      "sequence": 26,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "fa79cfdc-3681-5935-91c1-8d5d594870fd",
+      "sequence": 1,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "5d9e6536-f210-520c-9d40-346f43e97cb9",
+      "sequence": 2,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "7fe10313-2cb8-5a2c-863e-6bad193a6d95",
+      "sequence": 3,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "3ca65f28-9656-5d09-b51e-a92a28aa25ee",
+      "sequence": 4,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "bd25671c-5cd4-53d2-b214-7102d9070e8f",
+      "sequence": 5,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "49fba4a8-ffff-5890-9417-1c25931c1bd0",
+      "sequence": 6,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "97673faf-d1c4-5fb5-bcc7-2b0db3ff5157",
+      "sequence": 7,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "8916895d-28ea-5bbb-86c5-e29642eae79f",
+      "sequence": 8,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "a08198e3-bbb2-5626-9942-879cad59cb2a",
+      "sequence": 9,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "4584de61-d4df-598d-816b-e21a2f7c8865",
+      "sequence": 10,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "928dfbbf-f866-5c62-8cac-a9e792880e49",
+      "sequence": 11,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "901f8784-3b4a-518b-89c8-5fa205564696",
+      "sequence": 12,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "27e00af3-03b4-5581-b453-2bc7e0e1ec3d",
+      "sequence": 13,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "4646132a-60ea-592b-a844-74b4403146fb",
+      "sequence": 14,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "b2f2ab81-2807-52bd-877d-dd661b43b627",
+      "sequence": 15,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "f3ab99d2-f276-5afd-9929-c6a80c451ddf",
+      "sequence": 16,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "fc643baa-6539-5e24-a723-0512ffa3d871",
+      "sequence": 17,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "cdc565aa-437f-5d67-bc21-da0710e0a653",
+      "sequence": 18,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "7c4d1bc7-6ae8-5fd6-9dfc-9b68388ee30d",
+      "sequence": 19,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "29227c1d-fea4-5bbc-8759-38854d147ddb",
+      "sequence": 20,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "441ea968-f529-523a-b25b-22bad6c5bbc5",
+      "sequence": 21,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "fe324788-1c1e-5ca8-8730-e5d4b724aebe",
+      "sequence": 22,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "f9bc7c1f-41e1-5cd2-8d0b-39e87f9a50a7",
+      "sequence": 23,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "faced772-4655-545e-bdf2-5fdeb18c2aa0",
+      "sequence": 24,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "fd27086d-0132-5b04-bea1-ffca5520f92e",
+      "sequence": 25,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "ee5b5466-358b-595c-abab-ea056e87595e",
+      "sequence": 26,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
+    },
+    {
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "stop_id": "ad9bb64b-aad6-54f4-9cda-1c18b40d0b9b",
+      "sequence": 27,
+      "distance_along_route_m": null,
+      "source": "DERIVED from this route's CANONICAL_PATTERN trip (see trips[].source=https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf) - not an independently maintained sequence, to avoid duplicate/contradictory RouteStop orderings for the same route/direction (see plan.md Phase 4 handoff, 'route topology' note).",
+      "confidence": "OFFICIAL"
     }
   ],
   "route_variants": [],
@@ -2629,6 +4201,307 @@
       "source": "https://www.cda.gov.pk/Assets/metro_transit_route/FR-14_Forward.pdf",
       "confidence": "OFFICIAL",
       "notes": "This is ONE real, officially-published trip pattern (stop-level arrival/departure offsets, seconds from trip start) taken verbatim from the cited CDA PDF. Multiple consecutive trips on that PDF were checked and confirmed to be EXACT time-shifts of this same pattern by 'headway_min' - so every real trip for this route/direction/day can be reconstructed by repeating this pattern every headway_min minutes from first_trip_start to last_trip_start (total_trips_per_day trips), without inventing any new stop-level timing. Intermediate departure time for 'CDA Stop' was truncated in the fetched extract; recorded as UNKNOWN (None) rather than guessed."
+    },
+    {
+      "id": "6541066e-190d-5301-b822-469c0dd2051d",
+      "route_id": "72095197-1804-51ee-9ca0-bd70c897ea9d",
+      "kind": "CANONICAL_PATTERN",
+      "gtfs_route_id_on_pdf": "10006",
+      "direction": "Forward",
+      "canonical_trip_id_on_pdf": "176496-0",
+      "canonical_trip_start_time": "06:00:00",
+      "headway_min": 60,
+      "total_trips_per_day": 17,
+      "first_trip_start": "06:00:00",
+      "last_trip_start": "22:00:00",
+      "stop_times": [
+        {
+          "stop_id": "f869e025-9d7c-5aae-82df-12635d4da77d",
+          "arrival_offset_s": 0,
+          "departure_offset_s": 0
+        },
+        {
+          "stop_id": "7de2d91e-2d0d-5b1c-8183-5db6c2d95fac",
+          "arrival_offset_s": 160,
+          "departure_offset_s": 180
+        },
+        {
+          "stop_id": "317729cb-6575-5fcd-b5e6-8e7d966c9e7f",
+          "arrival_offset_s": 250,
+          "departure_offset_s": 270
+        },
+        {
+          "stop_id": "42a5f0f6-82c8-50a0-aa6e-303bb4a66495",
+          "arrival_offset_s": 330,
+          "departure_offset_s": 350
+        },
+        {
+          "stop_id": "c84a811b-0c78-583b-84f3-b1de9ecb5236",
+          "arrival_offset_s": 430,
+          "departure_offset_s": 450
+        },
+        {
+          "stop_id": "8ac5478b-09ce-58c3-85d0-9dcaf13d701e",
+          "arrival_offset_s": 500,
+          "departure_offset_s": 520
+        },
+        {
+          "stop_id": "524418c1-1f45-594d-9e11-ffcbd5cd5bd1",
+          "arrival_offset_s": 560,
+          "departure_offset_s": 580
+        },
+        {
+          "stop_id": "eea28d7b-4100-53a4-81a5-204280851473",
+          "arrival_offset_s": 645,
+          "departure_offset_s": 665
+        },
+        {
+          "stop_id": "82be220b-ef31-552c-99de-1b1b1c693d79",
+          "arrival_offset_s": 725,
+          "departure_offset_s": 745
+        },
+        {
+          "stop_id": "58a6c462-2ab7-5855-b759-00b2e232320b",
+          "arrival_offset_s": 875,
+          "departure_offset_s": 895
+        },
+        {
+          "stop_id": "e0599e0f-23db-561e-8e28-a0c53409a482",
+          "arrival_offset_s": 1025,
+          "departure_offset_s": 1045
+        },
+        {
+          "stop_id": "09881f67-68c5-5f79-9319-59001ba98501",
+          "arrival_offset_s": 1100,
+          "departure_offset_s": 1120
+        },
+        {
+          "stop_id": "f4a8340a-de48-582c-9281-7aee834f5ee9",
+          "arrival_offset_s": 1175,
+          "departure_offset_s": 1195
+        },
+        {
+          "stop_id": "bbd9cb42-f76f-5021-8a5d-10e353c9cba0",
+          "arrival_offset_s": 1305,
+          "departure_offset_s": 1325
+        },
+        {
+          "stop_id": "d75011fa-d2d8-5e58-b210-b7ec854fcc05",
+          "arrival_offset_s": 1405,
+          "departure_offset_s": 1425
+        },
+        {
+          "stop_id": "44738436-d11b-5b21-9707-da13d11b72cb",
+          "arrival_offset_s": 1535,
+          "departure_offset_s": 1555
+        },
+        {
+          "stop_id": "34048326-c05c-5572-8129-a6ce911b6810",
+          "arrival_offset_s": 1665,
+          "departure_offset_s": 1685
+        },
+        {
+          "stop_id": "1cb600f0-87b9-5b7b-bb2f-554fbe1b2626",
+          "arrival_offset_s": 1800,
+          "departure_offset_s": 1820
+        },
+        {
+          "stop_id": "294008ee-2f44-5854-a258-24ac776b1b90",
+          "arrival_offset_s": 1930,
+          "departure_offset_s": 1950
+        },
+        {
+          "stop_id": "c8087ea3-a8ca-5a14-9dd3-53967766d8c2",
+          "arrival_offset_s": 2030,
+          "departure_offset_s": 2050
+        },
+        {
+          "stop_id": "efc51353-ec3b-5aad-abbb-c7ece76e8a3a",
+          "arrival_offset_s": 2130,
+          "departure_offset_s": 2150
+        },
+        {
+          "stop_id": "a9624817-c11e-5d66-bfc7-572a0271a84c",
+          "arrival_offset_s": 2190,
+          "departure_offset_s": 2210
+        },
+        {
+          "stop_id": "d62e75c7-0368-5f33-88b1-af212e86436e",
+          "arrival_offset_s": 2255,
+          "departure_offset_s": 2275
+        },
+        {
+          "stop_id": "78a2cef5-471b-5ca5-bad4-66153e666530",
+          "arrival_offset_s": 2365,
+          "departure_offset_s": 2385
+        },
+        {
+          "stop_id": "8e3dd477-9b8e-53b0-a472-a9985f1cac0d",
+          "arrival_offset_s": 2445,
+          "departure_offset_s": 2465
+        },
+        {
+          "stop_id": "0e878e48-cd72-5859-ae5e-63b4b43adf44",
+          "arrival_offset_s": 2580,
+          "departure_offset_s": 2580
+        }
+      ],
+      "source": "https://www.cda.gov.pk/Assets/metro_transit_route/FR-06_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Real, officially-published trip pattern (stop-level arrival/departure offsets, seconds from trip start), verbatim from the cited CDA PDF. Multiple consecutive trips on that PDF were checked and confirmed to be exact time-shifts of this pattern by headway_min - every real trip for this route/direction/day can be reconstructed by repeating this pattern every headway_min minutes from first_trip_start to last_trip_start (total_trips_per_day trips), without inventing any stop-level timing."
+    },
+    {
+      "id": "9c1de61c-5a70-50c1-aae2-d0ae3a75fba9",
+      "route_id": "6ad1600e-a794-5af4-8e33-9d2acb72556e",
+      "kind": "CANONICAL_PATTERN",
+      "gtfs_route_id_on_pdf": "10009",
+      "direction": "Forward",
+      "canonical_trip_id_on_pdf": "175728-0",
+      "canonical_trip_start_time": "06:00:00",
+      "headway_min": 15,
+      "total_trips_per_day": 65,
+      "first_trip_start": "06:00:00",
+      "last_trip_start": "22:00:00",
+      "stop_times": [
+        {
+          "stop_id": "fa79cfdc-3681-5935-91c1-8d5d594870fd",
+          "arrival_offset_s": 0,
+          "departure_offset_s": 0
+        },
+        {
+          "stop_id": "5d9e6536-f210-520c-9d40-346f43e97cb9",
+          "arrival_offset_s": 290,
+          "departure_offset_s": 310
+        },
+        {
+          "stop_id": "7fe10313-2cb8-5a2c-863e-6bad193a6d95",
+          "arrival_offset_s": 430,
+          "departure_offset_s": 450
+        },
+        {
+          "stop_id": "3ca65f28-9656-5d09-b51e-a92a28aa25ee",
+          "arrival_offset_s": 550,
+          "departure_offset_s": 570
+        },
+        {
+          "stop_id": "bd25671c-5cd4-53d2-b214-7102d9070e8f",
+          "arrival_offset_s": 665,
+          "departure_offset_s": 685
+        },
+        {
+          "stop_id": "49fba4a8-ffff-5890-9417-1c25931c1bd0",
+          "arrival_offset_s": 855,
+          "departure_offset_s": 875
+        },
+        {
+          "stop_id": "97673faf-d1c4-5fb5-bcc7-2b0db3ff5157",
+          "arrival_offset_s": 1095,
+          "departure_offset_s": 1115
+        },
+        {
+          "stop_id": "8916895d-28ea-5bbb-86c5-e29642eae79f",
+          "arrival_offset_s": 1355,
+          "departure_offset_s": 1375
+        },
+        {
+          "stop_id": "a08198e3-bbb2-5626-9942-879cad59cb2a",
+          "arrival_offset_s": 1605,
+          "departure_offset_s": 1625
+        },
+        {
+          "stop_id": "4584de61-d4df-598d-816b-e21a2f7c8865",
+          "arrival_offset_s": 1695,
+          "departure_offset_s": 1715
+        },
+        {
+          "stop_id": "928dfbbf-f866-5c62-8cac-a9e792880e49",
+          "arrival_offset_s": 1791,
+          "departure_offset_s": 1811
+        },
+        {
+          "stop_id": "901f8784-3b4a-518b-89c8-5fa205564696",
+          "arrival_offset_s": 1924,
+          "departure_offset_s": 1944
+        },
+        {
+          "stop_id": "27e00af3-03b4-5581-b453-2bc7e0e1ec3d",
+          "arrival_offset_s": 2049,
+          "departure_offset_s": 2069
+        },
+        {
+          "stop_id": "4646132a-60ea-592b-a844-74b4403146fb",
+          "arrival_offset_s": 2229,
+          "departure_offset_s": 2249
+        },
+        {
+          "stop_id": "b2f2ab81-2807-52bd-877d-dd661b43b627",
+          "arrival_offset_s": 2344,
+          "departure_offset_s": 2364
+        },
+        {
+          "stop_id": "f3ab99d2-f276-5afd-9929-c6a80c451ddf",
+          "arrival_offset_s": 2444,
+          "departure_offset_s": 2464
+        },
+        {
+          "stop_id": "fc643baa-6539-5e24-a723-0512ffa3d871",
+          "arrival_offset_s": 2554,
+          "departure_offset_s": 2574
+        },
+        {
+          "stop_id": "cdc565aa-437f-5d67-bc21-da0710e0a653",
+          "arrival_offset_s": 2651,
+          "departure_offset_s": 2671
+        },
+        {
+          "stop_id": "7c4d1bc7-6ae8-5fd6-9dfc-9b68388ee30d",
+          "arrival_offset_s": 2769,
+          "departure_offset_s": 2789
+        },
+        {
+          "stop_id": "29227c1d-fea4-5bbc-8759-38854d147ddb",
+          "arrival_offset_s": 2849,
+          "departure_offset_s": 2869
+        },
+        {
+          "stop_id": "441ea968-f529-523a-b25b-22bad6c5bbc5",
+          "arrival_offset_s": 2945,
+          "departure_offset_s": 2965
+        },
+        {
+          "stop_id": "fe324788-1c1e-5ca8-8730-e5d4b724aebe",
+          "arrival_offset_s": 3095,
+          "departure_offset_s": 3115
+        },
+        {
+          "stop_id": "f9bc7c1f-41e1-5cd2-8d0b-39e87f9a50a7",
+          "arrival_offset_s": 3225,
+          "departure_offset_s": 3245
+        },
+        {
+          "stop_id": "faced772-4655-545e-bdf2-5fdeb18c2aa0",
+          "arrival_offset_s": 3365,
+          "departure_offset_s": 3385
+        },
+        {
+          "stop_id": "fd27086d-0132-5b04-bea1-ffca5520f92e",
+          "arrival_offset_s": 3510,
+          "departure_offset_s": 3530
+        },
+        {
+          "stop_id": "ee5b5466-358b-595c-abab-ea056e87595e",
+          "arrival_offset_s": 3700,
+          "departure_offset_s": 3720
+        },
+        {
+          "stop_id": "ad9bb64b-aad6-54f4-9cda-1c18b40d0b9b",
+          "arrival_offset_s": 3900,
+          "departure_offset_s": 3900
+        }
+      ],
+      "source": "https://www.cda.gov.pk/Assets/metro_transit_route/FR-09_Forward.pdf",
+      "confidence": "OFFICIAL",
+      "notes": "Real, officially-published trip pattern (stop-level arrival/departure offsets, seconds from trip start), verbatim from the cited CDA PDF. Multiple consecutive trips on that PDF were checked and confirmed to be exact time-shifts of this pattern by headway_min - every real trip for this route/direction/day can be reconstructed by repeating this pattern every headway_min minutes from first_trip_start to last_trip_start (total_trips_per_day trips), without inventing any stop-level timing. The 'Forward' direction PDF (this record) actually runs Khanna Pul -> Golra Morh Metro Station, opposite of the route's own printed Long Name 'Golra Mor to Khanna Pul' - the same Forward/Backward-vs-Long-Name naming inversion already seen on other CDA route PDFs; recorded as printed, not silently corrected."
     }
   ],
   "stop_times": [],
@@ -2657,6 +4530,26 @@
       ],
       "source": "Wikipedia: Rawalpindi-Islamabad Metrobus (article text)",
       "confidence": "VERIFIED"
+    }
+  ],
+  "fare_rules": [
+    {
+      "name": "Standard Metrobus",
+      "base_fare": 50.0,
+      "per_leg_fare": 20.0,
+      "currency": "PKR",
+      "is_active": true,
+      "source": "No official fare schedule or multi-leg formula found in research (see docs/DATA_GAPS.md). Figure is a rough approximation from conflicting secondary reporting (INCPak: Red Line ~PKR 30 one-way as of 2026; other secondary sources vary) - the flat base+per-leg FORMULA itself is an architectural assumption (no zone/distance-based system was found), not sourced data.",
+      "confidence": "APPROXIMATE"
+    },
+    {
+      "name": "Feeder Route",
+      "base_fare": 30.0,
+      "per_leg_fare": 15.0,
+      "currency": "PKR",
+      "is_active": true,
+      "source": "No official fare schedule or multi-leg formula found in research (see docs/DATA_GAPS.md). Figure is a rough approximation from conflicting secondary reporting (INCPak: CDA feeder routes ~PKR 100 as of a mid-2025 update; icons.com.pk: ~PKR 40) - the flat base+per-leg FORMULA itself is an architectural assumption, not sourced data.",
+      "confidence": "APPROXIMATE"
     }
   ]
 }

@@ -14,7 +14,13 @@ not as historical facts about a prior codebase.
   for map display.
 - **Stop** — a physical location (`PostGIS geography(Point)`), may
   serve multiple routes. Carries coordinate provenance fields:
-  `coordinate_source`, `coordinate_confidence`.
+  `coordinate_source`, `coordinate_confidence`. Also carries
+  `external_key` (added this pass) — the canonical dataset's stable slug
+  (e.g. `"cda_pims_hospital"`), used for import matching/deduplication,
+  kept deliberately separate from `name` (the human-readable display
+  name, e.g. `"PIMS Hospital"`) after a bug where the importer wrote the
+  slug into `name` and never used the dataset's actual `name` field at
+  all — see `docs/DATA_GAPS.md`'s "Seeding/importer fixes" section.
 - **RouteStop** — ordered association of a Stop to a Route
   (`sequence`), with optional `distance_along_route_m`.
 - **Trip** — a scheduled run of a Route, with a status lifecycle
@@ -38,14 +44,47 @@ route's geometry is OSRM-derived (see §4 below) vs. absent.
 **Do not present any figure in this section as higher than stated, and
 do not fabricate data to fill a gap listed here.**
 
+> **UPDATE (correction pass, 2026-08-25):** this section previously
+> reflected a data-collection pass that only fetched complete timetables
+> for 4 of the 22 CDA feeder routes — a limitation of that pass, not the
+> intended scope. A follow-up correction pass fetched 2 more complete
+> feeder timetables (FR-06, FR-09) and, critically, explicitly classified
+> **all 22** feeder routes plus the 4 Metrobus lines into a 4-tier
+> coverage system (see `docs/DATA_GAPS.md` for the full route-by-route
+> table) so no route's support level is ever ambiguous or silently
+> assumed. See `plan.md`'s "Correction Pass" handoff for exact figures,
+> what changed, and what didn't.
+
 | Dataset | Coverage |
 |---|---|
 | Agencies/routes (names, endpoints, headways) | 4 Metrobus lines (Red/Orange/Blue/Green) + 22 confirmed CDA feeder route/direction pairs, all with `confidence: OFFICIAL` name/headway/endpoint data |
-| Stop coordinates | **88 of 122 known stops** have located coordinates; **34 remain `UNKNOWN`** — no coordinate may be fabricated for these |
-| Route geometry (OSRM road-snap) | **0 real routes currently have complete geometry.** Every real route's full ordered stop sequence has at least one unlocated stop (Red Line 1 short, FR-01 10, FR-04 4, FR-07 9, FR-14 10 short) — the road-snap process itself is straightforward once a route's stop sequence is fully located; the blocker is upstream stop-coordinate coverage |
-| Stop-level timetables | **4 of ~22 known feeder routes** have real, officially-sourced stop-level timetables: FR-01 (26 stops, 16 trips/day), FR-04 (25 stops, 97 trips/day), FR-07 (23 stops, 97 trips/day), FR-14 (18 stops, 65 trips/day). The 4 main Metrobus lines and the other 18 feeder routes have **no stop-level timetable** — headway/frequency only |
-| Fares | DB-driven, static, flat per-boarding formula (`base_fare + per_leg_fare × (legs−1)`) — not distance-based, not from an external API |
+| Stop coordinates (in `transit_data.json` itself) | **17 of 158 stops** carry a curated coordinate in the canonical dataset file; **141 remain `UNKNOWN`** — no coordinate may be fabricated for these. (A prior Phase 2 pass separately geocoded 88 of the then-122 stops **directly against a live database**, via `scripts/geocode_stops.py` — that enrichment is NOT reflected back into `transit_data.json` and has NOT been re-run since this pass added 36 new stops; see `docs/DATA_GAPS.md` §0 for exact status.) |
+| Route geometry (OSRM road-snap) | **0 real routes currently have complete geometry in the canonical dataset.** Unchanged by this pass — still blocked on stop-coordinate coverage, now for 6 timetabled routes instead of 4 (FR-06/FR-09 added, both with unlocated stops) |
+| Stop-level timetables | **6 of 22 CDA feeder routes** (was 4) have real, officially-sourced stop-level timetables: FR-01 (26 stops), FR-04 (25 stops), **FR-06 (26 stops, new)**, FR-07 (23 stops), **FR-09 (27 stops, new)**, FR-14 (18 stops). All 22 feeder routes are now explicitly classified into a 4-tier coverage system — see `docs/DATA_GAPS.md`. The 4 main Metrobus lines still have **no stop-level timetable** — headway/frequency only |
+| Route topology (RouteStop ordering) | **Fixed this pass:** every route with a canonical timetable now has its `route_stops` sequence **mechanically derived** from that timetable's stop order (not a separately hand-maintained list) — eliminating the topology-ambiguity risk of the two representations silently drifting apart or contradicting each other. Red Line's independently-sourced 23-stop sequence (no timetable backing it) is unaffected |
+| Fares | DB-driven, static, flat per-boarding formula (`base_fare + per_leg_fare × (legs−1)`) — **now sourced from `transit_data.json`'s `fare_rules` array** (previously hardcoded directly in `app/seeding/importer.py`, bypassing the dataset entirely) — not distance-based, not from an external API, and **explicitly `confidence: APPROXIMATE`**: no authoritative fare schedule or multi-leg formula was ever found in research; the flat per-boarding formula itself is an architectural choice, not sourced data (see `docs/DATA_GAPS.md` §8) |
 | Real-time vehicle data | **Does not exist anywhere.** No official GPS feed exists for this transit system (see §5). All "live" vehicle data must be simulation until/unless one is connected |
+
+## 2a. Route coverage tiers (added this pass)
+
+Every route in `transit_data.json` now carries an explicit
+`coverage_tier` (1–4) and `coverage_tier_label`, so "how supported is
+this route" is never something a future pass has to re-derive from
+scratch or guess at:
+
+| Tier | Label | Meaning | Count |
+|---|---|---|---|
+| 1 | `FULLY_SUPPORTED` | Ordered topology + real, officially-sourced stop-level timetable | 6 (FR-01, FR-04, FR-06, FR-07, FR-09, FR-14) |
+| 2 | `PARTIALLY_SUPPORTED_TOPOLOGY_ONLY` | Ordered topology from reliable (if secondary) sources, no timetable | 1 (Red Line) |
+| 3 | `ROUTE_KNOWN_NO_TOPOLOGY` | Route identity/endpoints/headway confirmed from an official source, but no reliable ordered stop sequence | 19 (Orange, Blue, Green, and 16 of the 22 feeder routes) |
+| 4 | `INSUFFICIENT_EVIDENCE` | Route mentioned in research but existence itself isn't reliably established | 0 — every CDA feeder route's *existence* is confirmed by the official CDA route-index page, so nothing in this dataset falls in tier 4 today |
+
+See `docs/DATA_GAPS.md` for the full route-by-route breakdown, including
+which routes have a *partial* stop-name fragment that was deliberately
+**not** encoded as `route_stops` because it wasn't verified complete/
+correctly-ordered from a direct source fetch (encoding an unverified
+partial sequence risks exactly the "contradictory topology" problem this
+pass was asked to eliminate, not reintroduce it under a different name).
 
 ## 3. Data provenance summary
 

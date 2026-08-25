@@ -42,7 +42,9 @@ class TransitDataImporter:
 
         results["stop_times"] = await self._import_stop_times(data.get("trips", []))
 
-        results["fare_rules"] = await self._import_fare_rules(self._get_default_fare_rules())
+        results["fare_rules"] = await self._import_fare_rules(
+            data.get("fare_rules") or self._get_default_fare_rules()
+        )
 
         return results
 
@@ -79,7 +81,8 @@ class TransitDataImporter:
     async def _build_stop_key_maps(self, stops_data: list[dict]) -> None:
         result = await self.session.execute(select(Stop))
         for stop in result.scalars().all():
-            self.stop_key_to_id[stop.name] = stop.id
+            if stop.external_key:
+                self.stop_key_to_id[stop.external_key] = stop.id
         for stop_data in stops_data:
             self.stop_uuid_to_key[stop_data["id"]] = stop_data["key"]
 

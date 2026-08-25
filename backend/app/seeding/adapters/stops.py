@@ -23,10 +23,21 @@ class StopAdapter:
         return imported_count
 
     async def _get_by_key(self, key: str) -> Stop | None:
+        # Matched by the dataset's stable slug (`external_key`), NOT by
+        # display name - a stop's human-readable name may legitimately
+        # change between dataset revisions without that being a new stop.
         result = await self.session.execute(
-            select(Stop).where(Stop.name == key)
+            select(Stop).where(Stop.external_key == key)
         )
         return result.scalar_one_or_none()
+
+    def _display_name(self, data: dict) -> str:
+        # The dataset always carries a human-readable `name` distinct from
+        # its slug `key` (e.g. key="cda_pims_hospital",
+        # name="PIMS Hospital"); fall back to the key only for a
+        # malformed/legacy record that's missing `name` entirely, so
+        # import never hard-fails over a missing display name.
+        return data.get("name") or data["key"]
 
     async def _create(self, data: dict) -> Stop:
         location = None
@@ -39,7 +50,8 @@ class StopAdapter:
         coordinate_confidence = self._map_coordinate_confidence(data.get("confidence", ""))
 
         stop = Stop(
-            name=data["key"],
+            name=self._display_name(data),
+            external_key=data["key"],
             location=location,
             coordinate_source=coordinate_source,
             coordinate_confidence=coordinate_confidence,
@@ -58,6 +70,7 @@ class StopAdapter:
         coordinate_source = self._map_coordinate_source(data.get("source", ""), data.get("confidence", ""))
         coordinate_confidence = self._map_coordinate_confidence(data.get("confidence", ""))
 
+        stop.name = self._display_name(data)
         stop.location = location
         stop.coordinate_source = coordinate_source
         stop.coordinate_confidence = coordinate_confidence
