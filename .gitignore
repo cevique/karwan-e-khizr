@@ -1,0 +1,481 @@
+# ============================================================
+# Karwan-e-Khizr
+# Root .gitignore
+# Covers:
+# React Native / Expo / TypeScript / Web
+# Python / FastAPI
+# Android / iOS build artifacts
+# Docker
+# IDEs / editors
+# OS junk
+# Secrets / environment files
+# Logs / caches / temporary files
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Environment / Secrets
+# ------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+!.env.template
+
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Local credentials / tokens
+credentials.json
+credentials.local.json
+secrets.json
+secrets.local.json
+
+# Expo / EAS local config that may contain credentials
+.eas/
+.expo/
+
+
+# ------------------------------------------------------------
+# Node / JavaScript / TypeScript
+# ------------------------------------------------------------
+
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.yarn-cache/
+.yarn-integrity
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+*.tsbuildinfo
+
+# Parcel / Vite / Webpack / Rollup / Metro caches
+.parcel-cache/
+.cache/
+.vite/
+webpack-stats.json
+
+# Generic build output
+dist/
+build/
+out/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Temporary JS tooling
+.eslintcache
+.stylelintcache
+
+
+# ------------------------------------------------------------
+# Expo / React Native
+# ------------------------------------------------------------
+
+.expo/
+.expo-shared/
+
+# Expo generated native directories
+# Ignore these ONLY if the project uses Expo prebuild/CNG
+android/
+ios/
+
+# If native projects are intentionally committed later,
+# remove the previous two rules.
+
+*.tgz
+
+# React Native / Metro
+.metro-health-check*
+.metro-cache/
+react-native-packager-cache/
+haste-map-*
+
+# Watchman
+.watchmanconfig.local
+
+
+# ------------------------------------------------------------
+# Android
+# ------------------------------------------------------------
+
+# Gradle
+.gradle/
+**/.gradle/
+
+# Build output
+**/build/
+**/app/build/
+
+# Android Studio
+*.iml
+.idea/
+
+# APK / AAB
+*.apk
+*.aab
+
+# Signing
+*.keystore
+*.jks
+
+# Local SDK configuration
+local.properties
+
+# Native generated files
+captures/
+.externalNativeBuild/
+.cxx/
+**/.cxx/
+
+
+# ------------------------------------------------------------
+# iOS / Xcode
+# ------------------------------------------------------------
+
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+
+# Xcode build products
+*.app
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# iOS temporary files
+*.hmap
+*.ipa
+*.xcarchive
+
+
+# ------------------------------------------------------------
+# Python / FastAPI / Backend
+# ------------------------------------------------------------
+
+# Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Compiled Python
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.ruff_cache/
+.pyright/
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Wheel / source distributions
+*.whl
+*.tar.gz
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python logs
+*.log
+
+
+# ------------------------------------------------------------
+# FastAPI / Uvicorn / Local runtime
+# ------------------------------------------------------------
+
+*.sqlite
+*.sqlite3
+*.db
+
+# Local generated files
+tmp/
+temp/
+
+
+# ------------------------------------------------------------
+# PostgreSQL / Database local artifacts
+# ------------------------------------------------------------
+
+# Local DB dumps
+*.sql.gz
+*.dump
+*.backup
+
+# Local database files
+*.pgdata/
+postgres-data/
+db-data/
+
+
+# ------------------------------------------------------------
+# Alembic / generated migration artifacts
+# ------------------------------------------------------------
+
+# Do NOT ignore actual Alembic migration files.
+# They are source code and should be committed.
+
+# Only ignore local/generated migration caches if any
+.alembic/
+
+
+# ------------------------------------------------------------
+# Docker
+# ------------------------------------------------------------
+
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Docker local volumes
+.docker/
+docker-data/
+volumes/
+
+
+# ------------------------------------------------------------
+# IDEs / Editors
+# ------------------------------------------------------------
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Allow shared VS Code settings if deliberately committed
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Sublime
+*.sublime-workspace
+*.sublime-project
+
+# Notepad++
+*.bak
+
+
+# ------------------------------------------------------------
+# Operating Systems
+# ------------------------------------------------------------
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+
+logs/
+log/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# ------------------------------------------------------------
+# Temporary / Runtime files
+# ------------------------------------------------------------
+
+tmp/
+temp/
+.tmp/
+.temp/
+
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.rej
+
+*.pid
+*.seed
+
+# Local runtime sockets
+*.sock
+
+
+# ------------------------------------------------------------
+# Documentation / Obsidian
+# ------------------------------------------------------------
+
+# Obsidian workspace/editor state
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+
+# Obsidian plugins may contain machine-specific state
+.obsidian/plugins/*/data.json
+
+# Keep the vault configuration itself tracked if desired.
+# Do NOT ignore the entire .obsidian directory.
+
+
+# ------------------------------------------------------------
+# Generated assets / screenshots
+# ------------------------------------------------------------
+
+screenshots/
+screenshots-local/
+recordings/
+videos/
+*.mp4
+*.mov
+*.webm
+
+# Generated reports
+reports/
+artifacts/
+
+
+# ------------------------------------------------------------
+# Local AI / Agent tooling
+# ------------------------------------------------------------
+
+# Common local agent caches
+.opencode/
+.opencode-cache/
+.openclaw/
+.claude/
+.cursor/
+.cursorrules.local
+
+# Local AI logs/state
+.ai/
+.agent/
+.agent-cache/
+
+# Keep project configuration files such as:
+# opencode.json
+# AGENTS.md
+# tracked unless they contain secrets.
+
+
+# ------------------------------------------------------------
+# Testing / Temporary browser data
+# ------------------------------------------------------------
+
+playwright-report/
+test-results/
+blob-report/
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+
+# ------------------------------------------------------------
+# Package manager / tool caches
+# ------------------------------------------------------------
+
+.nx/
+.turbo/
+.turbo-cache/
+.sentryclirc
+
+# Expo / EAS generated metadata
+.eas/
+
+
+# ------------------------------------------------------------
+# Local certificates / generated signing material
+# ------------------------------------------------------------
+
+*.crt
+*.csr
+*.der
+
+# Uncomment these if certificates are generated locally:
+# certs/
+# certificates/
+
+
+# ------------------------------------------------------------
+# Miscellaneous generated files
+# ------------------------------------------------------------
+
+*.orig
+*.swp
+*.swo
+*.pid
+*.seed
+*.lock.tmp
+
+# OS/editor temp files
+.#*
+\#*\#

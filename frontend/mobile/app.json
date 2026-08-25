@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Karwan-e-Khizr",
+    "slug": "karwan-e-khizr",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "backgroundColor": "#1B8A4A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.karwaneKhizr.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1B8A4A"
+      },
+      "package": "com.karwaneKhizr.app"
+    }
+  }
+}
