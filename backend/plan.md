@@ -1935,6 +1935,47 @@ backend/app/simulation/
 5. `source` is never omitted — simulated data is never mistaken for
    real-time.
 
+### Implementation Handoff (2026-08-26)
+
+**Status:** COMPLETE — 36/36 tests passing, HTTP endpoints verified.
+
+**Files created/modified:**
+
+| File | Action | Lines | Notes |
+|---|---|---|---|
+| `app/simulation/schemas.py` | Created | 85 | Pydantic v2 models with `ConfigDict(from_attributes=True)` |
+| `app/simulation/engine.py` | Created | 290 | `SimulationEngine` — pure, deterministic position computation |
+| `app/simulation/provider.py` | Created | 105 | `VehicleLocationProvider` protocol + `SimulatedVehicleLocationProvider` |
+| `app/simulation/trip_generator.py` | Created | 95 | Schedule-based trip generation from DB |
+| `app/simulation/router.py` | Created | 130 | FastAPI router: 3 REST endpoints |
+| `app/simulation/__init__.py` | Created | 15 | Module exports |
+| `app/api/router.py` | Modified | +2 | Added `realtime_router` under tags `["realtime"]` |
+| `tests/test_phase8_realtime.py` | Created | 490 | 36 unit + integration tests |
+
+**Test results:**
+- `test_phase8_realtime.py`: 36 passed
+- Full suite: 265 passed, 4 failed (pre-existing Phase 4/5 event loop teardown), 2 skipped
+- No regressions introduced
+
+**HTTP verification:**
+- `GET /api/v1/transit/realtime/vehicles` → 200, returns `{"vehicles": []}`
+- `GET /api/v1/transit/realtime/vehicles?route_id=1` → 200, filtered results
+- `GET /api/v1/transit/realtime/vehicles?stop_id=1` → 200, filtered results
+- `GET /api/v1/transit/realtime/vehicles/{id}` → 404 when not found (correct)
+- `GET /api/v1/transit/realtime/vehicles/{id}/eta?stop_id=1` → 404 when not found (correct)
+
+**Key design decisions:**
+- **On-demand deterministic simulation** — no background publish loop; positions computed per-request
+- **`VehicleLocationProvider` protocol** — swappable for future real GPS providers
+- **All positions always labeled `source: "simulated"`** — never mistaken for real data
+- **Geometry-aware interpolation** — falls back to straight-line between stops when no PostGIS geometry present
+- **`StopTimeEntry` (plain dataclass)** — decouples simulation engine from SQLAlchemy ORM models
+
+**Known limitations:**
+- Empty `vehicles` array when no scheduled trips are active (e.g., late night) — expected behavior
+- No WebSocket implementation (plan.md did not mandate `/ws/vehicles`)
+- No background publisher — all computation is request-time (can be cached later if needed)
+
 ---
 
 ## 12. Phase 9 — AI Pipeline (Request #1, #2, Speech-to-Text)
