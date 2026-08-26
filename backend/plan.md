@@ -1404,6 +1404,93 @@ backend/app/core/
 
 ---
 
+## Phase 6 Implementation Handoff / Status
+
+**Status: COMPLETED ✓**
+
+### What Was Implemented
+
+1. **User Schemas** (`app/users/schemas.py`):
+   - `RegisterRequest` — email (EmailStr), password (min 6, max 128), full_name (optional)
+   - `LoginRequest` — email, password
+   - `UserPublic` — id, email, full_name, role
+   - `RegisterResponse` — id, email, role
+   - `LoginResponse` — access_token, token_type, user (UserPublic)
+
+2. **User Service** (`app/users/service.py`):
+   - `UserService.register()` — creates user with bcrypt-hashed password, default role "passenger", checks duplicate email
+   - `UserService.login()` — verifies credentials, returns JWT + user
+   - `UserService.get_by_id()` — returns user or raises NotFoundError
+   - `UserService.get_by_id_or_none()` — returns user or None
+
+3. **Auth Dependencies** (`app/users/dependencies.py`):
+   - `get_current_user(token)` — decodes JWT, fetches user from DB, verifies active status
+   - `require_admin(user)` — checks role == "admin", raises 403 if not
+   - `require_role(role)` — returns dependency that checks role match
+
+4. **Auth Router** (`app/users/router.py`):
+   - `POST /auth/register` — creates user, returns 201
+   - `POST /auth/login` — returns JWT + user profile
+   - `GET /auth/me` — returns current user profile (JWT required)
+
+5. **App Exception Handler** (`app/main.py`):
+   - Added `AppException` handler to return structured error responses for `ConflictError` (409), `UnauthorizedError` (401), etc.
+
+6. **Router Integration** (`app/api/router.py`):
+   - Added auth router to API router
+
+### Files Changed
+
+**New Files:**
+- `app/users/__init__.py` — module exports
+- `app/users/schemas.py` — Pydantic request/response schemas
+- `app/users/service.py` — UserService (registration, login, profile)
+- `app/users/dependencies.py` — FastAPI auth dependencies
+- `app/users/router.py` — auth API endpoints
+- `tests/test_phase6_auth.py` — 43 comprehensive tests
+
+**Modified Files:**
+- `app/api/router.py` — added auth router
+- `app/main.py` — added AppException handler
+
+### Tests Run / Results
+
+- **Phase 6 tests**: 43 passed, 0 failed, 0 skipped
+- **Phase 1 tests**: 20 passed (no regression)
+- **Phase 3 tests**: 39 passed (no regression)
+- **Phase 4 tests**: 35 passed, 3 failed (pre-existing event loop teardown — not Phase 6)
+- **Phase 5 tests**: 51 passed, 1 failed (pre-existing event loop teardown — not Phase 6)
+- **Full suite**: 188 passed, 4 failed (all pre-existing event loop teardown), 2 skipped
+
+### Real HTTP Verification
+
+All endpoints verified against real running server with live PostgreSQL:
+- `POST /api/v1/auth/register` — returns 201 with user data
+- `POST /api/v1/auth/register` duplicate — returns 409
+- `POST /api/v1/auth/login` — returns JWT + user
+- `POST /api/v1/auth/login` wrong password — returns 401
+- `GET /api/v1/auth/me` with valid JWT — returns user profile
+- `GET /api/v1/auth/me` without token — returns 401
+- `GET /api/v1/auth/me` with invalid token — returns 401
+
+### Database Migration Status
+
+- No new migration required — `users` table already existed from Phase 2
+- Auth system uses existing `users` table schema (id, email, hashed_password, full_name, role, is_active, created_at)
+
+### Known Limitations
+
+1. **No refresh tokens** — per `08_TICKETING_AUTH_AND_ADMIN.md` §4, refresh tokens are FUTURE
+2. **No password change/reset** — FUTURE per spec
+3. **No email verification** — FUTURE per spec
+4. **Event loop teardown** — pre-existing issue from Phase 4/5, unrelated to Phase 6
+
+### Exact Next Phase
+
+**Phase 7 — Fares & Ticketing** (per dependency graph: Phase 6 → Phase 7)
+
+---
+
 ## 10. Phase 7 — Fares & Ticketing
 
 ### Objective

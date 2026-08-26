@@ -1,12 +1,13 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 
 from app.api.router import api_router
 from app.core.config import settings, validate_required_settings
 from app.core.database import close_db, init_db
+from app.core.exceptions import AppException
 from app.core.logging import configure_logging, get_logger
 
 logger = get_logger(__name__)
@@ -50,6 +51,13 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(api_router, prefix="/api/v1")
+
+    @app.exception_handler(AppException)
+    async def app_exception_handler(request: Request, exc: AppException):
+        return ORJSONResponse(
+            status_code=exc.status_code,
+            content={"detail": exc.message, "code": exc.code, **exc.details},
+        )
 
     return app
 
