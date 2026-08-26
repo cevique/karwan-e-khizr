@@ -3218,3 +3218,180 @@ re-verified since the file was rewritten, not diffed line-by-line).
      unconfirmed fragments.
   5. Only then: route geometry generation (OSRM), which is genuinely
      Phase 4+ work and was correctly not attempted this pass.
+
+---
+
+# CORRECTION PASS 2 HANDOFF — Audit + Further CDA Coverage Expansion (2026-08-25)
+
+**Scope: `backend/` only, same as pass 1. `frontend/` untouched.**
+**Do NOT commit** — per this pass's brief, OpenCode verifies and commits.
+
+## What this pass was
+
+A review of pass 1's results asked for: (a) more CDA feeder route
+coverage where reliable material exists, (b) investigation of other
+Islamabad/Rawalpindi transit systems, (c) an explanation of the 168
+`route_stops` count (reported per-route breakdown summed to 145, not
+168), (d) a full schema/integrity audit of `transit_data.json`, (e) a
+fares re-check, and (f) doc/test updates for all of the above.
+
+## What changed
+
+### Dataset (`backend/data/transit_data.json`)
+- **3 more complete, verified stop-level timetables added**: FR-03A
+  (PIMS Hospital → Flower Market, 13 stops, 97 trips/day, 10-min
+  headway), FR-10 (Golra Morh → Taxila, 25 stops, 19 trips/day, 50-min
+  average headway — printed average doesn't match the actual alternating
+  30/60-min gaps, recorded as printed), FR-15 (Khanna Pul → T-Chowk, 16
+  stops, 33 trips/day, 30-min headway). **Fully-supported feeder routes:
+  6 → 9 of 22.**
+- **FR-03A surfaced a 3-way endpoint naming conflict** (its own PDF's
+  Long Name says "Faisal Masjid," its actual stop sequence ends at
+  "Flower Market," the CDA transit-map PDF caption says "Saidpur
+  Village") — all three preserved in `docs/DATA_GAPS.md`, none silently
+  chosen as "correct," though the dataset's `long_name` field uses
+  "Flower Market" since it's the only one directly verifiable from the
+  actual stop sequence.
+- **`route_stops` regenerated for the 3 newly-promoted routes** (same
+  mechanical-derivation-from-canonical-trip approach as pass 1), plus
+  a full idempotent re-derivation of every Tier-1 route's `route_stops`
+  (safe to re-run this script any number of times).
+- **Removed the dead top-level `stop_times: []` key** — confirmed by
+  direct code inspection (`app/seeding/importer.py`,
+  `app/seeding/adapters/stop_times.py`) that nothing ever reads it; only
+  `trips[].stop_times` is consumed. See "Schema audit" below.
+- **No new operator/agency added** — investigated Punjab-wide PMTA
+  tenders and a claimed separate "Rawalpindi Green Line Electric Bus"
+  from a single low-reliability source; neither met the evidence bar for
+  inclusion (see `docs/DATA_GAPS.md` §13).
+- **No fare changes** — no new authoritative fare information was found
+  this pass; existing `fare_rules` entries (`Standard Metrobus`,
+  `Feeder Route`, both `confidence: APPROXIMATE`) are unchanged.
+- Final counts this pass: **26 routes** (unchanged), **200 stops** (was
+  158, +42 from FR-03A/FR-10/FR-15's newly-discovered names — many
+  overlapping with already-known stops on shared corridor segments, so
+  not a flat 13+25+16=54; verified via the shared-stop audit below),
+  **222 route_stops** (was 168, +54 — see the full explanation in
+  `docs/DATA_GAPS.md` §11), **9 trips** (canonical patterns; was 6),
+  **17 located stops / 183 unknown** (unchanged basis, more total stops
+  = lower located fraction), **2 fare_rules** (unchanged), **2 service
+  calendars** (unchanged), **2 transfers** (unchanged), **2 operators**
+  (unchanged).
+
+### The `route_stops` count discrepancy — resolved (not a bug)
+The reported "168 vs 145" mismatch was **never a real inconsistency**.
+145 was only the sum of the six Tier-1 feeder routes' `route_stops`
+listed in that particular report; Red Line's pre-existing, independently
+-sourced 23-stop `route_stops` sequence (Tier 2, no canonical trip
+backing it, so it wasn't in that "FR-*" table) accounts for the other
+23: 145 + 23 = 168, exactly. Verified directly against the database-shape
+JSON (`route_id` → count breakdown) and now covered by a permanent
+regression test (`test_route_stop_total_matches_per_route_breakdown`)
+that computes the expected total from the dataset itself rather than a
+hardcoded number, specifically so this kind of incomplete-summary
+confusion can't recur silently.
+
+### Data-integrity audit — zero issues found
+Ran a full static audit (duplicate IDs, duplicate keys, orphaned
+references in every direction, duplicate `(route_id, sequence)` pairs, a
+stop appearing twice in one route, more than one canonical trip per
+route/direction, invalid `transfers` references) directly against the
+JSON with Python — see `docs/DATA_GAPS.md` §10 for the full table.
+**Nothing needed fixing.** Also verified the 30 stops shared across
+multiple routes (e.g. "Khanna Pul" on FR-01/FR-09/FR-15) each resolve to
+exactly one `Stop` record, correctly deduplicated via case-insensitive
+slug matching — real-world corridor overlap handled correctly, not
+duplicated per route.
+
+### Schema audit (`transit_data.json`'s top-level keys)
+Walked every top-level key's actual producer/consumer relationship in
+the codebase. Found and fixed one real issue (the dead `stop_times` key,
+above). Found — but explicitly did NOT fix, as out of this pass's
+"audit and fix genuine inconsistencies" scope — a real **feature gap**:
+`service_calendars` and `transfers` are present in the dataset (2 records
+each) but **there is no seeding adapter for either at all** —
+`app/seeding/importer.py` never imports them into the database. This is
+flagged for Phase 4 (or a dedicated follow-up), not fixed here, since
+building a new adapter is implementation work beyond a data/research
+audit.
+
+### Tests (`tests/test_phase3_seeding.py`)
+- Added `test_route_stop_total_matches_per_route_breakdown` (the 168/222
+  regression test, computed from the dataset, never hardcoded).
+- Added `test_no_dead_top_level_stop_times_key` (regression test against
+  the removed schema artifact reappearing).
+- Added `test_fr03a_timetable_data`, `test_fr10_timetable_data`,
+  `test_fr15_timetable_data`.
+- Added `test_shared_stops_are_a_single_row_across_routes` (verifies
+  "Khanna Pul" and "NUST Metro Station" each resolve to one DB row shared
+  across ≥3 routes).
+- Updated `test_all_22_cda_feeder_routes_present_and_classified`'s
+  neighboring assertions and `test_trips_imported_correctly`'s expected
+  route-name set for the 3 new routes.
+- 59 tests now collected total (was 53 after pass 1).
+
+### Documentation
+- `docs/DATA_GAPS.md`: new §0 "Pass 2" entry, Tier 1/Tier 3 tables
+  updated (9/16 routes), new §10 (integrity audit), §11 (route_stops
+  explanation), §12 (schema audit), §13 (other-systems investigation).
+- `docs/SOURCES.md`: 3 new PDF sources fully documented, PMTA/Wikipedia
+  investigation sources documented, the rejected metro-status.com claim
+  documented with reasoning.
+- `docs/04_TRANSIT_DATA_AND_DOMAIN_MODEL.md`: inventory table and §2a
+  tier table updated with new counts.
+
+## What did NOT change / explicitly out of scope
+
+- **Same sandbox constraint as every prior pass**: no live database, no
+  Docker, no network access to a geocoding service or OSRM. Nothing
+  about stop-coordinate coverage or route geometry was attempted.
+- **FR-08A/FR-08C were not re-attempted** — still the same anomalous
+  extraction result from pass 1 (repeated single-terminus timestamps,
+  not a usable sequence). A different extraction approach is needed, not
+  attempted this pass.
+- **13 feeder routes still have no timetable at all** — FR-04A, FR-04B,
+  FR-05, FR-08A, FR-08C, FR-11, FR-12, FR-13, FR-14A, FRB-01, FRG-1,
+  ST-01, ST-02. None were fetched this pass beyond what pass 1 already
+  attempted (FR-08A/FR-08C, FRG-1's partial fragment).
+- **`service_calendars`/`transfers` importer gap not fixed** — flagged,
+  not built (see "Schema audit" above).
+- **No new operator/agency added** (see "What changed" above).
+- **Fares unchanged** — no new fare evidence found.
+- **Frontend untouched.**
+- **Nothing committed** — per this pass's explicit instruction.
+
+## Is the dataset safe to hand to OpenCode for verification?
+
+**Yes**, with the same caveat as pass 1: everything that can be verified
+without a live database/Docker has been (JSON structural validity,
+full referential-integrity audit, `py_compile` on every changed file,
+`pytest --collect-only` — 59 tests, zero import errors — and a full
+`pytest` run: every non-DB-dependent test passes, every DB-dependent
+test errors on connection refusal, the same 1 pre-existing unrelated
+`passlib`/`bcrypt` failure as pass 1). **The actual live-database import,
+idempotency check, and full end-to-end test suite (Section 13/8-style
+verification) still needs to be run by whoever has Docker/Postgres
+access** — this pass did not change that constraint, only the amount of
+real data ready to be verified once that access exists.
+
+## What Phase 4 should now expect
+
+- 200 stops (not 158, not 122), 222 route_stops (not 168, not 23), 9
+  canonical trips (not 6, not 4) — same "read expected values from the
+  dataset, don't hardcode" guidance as pass 1's handoff, now doubly
+  proven necessary.
+- `service_calendars`/`transfers` need an importer adapter before
+  anything downstream can rely on them being in the database — currently
+  dataset-only.
+- Immediate, concretely-scoped next steps, in rough priority order
+  (updated from pass 1's list):
+  1. Run the migration + import live, verify exact counts, update this
+     handoff.
+  2. Re-run stop geocoding against the expanded 200-stop set.
+  3. Build the missing `service_calendars`/`transfers` seeding adapters.
+  4. Re-attempt FR-08A/FR-08C with a different PDF-extraction approach.
+  5. Fetch the remaining 11 feeder routes with genuinely no evidence yet
+     attempted (FR-04A, FR-04B, FR-05, FR-11, FR-12, FR-13, FR-14A,
+     FRB-01, ST-01, ST-02, plus a fresh attempt at FRG-1).
+  6. Only then: route geometry generation (OSRM), genuinely Phase 4+
+     work.

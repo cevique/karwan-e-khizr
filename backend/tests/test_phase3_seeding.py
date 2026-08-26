@@ -58,6 +58,55 @@ class TestDatasetParsing:
                 f"route {r['key']} has no valid coverage_tier classification"
             )
 
+    def test_route_stop_total_matches_per_route_breakdown(self):
+        # Regression test for the "168 vs 145" discrepancy raised during
+        # review: the total route_stops count must always equal the sum
+        # of every individual route's own route_stops count - computed
+        # here directly from the dataset, not hardcoded, so it can never
+        # silently drift out of sync again. As of this pass: 9 Tier-1
+        # feeder routes (mechanically derived from their canonical trip)
+        # + Red Line's independently-sourced 23-stop sequence (Tier 2,
+        # no canonical trip) = the total.
+        data = load_transit_data(TEST_DATA_PATH)
+        from collections import defaultdict
+        per_route = defaultdict(int)
+        for rs in data["route_stops"]:
+            per_route[rs["route_id"]] += 1
+        assert sum(per_route.values()) == len(data["route_stops"])
+
+        route_key_by_id = {r["id"]: r["key"] for r in data["routes"]}
+        tier1_route_ids = {
+            t["route_id"] for t in data["trips"] if t.get("kind") == "CANONICAL_PATTERN"
+        }
+        tier1_total = sum(per_route[rid] for rid in tier1_route_ids)
+        expected_tier1_total = sum(len(t["stop_times"]) for t in data["trips"] if t.get("kind") == "CANONICAL_PATTERN")
+        assert tier1_total == expected_tier1_total, (
+            f"Tier-1 route_stops total ({tier1_total}) must equal the sum of all "
+            f"canonical trips' stop_times ({expected_tier1_total}) - they are "
+            f"mechanically derived from each other and must never drift apart"
+        )
+
+        red_line_id = next(r["id"] for r in data["routes"] if r["key"] == "red_line")
+        assert per_route[red_line_id] == 23
+
+        # No route_stops exist for any route that is neither Tier 1 nor
+        # Red Line (Tier 2) - Tier 3/4 routes have no verified topology.
+        non_topology_route_ids = set(route_key_by_id) - tier1_route_ids - {red_line_id}
+        for rid in non_topology_route_ids:
+            assert per_route.get(rid, 0) == 0, (
+                f"route {route_key_by_id[rid]} has route_stops but is not Tier 1 or "
+                f"Red Line - unexpected topology for an unverified route"
+            )
+
+    def test_no_dead_top_level_stop_times_key(self):
+        # Schema audit finding: an earlier draft of this dataset carried
+        # an always-empty, never-populated, never-read top-level
+        # "stop_times" key (the importer only ever reads
+        # trips[].stop_times). Removed as a vestigial artifact - this is
+        # a regression test to make sure it doesn't silently reappear.
+        data = load_transit_data(TEST_DATA_PATH)
+        assert "stop_times" not in data
+
     def test_malformed_records_fail(self, tmp_path):
         invalid_file = tmp_path / "test_invalid.json"
         invalid_file.write_text("{ invalid json }")
@@ -241,7 +290,7 @@ class TestDatabaseImport:
         )
         trips = result.all()
         route_names = {t[1] for t in trips}
-        for expected in ("FR-01", "FR-04", "FR-06", "FR-07", "FR-09", "FR-14"):
+        for expected in ("FR-01", "FR-03A", "FR-04", "FR-06", "FR-07", "FR-09", "FR-10", "FR-14", "FR-15"):
             assert expected in route_names
 
     @pytest.mark.asyncio
@@ -564,6 +613,61 @@ class TestTimetables:
 
         assert len(fr14_times) > 15
         assert fr14_times[0][1] == "cda_barakahu"
+
+    @pytest.mark.asyncio
+    async def test_fr03a_timetable_data(self, session: AsyncSession):
+        # New this correction pass: PIMS Hospital -> Flower Market, 13
+        # stops, 97 trips/day, 10-min headway. Long Name on the source
+        # PDF itself ("PIMS Hospital to Faisal Masjid") does not match
+        # the route's actual last stop (Flower Market) - see
+        # docs/DATA_GAPS.md for this preserved conflict.
+        data = load_transit_data(TEST_DATA_PATH)
+        importer = TransitDataImporter(session)
+        await importer.import_all(data)
+        await session.commit()
+        await self._assert_timetable(session, "FR-03A", "cda_pims_hospital", "cda_flower_market")
+
+    @pytest.mark.asyncio
+    async def test_fr10_timetable_data(self, session: AsyncSession):
+        # New this correction pass: Golra Morh -> Taxila, 25 stops,
+        # 19 trips/day, printed average headway 50 min (actual gaps
+        # alternate 30/60 min - preserved as printed, not corrected).
+        data = load_transit_data(TEST_DATA_PATH)
+        importer = TransitDataImporter(session)
+        await importer.import_all(data)
+        await session.commit()
+        await self._assert_timetable(session, "FR-10", "cda_golra_morh", "cda_taxila")
+
+    @pytest.mark.asyncio
+    async def test_fr15_timetable_data(self, session: AsyncSession):
+        # New this correction pass: Khanna Pul -> T-Chowk, 16 stops,
+        # 33 trips/day, 30-min headway.
+        data = load_transit_data(TEST_DATA_PATH)
+        importer = TransitDataImporter(session)
+        await importer.import_all(data)
+        await session.commit()
+        await self._assert_timetable(session, "FR-15", "cda_khanna_pul", "cda_t_chowk")
+
+    @pytest.mark.asyncio
+    async def test_shared_stops_are_a_single_row_across_routes(self, session: AsyncSession):
+        # Real-world corridor overlap: e.g. "Khanna Pul" is the start of
+        # FR-01, FR-09, and FR-15; "NUST Metro Station" appears on FR-01,
+        # FR-07, and FR-10. These must resolve to ONE Stop row each, not
+        # a duplicate per route.
+        data = load_transit_data(TEST_DATA_PATH)
+        importer = TransitDataImporter(session)
+        await importer.import_all(data)
+        await session.commit()
+
+        for key, expected_min_routes in [("cda_khanna_pul", 3), ("cda_nust_metro_station", 3)]:
+            result = await session.execute(select(Stop).where(Stop.external_key == key))
+            stops = result.scalars().all()
+            assert len(stops) == 1, f"{key} should resolve to exactly one Stop row, found {len(stops)}"
+
+            route_count = await session.execute(
+                select(func.count(func.distinct(RouteStop.route_id))).where(RouteStop.stop_id == stops[0].id)
+            )
+            assert route_count.scalar() >= expected_min_routes
 
     @pytest.mark.asyncio
     async def test_no_route_has_more_than_one_canonical_trip_per_direction(self, session: AsyncSession):
