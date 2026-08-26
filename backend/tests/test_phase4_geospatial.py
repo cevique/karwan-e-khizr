@@ -40,8 +40,6 @@ async def db_session():
         await session.commit()
         yield session
     await close_db()
-    await close_nominatim_client()
-    await close_osrm_client()
 
 
 class TestLocationResolution:

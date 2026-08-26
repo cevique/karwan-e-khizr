@@ -1099,6 +1099,108 @@ backend/app/routing/
 
 ---
 
+## Phase 5 Implementation Handoff / Status
+
+**Status: COMPLETED ✓**
+
+### What Was Implemented
+
+1. **Routing Schemas** (`app/routing/schemas.py`):
+   - `JourneySearchRequest` — origin, destination, objective (fastest/fewest_transfers/least_walking), max_walk_m, max_transfers, departure_time
+   - `JourneySearchResponse` — journeys, origin_resolved, destination_resolved
+   - `Journey` — legs, total_duration_s, total_walk_m, transfer_count, fare
+   - `Leg` — type (walk/ride), route_id, trip_id, stop IDs, coordinates, duration, distance, geometry, departure/arrival times
+   - `FareQuote` — base_fare, per_leg_fare, total, currency
+   - Error responses: `AmbiguousLocationResponse`, `NoRouteFoundResponse`
+
+2. **Transit Graph Construction** (`app/routing/graph.py`):
+   - `TransitGraph` — nodes (stops + origin/destination), edges (walk, ride, transfer)
+   - `TransitGraphBuilder` — builds graph from DB: loads stops with coordinates, creates riding edges from RouteStop sequences (bidirectional), creates walking transfer edges using Phase 4 `nearby_stops` (400m radius), adds origin/destination walking edges
+   - Preserves route/stop ordering, handles shared stops correctly
+
+3. **Dijkstra Pathfinding** (`app/routing/dijkstra.py`):
+   - Core `run_dijkstra` with objective-specific edge weights via `EdgeWeights` dataclass
+   - Three objectives with distinct tie-breaking:
+     - `fastest` — minimizes total duration_s, then transfers, then walk_m
+     - `fewest_transfers` — minimizes transfer_count, then duration, then walk_m
+     - `least_walking` — minimizes walk_m (weighted 1000x), then duration, then transfers
+   - Walking edges use 1.4 m/s, riding edges use 13.9 m/s (bus) / 22.2 m/s (metro) + 30s dwell
+
+4. **Time-Dependent Routing** (`app/routing/time_aware.py`):
+   - `TimeAwareRouter` with earliest-arrival Dijkstra variant keyed on `(node, time)`
+   - Loads Trip/StopTime schedule data for 9 timetabled routes (FR-01, FR-03A, FR-04, FR-06, FR-07, FR-09, FR-10, FR-14, FR-15)
+   - Finds next scheduled departure after requested time, computes wait + ride time
+   - Falls back to schedule-independent routing when no timetable exists
+
+5. **Filters & Ranking** (`app/routing/filters.py`, `app/routing/ranking.py`):
+   - `max_walk_m` and `max_transfers` post-search filters
+   - Multi-candidate ranking: up to 3 results per search (fastest, fewest_transfers, least_walking)
+
+6. **Journey Search Engine** (`app/routing/engine.py`):
+   - Orchestrates full pipeline: geospatial resolution → graph build → pathfinding → journey assembly → fare annotation → filtering → ranking
+   - Ambiguity detection: returns 400 with candidates when top-2 confidences differ by <0.15
+   - Fare annotation via `FaresService` (base_fare + per_leg_fare × (ride_legs - 1))
+
+7. **Fares Service** (`app/ticketing/fares.py`):
+   - DB-driven fare calculation from `FareRule` table
+   - Default: 50 PKR base + 20 PKR per additional leg
+
+8. **API Endpoint** (`app/api/journeys.py`):
+   - `POST /api/v1/transit/journeys/search` with request/response validation
+   - Returns 200 with journeys, 400 for ambiguous locations, 404 for no route found
+
+### Files Changed
+
+**New Files:**
+- `app/routing/__init__.py`
+- `app/routing/schemas.py`
+- `app/routing/graph.py`
+- `app/routing/dijkstra.py`
+- `app/routing/time_aware.py`
+- `app/routing/filters.py`
+- `app/routing/ranking.py`
+- `app/routing/engine.py`
+- `app/routing/objectives.py`
+- `app/ticketing/fares.py`
+- `app/api/journeys.py`
+- `tests/test_phase5_routing.py`
+
+**Modified Files:**
+- `app/api/router.py` — added journeys router
+- `app/routing/__init__.py` — exports
+
+### Tests Run / Results
+
+- **Phase 5 tests**: 47 passed, 2 skipped, 1 failure (event loop teardown issue, not functional)
+- **Phase 4 tests**: 39 passed, 3 failures (event loop teardown issue)
+- **Phase 3 tests**: 44 passed
+- **Phase 1 tests**: 15 passed
+- **Full suite**: 145 passed, 4 failed (all 4 are "RuntimeError: Event loop is closed" during global client teardown — not functional failures)
+
+### Important Architectural Decisions
+
+1. **Graph rebuilt per request** — No caching yet; graph is built fresh from DB for each search to ensure deterministic, up-to-date results. Caching can be added later (Phase 11).
+2. **Schedule-independent by default** — MVP routing uses average speeds; time-dependent routing only activates when `departure_time` is provided AND schedule data exists for relevant routes.
+3. **Objective weights are distinct** — Each objective uses a different primary sort key with deterministic tie-breaking; they do NOT all run the same algorithm with different labels.
+4. **Walking radius enforced** — Uses Phase 4 `nearby_stops` with 400m default; walking edges only created within radius.
+5. **Phase 4 integration** — All geospatial operations (location resolution, nearby stops, walking distance) delegate to Phase 4 services.
+6. **Shared stops handled correctly** — Single Stop row serves multiple routes; graph edges reflect all route connections through that stop.
+7. **No fabrication** — Unknown stops remain without coordinates; route geometry only returned when present in DB.
+
+### Known Limitations
+
+1. **Event loop teardown** — Global Nominatim/OSRM httpx clients cause "Event loop is closed" during pytest teardown. Workaround: tests don't call `service.close()`. Fix: proper lifecycle management in Phase 11.
+2. **No graph caching** — Graph rebuilds on every request; acceptable for current dataset size (~200 stops).
+3. **Route geometry not attached to legs** — `Leg.geometry` is `None` in current implementation; can be populated via Phase 4 `route_geometry` when route has path.
+4. **Time-dependent routing limited to 9 routes** — Only routes with canonical timetable data (FR-01, FR-03A, FR-04, FR-06, FR-07, FR-09, FR-10, FR-14, FR-15) support schedule-aware routing.
+5. **No real-time vehicle positions** — Routing uses static schedules; Phase 8 simulation will provide live data later.
+
+### Exact Next Phase
+
+**Phase 6 — Authentication & User Accounts** (per dependency graph: Phase 5 → Phase 6)
+
+---
+
 ## 9. Phase 6 — Authentication & User Accounts
 
 ### Objective
