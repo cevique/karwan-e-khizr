@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,6 +10,22 @@ from app.db.models.user import User
 from app.users.service import UserService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+
+
+class OAuth2PasswordBearerOptional(OAuth2PasswordBearer):
+    """OAuth2 scheme that returns None instead of raising 401 when token is missing."""
+
+    async def __call__(self, request: Request):
+        from fastapi.security.utils import get_authorization_scheme_param
+        authorization = request.headers.get("Authorization")
+        if not authorization:
+            return None
+        scheme, credentials = get_authorization_scheme_param(authorization)
+        if not authorization or scheme.lower() != "bearer":
+            if self.auto_error:
+                return None
+            return None
+        return credentials
 
 
 async def get_current_user(
@@ -54,6 +70,18 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     return user
+
+
+async def get_current_user_or_none(
+    token: str | None = Depends(OAuth2PasswordBearerOptional(tokenUrl="/api/v1/auth/login")),
+    db: AsyncSession = Depends(get_db),
+) -> User | None:
+    if token is None:
+        return None
+    try:
+        return await get_current_user(token=token, db=db)
+    except HTTPException:
+        return None
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
