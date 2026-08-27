@@ -9,13 +9,18 @@ from sqlalchemy.ext.asyncio import (
 
 from app.core.config import settings
 
-engine: AsyncEngine = create_async_engine(
-    settings.DATABASE_URL,
-    echo=settings.APP_ENV == "development",
-    pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20,
-)
+
+def _create_engine() -> AsyncEngine:
+    return create_async_engine(
+        settings.DATABASE_URL,
+        echo=settings.APP_ENV == "development",
+        pool_pre_ping=True,
+        pool_size=10,
+        max_overflow=20,
+    )
+
+
+engine: AsyncEngine = _create_engine()
 
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
@@ -40,4 +45,7 @@ async def init_db() -> None:
 
 
 async def close_db() -> None:
-    await engine.dispose()
+    try:
+        await engine.dispose()
+    except RuntimeError:
+        pass

@@ -16,6 +16,7 @@ from app.users.service import UserService
 async def db_session():
     await init_db()
     async with AsyncSessionLocal() as session:
+        await session.execute(text("DELETE FROM tickets"))
         await session.execute(text("DELETE FROM users"))
         await session.commit()
         yield session

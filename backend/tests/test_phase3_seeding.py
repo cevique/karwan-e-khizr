@@ -2,7 +2,7 @@ import pytest
 import json
 from pathlib import Path
 from collections import defaultdict
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import init_db, close_db, AsyncSessionLocal
@@ -14,6 +14,19 @@ from app.db.models.route_stop import RouteStop
 from app.db.models.trip import Trip
 from app.db.models.stop_time import StopTime
 from app.db.models.fare_rule import FareRule
+
+
+_TRUNCATE_ORDER = [
+    "vehicle_positions", "vehicles", "stop_times", "trips",
+    "route_stops", "tickets", "users", "fare_rules",
+    "routes", "stops", "agencies",
+]
+
+
+async def _clean_db(session: AsyncSession):
+    for table in _TRUNCATE_ORDER:
+        await session.execute(text(f"TRUNCATE TABLE {table} CASCADE"))
+    await session.commit()
 
 
 TEST_DATA_PATH = Path("data/transit_data.json")
@@ -119,6 +132,7 @@ class TestDatabaseImport:
     async def session(self):
         await init_db()
         async with AsyncSessionLocal() as session:
+            await _clean_db(session)
             yield session
         await close_db()
 
@@ -334,6 +348,7 @@ class TestIdempotency:
     async def session(self):
         await init_db()
         async with AsyncSessionLocal() as session:
+            await _clean_db(session)
             yield session
         await close_db()
 
@@ -370,6 +385,7 @@ class TestStopCollisions:
     async def session(self):
         await init_db()
         async with AsyncSessionLocal() as session:
+            await _clean_db(session)
             yield session
         await close_db()
 
@@ -415,6 +431,7 @@ class TestCoordinates:
     async def session(self):
         await init_db()
         async with AsyncSessionLocal() as session:
+            await _clean_db(session)
             yield session
         await close_db()
 
@@ -504,6 +521,7 @@ class TestTimetables:
     async def session(self):
         await init_db()
         async with AsyncSessionLocal() as session:
+            await _clean_db(session)
             yield session
         await close_db()
 
@@ -686,6 +704,7 @@ class TestFareRules:
     async def session(self):
         await init_db()
         async with AsyncSessionLocal() as session:
+            await _clean_db(session)
             yield session
         await close_db()
 
@@ -722,6 +741,7 @@ class TestEmptyOptionalFields:
     async def session(self):
         await init_db()
         async with AsyncSessionLocal() as session:
+            await _clean_db(session)
             yield session
         await close_db()
 

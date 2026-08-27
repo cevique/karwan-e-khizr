@@ -41,6 +41,10 @@ from app.ticketing.fares import FaresService
 from app.core.constants import DEFAULT_WALKING_RADIUS_M, MAX_JOURNEY_CANDIDATES
 from pathlib import Path
 
+from app.geospatial.nominatim import close_nominatim_client
+from app.geospatial.osrm import close_osrm_client
+
+
 TEST_DATA_PATH = Path("data/transit_data.json")
 
 
@@ -53,6 +57,8 @@ async def db_session():
         await importer.import_all(data)
         await session.commit()
         yield session
+    await close_nominatim_client()
+    await close_osrm_client()
     await close_db()
 
 

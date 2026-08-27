@@ -1,5 +1,5 @@
-from datetime import datetime, time
-from sqlalchemy import select
+from datetime import datetime, time, timezone
+from sqlalchemy import select, cast, Time
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models.trip import Trip
@@ -71,19 +71,19 @@ class TripAdapter:
     def _parse_time(self, time_str: str) -> datetime:
         try:
             t = time.fromisoformat(time_str)
-            return datetime.combine(datetime.today(), t)
+            return datetime(2000, 1, 1, t.hour, t.minute, t.second, t.microsecond, tzinfo=timezone.utc)
         except Exception:
-            return datetime.combine(datetime.today(), time(6, 0))
+            return datetime(2000, 1, 1, 6, 0, 0, tzinfo=timezone.utc)
 
     async def _get_by_natural_key(self, route_id: int, trip_data: dict) -> Trip | None:
         direction_id = self._get_direction_id(trip_data.get("direction"))
-        scheduled_start = self._parse_time(trip_data.get("canonical_trip_start_time", "06:00:00"))
+        t = time.fromisoformat(trip_data.get("canonical_trip_start_time", "06:00:00"))
 
         result = await self.session.execute(
             select(Trip).where(
                 Trip.route_id == route_id,
                 Trip.direction_id == direction_id,
-                Trip.scheduled_start_time == scheduled_start,
+                cast(Trip.scheduled_start_time, Time) == t,
             )
         )
         return result.scalar_one_or_none()

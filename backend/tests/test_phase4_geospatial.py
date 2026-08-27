@@ -39,6 +39,8 @@ async def db_session():
         await importer.import_all(data)
         await session.commit()
         yield session
+    await close_nominatim_client()
+    await close_osrm_client()
     await close_db()
 
 
