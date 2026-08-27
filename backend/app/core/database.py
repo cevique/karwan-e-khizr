@@ -40,12 +40,13 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 async def init_db() -> None:
     from app.db.base import Base
+    try:
+        await engine.dispose(close=False)
+    except RuntimeError:
+        pass
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
 async def close_db() -> None:
-    try:
-        await engine.dispose()
-    except RuntimeError:
-        pass
+    pass
