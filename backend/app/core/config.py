@@ -57,9 +57,10 @@ class Settings(BaseSettings):
     NOMINATIM_USER_AGENT: str = Field(default="karwan-e-khizr/1.0")
 
     # Rate limiting
-    RATE_LIMIT_LOGIN: int = Field(default=5, description="Login attempts per minute")
-    RATE_LIMIT_VALIDATE: int = Field(default=30, description="Ticket validations per minute")
-    RATE_LIMIT_CONVERSE: int = Field(default=10, description="AI converse requests per minute")
+    RATE_LIMIT_LOGIN: int = Field(default=20, description="Login attempts per minute")
+    RATE_LIMIT_REGISTER: int = Field(default=30, description="Registration attempts per minute")
+    RATE_LIMIT_VALIDATE: int = Field(default=60, description="Ticket validations per minute")
+    RATE_LIMIT_CONVERSE: int = Field(default=30, description="AI converse requests per minute")
 
     # QR signing
     QR_SIGNING_KEY: str = Field(default="", description="Server-side secret for QR payload signing")

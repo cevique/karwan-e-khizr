@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.database import get_db
+from app.core.rate_limiter import rate_limit_dependency
 from app.users.dependencies import CurrentUser
 from app.ticketing.service import TicketService
 from app.ticketing.schemas import (
@@ -17,6 +19,10 @@ from app.ticketing.schemas import (
 
 router = APIRouter(prefix="/tickets", tags=["tickets"])
 fares_router = APIRouter(prefix="/fares", tags=["fares"])
+
+_validate_limiter_dep, _validate_limiter = rate_limit_dependency(
+    max_requests=settings.RATE_LIMIT_VALIDATE, window_seconds=60
+)
 
 
 @fares_router.post("/quote", response_model=FareQuote, status_code=status.HTTP_200_OK)
@@ -84,7 +90,12 @@ async def revoke_ticket(
         raise
 
 
-@router.post("/validate", response_model=ValidationResult, status_code=status.HTTP_200_OK)
+@router.post(
+    "/validate",
+    response_model=ValidationResult,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(_validate_limiter_dep)],
+)
 async def validate_ticket(
     request: ValidationRequest,
     current_user: CurrentUser,

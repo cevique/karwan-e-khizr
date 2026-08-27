@@ -42,6 +42,7 @@ from app.core.exceptions import (
     ValidationError,
 )
 from app.core.logging import configure_logging, get_logger
+from app.core.rate_limiter import RateLimiter, rate_limit_dependency
 from app.core.security import create_access_token, decode_token, hash_password, verify_password
 
 __all__ = [
@@ -54,6 +55,8 @@ __all__ = [
     "close_db",
     "configure_logging",
     "get_logger",
+    "RateLimiter",
+    "rate_limit_dependency",
     "hash_password",
     "verify_password",
     "create_access_token",

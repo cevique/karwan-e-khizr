@@ -5,13 +5,18 @@ from app.ai.pipeline import ConversationPipeline, get_conversation_pipeline
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.exceptions import AIProviderError, ProviderError, ValidationError
+from app.core.rate_limiter import rate_limit_dependency
 from app.users.dependencies import get_current_user_or_none
 from app.db.models.user import User
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
+_converse_limiter_dep, _converse_limiter = rate_limit_dependency(
+    max_requests=settings.RATE_LIMIT_CONVERSE, window_seconds=60
+)
 
-@router.post("/converse", status_code=status.HTTP_200_OK)
+
+@router.post("/converse", status_code=status.HTTP_200_OK, dependencies=[Depends(_converse_limiter_dep)])
 async def converse(
     message: str | None = Form(default=None),
     audio: UploadFile | None = File(default=None),
