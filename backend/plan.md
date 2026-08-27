@@ -2488,6 +2488,32 @@ backend/app/admin/
 4. Any admin endpoint without a JWT returns HTTP 401.
 5. Data quality view accurately reflects the seeded data coverage gaps.
 
+### Implementation Handoff (2026-08-27)
+
+All acceptance criteria verified. 25/25 tests pass. Full regression
+(359/359 non-pre-existing) clean.
+
+**Files created:**
+- `app/admin/__init__.py` — exports AdminService and all schemas
+- `app/admin/schemas.py` — Pydantic response models
+- `app/admin/service.py` — AdminService business logic
+- `app/api/admin_router.py` — 7 FastAPI endpoints with admin auth
+- `tests/test_phase11_admin.py` — 25 integration tests
+
+**Files modified:**
+- `app/api/router.py` — added admin_router registration
+
+**Test notes:**
+- Tests use raw `asyncpg` in a new event loop to promote users to
+  admin role, avoiding conflict with the TestClient's running loop.
+- `test_tickets_list_returns_list` does not assert empty DB since
+  prior test runs may leave tickets behind.
+
+**Known pre-existing failures (not introduced by Phase 11):**
+- Phase 3: DB accumulation causes count mismatches (18 != 9 trips)
+- Phase 4: `Event loop is closed` in 3 geospatial tests
+- Phase 6: FK constraint errors during user table cleanup
+
 ---
 
 ## 15. Phase 12 — Predictive ETA
