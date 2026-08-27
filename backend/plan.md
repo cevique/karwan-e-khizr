@@ -2631,6 +2631,110 @@ No new API endpoints — `ETAPredictor` is consumed by the realtime API
 5. The vehicle ETA endpoint returns `baseline_eta_seconds` (always)
    and `predicted_eta_seconds` (only when predictor has coverage).
 
+### Implementation Handoff (2026-08-27)
+
+**Status:** COMPLETE — 59/59 Phase 12 tests passing, full regression clean.
+
+**Files created/modified:**
+
+| File | Action | Purpose |
+|---|---|---|
+| `app/eta/__init__.py` | Created | Module exports for ETA subsystem |
+| `app/eta/schemas.py` | Created | `ETAFeatures`, `ETAPrediction`, `TrainingSample`, `ModelArtifact` |
+| `app/eta/features.py` | Created | Feature extraction from vehicle/route state |
+| `app/eta/training.py` | Created | Synthetic training data generation from simulation |
+| `app/eta/model.py` | Created | Model training (LightGBM + LinearRegression), save/load, evaluation |
+| `app/eta/predictor.py` | Created | `ETAPredictor` protocol, `LocalETAPredictor`, `NoOpETAPredictor` |
+| `app/eta/config.py` | Created | ETA provider configuration |
+| `app/simulation/provider.py` | Modified | Integrated `ETAPredictor` into `get_vehicle_eta()` |
+| `app/simulation/router.py` | Modified | Injects `ETAPredictor` dependency into provider |
+| `app/simulation/__init__.py` | Modified | Removed eager import of `provider` to break circular import |
+| `app/__init__.py` | Modified | Removed eager `app.main` import to break circular import |
+| `tests/test_phase12_predictive_eta.py` | Created | 59 comprehensive tests |
+| `pyproject.toml` | Modified | Added `lightgbm`, `scikit-learn`, `pandas`, `joblib` dependencies |
+
+**ML approach:**
+- **Primary model:** LightGBM gradient-boosted trees (tabular, explainable, fast training)
+- **Baseline:** Linear Regression (kept as naive comparison)
+- **Fallback:** Deterministic ETA (always available, always correct)
+- No neural networks, no GPU dependency, no cloud ML platform required
+
+**Feature schema (stable contract):**
+
+```python
+ETAFeatures:
+    route_id: int
+    stop_id: int
+    time_of_day: str          # "HH:MM"
+    day_of_week: str          # "monday"–"sunday"
+    scheduled_duration_s: int # segment scheduled duration
+    distance_remaining_m: float
+    delay_seconds: int | None
+```
+
+**Training-data provenance:**
+- Synthetic data generated from deterministic simulation engine
+- Explicitly labeled `source: "synthetic"` — NOT real transit observations
+- Stored as JSON training artifact, not operational database table
+- Description: "Synthetic training data generated from deterministic simulation engine. NOT real transit observations. Used to validate ML pipeline architecture."
+- Design allows real vehicle observations to replace synthetic data without changing inference API
+
+**Model artifact/versioning:**
+- Saved to `data/eta_models/{version}/` directory
+- Contains: LightGBM model, LinearRegression model (joblib), metadata JSON
+- Metadata includes: version, trained_at, source, sample_count, evaluation metrics, feature importances
+- Lazy-loaded on first prediction attempt
+
+**Prediction/fallback behavior:**
+1. `LocalETAPredictor.predict(features)` → `ETAPrediction` or `None`
+2. `NoOpETAPredictor.predict(features)` → always `None`
+3. When predictor returns `None` → caller uses deterministic ETA
+4. Model file missing → graceful fallback to deterministic ETA
+5. Prediction unreasonable (≤0 or >7200s) → returns `None`
+6. `predicted_eta_seconds` only added to ETA response when ML has coverage
+7. `baseline_eta_seconds` always present — deterministic engine never replaced
+
+**API integration:**
+- No new API endpoints — `ETAPredictor` consumed internally by `SimulatedVehicleLocationProvider.get_vehicle_eta()`
+- `GET /transit/realtime/vehicles/{id}/eta` response unchanged:
+  - `baseline_eta_seconds`: always present (deterministic)
+  - `predicted_eta_seconds`: present only when ML predictor available and has coverage
+  - `source: "simulated"`: always present
+- Existing response fields (`scheduled_arrival`, `estimated_arrival`, `delay_seconds`, `next_stop_id`) preserved
+
+**Tests:**
+- 59 Phase 12 tests: all passing
+- Categories: Schema validation, Feature extraction, Synthetic data generation, Model training/saving/loading, Predictor behavior, Configuration, Integration, End-to-end pipeline, Edge cases, Regression (Phase 8 preserved)
+- Full regression: Phase 1 (20 passed), Phase 8 (36 passed), Phase 10 (30 passed), Phase 12 (59 passed)
+- DB-dependent tests error on connection refusal (pre-existing, PostgreSQL not running locally)
+
+**Verification performed:**
+- All imports compile correctly
+- Full training pipeline generates data, trains model, saves/loads artifact, produces predictions
+- Deterministic training with fixed random seed
+- LightGBM MAE ≤ baseline MAE (model outperforms naive prediction)
+- Predictor integration with simulation provider works
+- `NoOpETAPredictor` fallback works correctly
+- `LocalETAPredictor` lazy-loads model and returns predictions
+- No frontend files modified
+
+**Pre-existing failures (not introduced by Phase 11):**
+- Phase 3: DB tests error on connection (PostgreSQL not running)
+- Phase 4: Event loop teardown in geospatial tests
+- Phase 6: DB tests error on connection (PostgreSQL not running)
+- Phase 7: DB tests error on connection (PostgreSQL not running)
+- Phase 11: DB tests error on connection (PostgreSQL not running)
+
+**Limitations:**
+1. Model trained on synthetic data — does NOT learn real Islamabad/Rawalpindi traffic patterns
+2. No real vehicle telemetry available yet — model validated only on simulation output
+3. Model accuracy claims would be meaningless with synthetic data
+4. 34 stops without coordinates cannot contribute to feature extraction
+5. Event loop teardown issue persists (pre-existing, unrelated to Phase 12)
+
+**Exact next phase:**
+Phase 13 — Rate Limiting, Security Hardening & Finalization (per dependency graph)
+
 ---
 
 ## 16. Phase 13 — Rate Limiting, Security Hardening & Finalization

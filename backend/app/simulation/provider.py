@@ -14,6 +14,8 @@ from app.db.models.stop_time import StopTime
 from app.db.models.trip import Trip
 from app.db.models.vehicle import Vehicle
 from app.db.models.vehicle_position import VehiclePosition as VehiclePositionModel
+from app.eta.predictor import ETAPredictor, NoOpETAPredictor
+from app.eta.features import extract_eta_features
 from app.simulation.engine import SimulationEngine
 from app.simulation.schemas import StopTimeEntry
 
@@ -27,9 +29,15 @@ class VehicleLocationProvider(Protocol):
 class SimulatedVehicleLocationProvider:
     """Default implementation using SimulationEngine and DB schedule data."""
 
-    def __init__(self, engine: SimulationEngine, db: AsyncSession):
+    def __init__(
+        self,
+        engine: SimulationEngine,
+        db: AsyncSession,
+        eta_predictor: Optional[ETAPredictor] = None,
+    ):
         self._engine = engine
         self._db = db
+        self._eta_predictor = eta_predictor or NoOpETAPredictor()
 
     async def get_all_positions(self) -> list[dict]:
         now = datetime.now(timezone.utc)
@@ -96,11 +104,25 @@ class SimulatedVehicleLocationProvider:
         if eta_data is None:
             return None
 
+        # Attempt ML prediction via ETAPredictor
+        predicted_eta = None
+        if self._eta_predictor.is_available:
+            features = extract_eta_features(
+                stops=stops,
+                current_elapsed_s=elapsed_s,
+                route_id=trip.route_id,
+                current_time=now,
+            )
+            if features is not None:
+                prediction = self._eta_predictor.predict(features)
+                if prediction is not None:
+                    predicted_eta = int(prediction.predicted_eta_seconds)
+
         return {
             "vehicle_id": vehicle_id,
             "next_stop_id": eta_data["next_stop_id"],
             "baseline_eta_seconds": eta_data["baseline_eta_seconds"],
-            "predicted_eta_seconds": None,
+            "predicted_eta_seconds": predicted_eta,
             "delay_seconds": None,
             "source": "simulated",
         }
