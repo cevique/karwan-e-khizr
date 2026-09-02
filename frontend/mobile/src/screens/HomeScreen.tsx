@@ -62,7 +62,7 @@ export function HomeScreen() {
         )}
         <MapLibreGL.MapView
           style={styles.map}
-          styleURL={MAP_STYLE_LIGHT}
+          mapStyle={MAP_STYLE_LIGHT}
           onDidFinishLoadingMap={() => setMapReady(true)}
         >
           <MapLibreGL.Camera
@@ -146,12 +146,12 @@ export function HomeScreen() {
                 <Text style={styles.routeBadgeText}>{bus.routeName.split(' ').pop()}</Text>
               </View>
               <Text style={styles.busRouteName}>{bus.routeName}</Text>
-              <Text style={styles.busNextStop}>Next: {bus.nextStopName}</Text>
+              <Text style={styles.busNextStop}>Next: {bus.nextStopName ?? 'Unknown'}</Text>
               <View style={styles.busMeta}>
-                <Text style={styles.busStat}>{bus.eta} min</Text>
+                <Text style={styles.busStat}>{bus.eta != null ? `${bus.eta} min` : '—'}</Text>
                 <Text style={styles.busStat}>{bus.speed} km/h</Text>
-                {bus.status === 'delayed' && (
-                  <Text style={styles.delayTag}>Delayed</Text>
+                {bus.status === 'scheduled' && (
+                  <Text style={styles.delayTag}>Scheduled</Text>
                 )}
               </View>
             </TouchableOpacity>

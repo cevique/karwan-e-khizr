@@ -33,6 +33,10 @@ class RateLimiter:
         """Reset the counter for a given key."""
         self._requests.pop(key, None)
 
+    def reset_all(self) -> None:
+        """Clear all tracked request counters. Intended for test isolation."""
+        self._requests.clear()
+
     def remaining(self, key: str) -> int:
         """Return remaining allowed requests for a key."""
         now = time.monotonic()

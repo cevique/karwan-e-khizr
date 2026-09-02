@@ -43,17 +43,17 @@ export function HomeScreen() {
             </div>
             <div style={styles.cardDetail}>
               <span style={styles.cardLabel}>Next stop:</span>
-              <span style={styles.cardValue}>{state.selectedBus.nextStopName}</span>
+              <span style={styles.cardValue}>{state.selectedBus.nextStopName ?? 'Unknown'}</span>
             </div>
             <div style={styles.cardMeta}>
               <span className="tabular-nums" style={styles.cardChip}>
-                <Clock size={12} /> {state.selectedBus.eta} min
+                <Clock size={12} /> {state.selectedBus.eta != null ? `${state.selectedBus.eta} min` : '—'}
               </span>
               <span className="tabular-nums" style={styles.cardChip}>
                 <Gauge size={12} /> {state.selectedBus.speed} km/h
               </span>
-              {state.selectedBus.status === 'delayed' && (
-                <span style={styles.delayBadge}>Delayed</span>
+              {state.selectedBus.status === 'scheduled' && (
+                <span style={styles.delayBadge}>Not yet en route</span>
               )}
             </div>
           </div>
@@ -135,17 +135,17 @@ export function HomeScreen() {
               <div style={styles.busCardBottom}>
                 <div style={styles.busCardMeta}>
                   <Bus size={13} color="var(--color-text-muted)" />
-                  <span style={styles.busNextStop}>Next: {bus.nextStopName}</span>
+                  <span style={styles.busNextStop}>Next: {bus.nextStopName ?? 'Unknown'}</span>
                 </div>
                 <div style={styles.busCardStats}>
                   <span className="tabular-nums" style={styles.stat}>
-                    <Clock size={12} /> {bus.eta} min
+                    <Clock size={12} /> {bus.eta != null ? `${bus.eta} min` : '—'}
                   </span>
                   <span className="tabular-nums" style={styles.stat}>
                     <Gauge size={12} /> {bus.speed} km/h
                   </span>
-                  {bus.status === 'delayed' && (
-                    <span style={styles.delayTag}>Delayed</span>
+                  {bus.status === 'scheduled' && (
+                    <span style={styles.delayTag}>Scheduled</span>
                   )}
                 </div>
               </div>

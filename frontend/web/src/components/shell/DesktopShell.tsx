@@ -1,4 +1,6 @@
 import { DesktopDock } from '../navigation/DesktopDock';
+import { AuthScreen } from '../../screens/AuthScreen';
+import { TicketsScreen } from '../../screens/TicketsScreen';
 import { HomeScreen } from '../../screens/HomeScreen';
 import { SearchScreen } from '../../screens/SearchScreen';
 import { RoutesScreen } from '../../screens/RoutesScreen';
@@ -22,6 +24,10 @@ export function DesktopShell() {
         return <SavedScreen />;
       case 'settings':
         return <SettingsScreen />;
+      case 'auth':
+        return <AuthScreen />;
+      case 'tickets':
+        return <TicketsScreen />;
       default:
         return <HomeScreen />;
     }

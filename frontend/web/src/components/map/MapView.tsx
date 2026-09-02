@@ -72,8 +72,8 @@ export function MapView({ style, interactive = true }: MapViewProps) {
     >
       {interactive && <NavigationControl position="bottom-right" showCompass={false} />}
 
-      {/* Route polylines */}
-      {routes.map(route => (
+      {/* Route polylines - only routes with real geometry data (most don't yet; see DATA_GAPS.md) */}
+      {routes.filter(route => route.polyline.length >= 2).map(route => (
         <Source key={route.id} id={route.id} type="geojson" data={{
           type: 'Feature',
           geometry: { type: 'LineString', coordinates: route.polyline },

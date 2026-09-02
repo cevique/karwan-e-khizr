@@ -11,7 +11,10 @@ const navItems: { id: Screen; label: string; icon: typeof Home }[] = [
 
 export function MobileNav() {
   const { state, navigate } = useApp();
-  const activeTab = state.screen === 'journey-detail' ? 'routes' : state.screen === 'search' ? 'home' : state.screen;
+  const activeTab = state.screen === 'journey-detail' ? 'routes'
+    : state.screen === 'search' ? 'home'
+    : state.screen === 'auth' || state.screen === 'tickets' ? 'settings'
+    : state.screen;
 
   return (
     <nav style={styles.nav}>

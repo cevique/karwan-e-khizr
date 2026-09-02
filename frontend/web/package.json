@@ -10,12 +10,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "framer-motion": "^11.11.0",
+    "lucide-react": "^0.460.0",
+    "maplibre-gl": "^4.7.1",
+    "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-map-gl": "^7.1.7",
-    "maplibre-gl": "^4.7.1",
-    "lucide-react": "^0.460.0",
-    "framer-motion": "^11.11.0"
+    "react-map-gl": "^7.1.7"
   },
   "devDependencies": {
     "@types/react": "^18.3.11",

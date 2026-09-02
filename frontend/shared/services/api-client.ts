@@ -52,6 +52,8 @@ async function executeRequest<T>(
   options?: {
     params?: Record<string, string | number | boolean | undefined>;
     body?: unknown;
+    form?: FormData;
+    headers?: Record<string, string>;
     signal?: AbortSignal;
   },
 ): Promise<T> {
@@ -71,20 +73,30 @@ async function executeRequest<T>(
   }
 
   try {
+    const headers: Record<string, string> = { ...options?.headers };
+    let body: FormData | string | undefined;
+    if (options?.form) {
+      // Let the browser set the multipart Content-Type (with boundary).
+      body = options.form;
+    } else if (options?.body !== undefined) {
+      headers['Content-Type'] = 'application/json';
+      body = JSON.stringify(options.body);
+    }
+
     const response = await fetch(buildUrl(path, options?.params), {
       method,
-      headers: { 'Content-Type': 'application/json' },
-      body: options?.body ? JSON.stringify(options.body) : undefined,
+      headers,
+      body,
       signal: controller.signal,
     });
 
     if (!response.ok) {
-      let body: unknown;
-      try { body = await response.json(); } catch { /* non-JSON body */ }
+      let responseBody: unknown;
+      try { responseBody = await response.json(); } catch { /* non-JSON body */ }
       throw new ApiError(
         `Request failed: ${response.status} ${response.statusText}`,
         response.status,
-        body,
+        responseBody,
       );
     }
 
@@ -109,19 +121,34 @@ async function executeRequest<T>(
 // ── Public API ──
 
 export const apiClient = {
-  get<T>(path: string, params?: Record<string, string | number | boolean | undefined>, signal?: AbortSignal): Promise<T> {
-    return executeRequest<T>('GET', path, { params, signal });
+  get<T>(
+    path: string,
+    params?: Record<string, string | number | boolean | undefined>,
+    signal?: AbortSignal,
+    headers?: Record<string, string>,
+  ): Promise<T> {
+    return executeRequest<T>('GET', path, { params, signal, headers });
   },
 
-  post<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
-    return executeRequest<T>('POST', path, { body, signal });
+  post<T>(path: string, body?: unknown, signal?: AbortSignal, headers?: Record<string, string>): Promise<T> {
+    return executeRequest<T>('POST', path, { body, signal, headers });
   },
 
-  put<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
-    return executeRequest<T>('PUT', path, { body, signal });
+  /** POST with a multipart/form-data body (e.g. the AI voice endpoint, which accepts a Form field or an audio File). */
+  postForm<T>(path: string, form: FormData, signal?: AbortSignal, headers?: Record<string, string>): Promise<T> {
+    return executeRequest<T>('POST', path, { form, signal, headers });
   },
 
-  delete<T>(path: string, signal?: AbortSignal): Promise<T> {
-    return executeRequest<T>('DELETE', path, { signal });
+  put<T>(path: string, body?: unknown, signal?: AbortSignal, headers?: Record<string, string>): Promise<T> {
+    return executeRequest<T>('PUT', path, { body, signal, headers });
+  },
+
+  delete<T>(path: string, signal?: AbortSignal, headers?: Record<string, string>): Promise<T> {
+    return executeRequest<T>('DELETE', path, { signal, headers });
   },
 };
+
+/** Build an Authorization header for an authenticated request. */
+export function authHeaders(token: string | null | undefined): Record<string, string> {
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}

@@ -13,11 +13,11 @@ from app.routing.schemas import (
 router = APIRouter(prefix="/transit/journeys", tags=["journeys"])
 
 
-@router.post("/search", status_code=status.HTTP_200_OK)
+@router.post("/search", status_code=status.HTTP_200_OK, response_model=JourneySearchResponse)
 async def search_journeys(
     request: JourneySearchRequest,
     session: AsyncSession = Depends(get_db),
-) -> dict:
+) -> JourneySearchResponse:
     engine = JourneySearchEngine(session)
     result = await engine.search(
         origin=request.origin,

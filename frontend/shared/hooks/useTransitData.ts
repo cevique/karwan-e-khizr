@@ -11,7 +11,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Bus, Stop, TransitRoute, Journey, SearchResult } from '../types';
-import { transitService } from '../services/transit-service';
+import type { JourneyObjective } from '../types/api';
+import { transitService, JourneySearchOptions } from '../services/transit-service';
 import type { Arrival } from '../services/transit-service';
 
 // ── Generic result shape ──
@@ -97,52 +98,73 @@ export function useStop(id: string | null): AsyncResult<Stop | null> & { refetch
 }
 
 // ── Vehicle hooks ──
+// Vehicles are enriched with route/stop names client-side, so these
+// accept the already-loaded routes/stops (e.g. from useTransitData) -
+// avoids a redundant fetch and keeps names consistent app-wide.
 
-export function useVehicles(): AsyncResult<Bus[]> & { refetch: () => void } {
-  return useAsyncData((signal) => transitService.getVehicles(signal), []);
+export function useVehicles(routes: TransitRoute[] = [], stops: Stop[] = []): AsyncResult<Bus[]> & { refetch: () => void } {
+  return useAsyncData((signal) => transitService.getVehicles(signal, routes, stops), [routes, stops]);
 }
 
-export function useVehicle(id: string | null): AsyncResult<Bus | null> & { refetch: () => void } {
+export function useVehicle(
+  id: string | null,
+  routes: TransitRoute[] = [],
+  stops: Stop[] = [],
+): AsyncResult<Bus | null> & { refetch: () => void } {
   return useAsyncData(
-    (signal) => (id ? transitService.getVehicle(id, signal) : Promise.resolve(null)),
-    [id],
+    (signal) => (id ? transitService.getVehicle(id, signal, routes, stops) : Promise.resolve(null)),
+    [id, routes, stops],
   );
 }
 
-export function useRouteVehicles(routeId: string | null): AsyncResult<Bus[]> & { refetch: () => void } {
+export function useRouteVehicles(
+  routeId: string | null,
+  routes: TransitRoute[] = [],
+  stops: Stop[] = [],
+): AsyncResult<Bus[]> & { refetch: () => void } {
   return useAsyncData(
-    (signal) => (routeId ? transitService.getRouteVehicles(routeId, signal) : Promise.resolve([])),
-    [routeId],
+    (signal) => (routeId ? transitService.getRouteVehicles(routeId, signal, routes, stops) : Promise.resolve([])),
+    [routeId, routes, stops],
   );
 }
 
 // ── Arrival hook ──
 
-export function useArrivals(stopId: string | null): AsyncResult<Arrival[]> & { refetch: () => void } {
+export function useArrivals(
+  stopId: string | null,
+  routes: TransitRoute[] = [],
+  stops: Stop[] = [],
+): AsyncResult<Arrival[]> & { refetch: () => void } {
   return useAsyncData(
-    (signal) => (stopId ? transitService.getArrivals(stopId, signal) : Promise.resolve([])),
-    [stopId],
+    (signal) => (stopId ? transitService.getArrivals(stopId, signal, routes, stops) : Promise.resolve([])),
+    [stopId, routes, stops],
   );
 }
 
 // ── Journey hooks ──
+// The real search takes free-text origin/destination (server-resolved),
+// and needs the already-loaded routes/stops to enrich leg details with
+// names/colors - pass `enabled: false` until the user actually submits a
+// search, since this fires on every dependency change otherwise.
 
 export function useJourneySearch(
-  originLat: number | null,
-  originLng: number | null,
-  destLat: number | null,
-  destLng: number | null,
+  origin: string,
+  destination: string,
+  routes: TransitRoute[],
+  stops: Stop[],
+  enabled: boolean,
+  options?: JourneySearchOptions,
 ): AsyncResult<Journey[]> & { refetch: () => void } {
   return useAsyncData(
     (signal) =>
-      originLat != null && originLng != null && destLat != null && destLng != null
-        ? transitService.searchJourneys(originLat, originLng, destLat, destLng, signal)
+      enabled && origin.trim() && destination.trim()
+        ? transitService.searchJourneys(origin, destination, routes, stops, options, signal)
         : Promise.resolve([]),
-    [originLat, originLng, destLat, destLng],
+    [origin, destination, routes, stops, enabled, options?.objective, options?.maxWalkM, options?.maxTransfers],
   );
 }
 
-// ── Search hook ──
+// ── Search hook (stop-name autocomplete) ──
 
 export function useSearchResults(query: string): AsyncResult<SearchResult[]> & { refetch: () => void } {
   return useAsyncData(
@@ -155,7 +177,9 @@ export function useSearchResults(query: string): AsyncResult<SearchResult[]> & {
 }
 
 // ── Preloaded data hook ──
-// Fetches routes, stops, and vehicles in parallel — useful for the map layer.
+// Fetches routes and stops first (vehicles need them for enrichment),
+// then vehicles - useful for the map layer and as the shared app-wide
+// transit context (see App.tsx).
 
 export interface TransitData {
   routes: TransitRoute[];
@@ -165,11 +189,13 @@ export interface TransitData {
 
 export function useTransitData(): AsyncResult<TransitData> & { refetch: () => void } {
   return useAsyncData(async (signal) => {
-    const [routes, stops, vehicles] = await Promise.all([
+    const [routes, stops] = await Promise.all([
       transitService.getRoutes(signal),
       transitService.getStops(signal),
-      transitService.getVehicles(signal),
     ]);
+    const vehicles = await transitService.getVehicles(signal, routes, stops);
     return { routes, stops, vehicles };
   }, []);
 }
+
+export type { JourneyObjective };

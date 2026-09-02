@@ -1,11 +1,16 @@
+import { useState } from 'react';
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
-import { ArrowLeft, Footprints, Bus, TrainFront, ArrowRightLeft, Navigation, Clock, MapPin } from 'lucide-react';
+import { ArrowLeft, Footprints, Bus, TrainFront, ArrowRightLeft, Navigation, Clock, MapPin, Ticket, Loader2, CheckCircle2 } from 'lucide-react';
 import type { JourneySegment, WalkSegment, TransitSegment, TransferSegment } from '@shared/types';
+import { transitService } from '@shared/services/transit-service';
+import { ApiError } from '@shared/services/api-client';
 
 export function JourneyDetailScreen() {
-  const { state, goBack } = useApp();
+  const { state, goBack, navigate, auth } = useApp();
   const journey = state.selectedJourney;
+  const [purchaseState, setPurchaseState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
   if (!journey) {
     return (
@@ -17,6 +22,28 @@ export function JourneyDetailScreen() {
       </div>
     );
   }
+
+  const rideLegCount = journey.segments.filter((s) => s.type !== 'walk' && s.type !== 'transfer').length;
+
+  const handleBuyTicket = async () => {
+    if (!auth.token) {
+      navigate('auth');
+      return;
+    }
+    setPurchaseState('loading');
+    setPurchaseError(null);
+    try {
+      await transitService.purchaseTicket(auth.token, journey as unknown as Record<string, unknown>, Math.max(rideLegCount, 1));
+      setPurchaseState('done');
+    } catch (err) {
+      setPurchaseState('error');
+      setPurchaseError(
+        err instanceof ApiError && err.status === 401
+          ? 'Your session expired. Please sign in again.'
+          : 'Could not complete the purchase. Please try again.',
+      );
+    }
+  };
 
   const segIcon = (seg: JourneySegment) => {
     if (seg.type === 'walk') return <Footprints size={16} />;
@@ -41,10 +68,15 @@ export function JourneyDetailScreen() {
           </div>
         </div>
 
-        {journey.tag && (
+        {(journey.tag || journey.fareLabel || journey.transferCount != null) && (
           <div style={styles.tagRow}>
-            <span style={styles.journeyTag}>{journey.tag}</span>
+            {journey.tag && <span style={styles.journeyTag}>{journey.tag}</span>}
             <span style={styles.fareTag}>{journey.fareLabel}</span>
+            {journey.transferCount != null && journey.transferCount > 0 && (
+              <span style={styles.fareTag}>
+                {journey.transferCount} transfer{journey.transferCount > 1 ? 's' : ''}
+              </span>
+            )}
           </div>
         )}
 
@@ -111,7 +143,7 @@ export function JourneyDetailScreen() {
                   </div>
                   <div style={styles.transitInfo}>
                     <span className="tabular-nums" style={styles.transitDuration}>
-                      {ts.stops} stops · {ts.duration} min
+                      {ts.stops != null ? `${ts.stops} stops · ` : ''}{ts.duration} min
                     </span>
                   </div>
                   <div style={styles.transitStops}>
@@ -131,6 +163,29 @@ export function JourneyDetailScreen() {
         </div>
 
         <div style={styles.actions}>
+          {purchaseState === 'done' ? (
+            <div style={styles.purchaseSuccess}>
+              <CheckCircle2 size={18} color="var(--color-accent-primary)" />
+              <span>Ticket purchased!</span>
+              <button style={styles.viewTicketLink} onClick={() => navigate('tickets')}>View tickets</button>
+            </div>
+          ) : (
+            <>
+              <button style={styles.buyBtn} onClick={handleBuyTicket} disabled={purchaseState === 'loading'}>
+                {purchaseState === 'loading' ? (
+                  <Loader2 size={16} className="spin" />
+                ) : (
+                  <>
+                    <Ticket size={16} />
+                    <span>Buy ticket · {journey.fareLabel}</span>
+                  </>
+                )}
+              </button>
+              {purchaseState === 'error' && purchaseError && (
+                <span style={styles.purchaseError}>{purchaseError}</span>
+              )}
+            </>
+          )}
           <button style={styles.trackBtn}>
             <Navigation size={16} />
             <span>Live tracking</span>
@@ -217,6 +272,26 @@ const styles: Record<string, React.CSSProperties> = {
   stopName: { fontSize: 12, color: 'var(--color-text-secondary)' },
   actions: {
     padding: '16px 20px', borderTop: '1px solid var(--color-hairline)',
+    display: 'flex', flexDirection: 'column', gap: 10,
+  },
+  buyBtn: {
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    width: '100%', padding: '14px 20px',
+    background: 'var(--color-accent-primary)', color: '#FFF',
+    border: 'none', borderRadius: 'var(--radius-full)',
+    fontSize: 15, fontWeight: 700, cursor: 'pointer',
+  },
+  purchaseError: { fontSize: 12, color: 'var(--color-error)', textAlign: 'center' as const },
+  purchaseSuccess: {
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    padding: '12px 20px', background: 'var(--color-accent-primary-muted)',
+    borderRadius: 'var(--radius-full)', color: 'var(--color-accent-primary)',
+    fontSize: 14, fontWeight: 600,
+  },
+  viewTicketLink: {
+    border: 'none', background: 'none', color: 'var(--color-accent-primary)',
+    fontSize: 13, fontWeight: 700, cursor: 'pointer', textDecoration: 'underline',
+    marginLeft: 4,
   },
   trackBtn: {
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,

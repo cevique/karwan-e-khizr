@@ -24,7 +24,13 @@ from app.routing.objectives import EdgeWeights
 from app.routing.graph import GraphEdge
 from app.core.constants import DEFAULT_WALKING_RADIUS_M
 from app.core.exceptions import AmbiguousLocationError, NoRouteFoundError
-from app.ticketing.fares import FaresService
+# NOTE: imported lazily inside __init__ (not at module level) to avoid a
+# circular import: app.ticketing.fares imports app.routing.schemas, which
+# (via app/routing/__init__.py) imports this module before FaresService
+# has finished being defined. Whether that happens depends on which of
+# app.routing / app.ticketing gets imported first elsewhere, so it's a
+# real, order-dependent bug rather than a hypothetical one - moving the
+# import here removes the cycle entirely.
 
 
 class JourneySearchEngine:
@@ -32,6 +38,8 @@ class JourneySearchEngine:
         self.session = session
         self.geospatial_service: GeospatialService | None = None
         self.graph: TransitGraphBuilder | None = None
+        from app.ticketing.fares import FaresService
+
         self.fares_service = FaresService(session)
 
     async def _get_geospatial_service(self) -> GeospatialService:
@@ -191,8 +199,8 @@ class JourneySearchEngine:
 
         for i, edge in enumerate(path_edges):
             if edge.edge_type == "walk":
-                from_node = graph.graph.nodes.get(edge.from_stop_id)
-                to_node = graph.graph.nodes.get(edge.to_stop_id)
+                from_node = graph.nodes.get(edge.from_stop_id)
+                to_node = graph.nodes.get(edge.to_stop_id)
                 if not from_node or not to_node:
                     continue
 
@@ -217,8 +225,8 @@ class JourneySearchEngine:
                 current_time = leg.arrival_time or current_time
 
             elif edge.edge_type == "ride":
-                from_node = graph.graph.nodes.get(edge.from_stop_id)
-                to_node = graph.graph.nodes.get(edge.to_stop_id)
+                from_node = graph.nodes.get(edge.from_stop_id)
+                to_node = graph.nodes.get(edge.to_stop_id)
                 if not from_node or not to_node:
                     continue
 

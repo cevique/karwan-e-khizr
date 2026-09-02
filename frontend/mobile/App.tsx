@@ -12,8 +12,12 @@ import { ProfileScreen } from './src/screens/ProfileScreen';
 
 // Initialise shared config for mobile
 initConfig({
+  // NOTE: "localhost" only reaches a backend running on this same device.
+  // For the Android emulator use 10.0.2.2 instead of localhost; for a
+  // physical device or iOS simulator on the same network, use the dev
+  // machine's LAN IP (e.g. http://192.168.x.x:8000/api/v1).
   apiUrl: 'http://localhost:8000/api/v1',
-  useMockData: true, // Backend not yet available; mock data used
+  useMockData: false,
 });
 
 const Tab = createBottomTabNavigator();

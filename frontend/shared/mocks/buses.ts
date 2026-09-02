@@ -43,7 +43,7 @@ export const mockBuses: Bus[] = [
     longitude: 73.0468,
     heading: 185,
     speed: 12,
-    status: 'delayed',
+    status: 'active',
     nextStopId: 'stop-g9-markaz',
     nextStopName: 'G-9 Markaz',
     eta: 5,

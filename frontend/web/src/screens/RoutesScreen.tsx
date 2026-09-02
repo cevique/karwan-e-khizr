@@ -1,10 +1,10 @@
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
-import { mockJourneys } from '@shared/index';
-import { Route, Clock, ArrowRight } from 'lucide-react';
+import { Route, Search } from 'lucide-react';
+import { getConfig } from '@shared/services/config';
 
 export function RoutesScreen() {
-  const { selectJourney, transit } = useApp();
+  const { navigate, transit } = useApp();
   const routes = transit.routes;
 
   return (
@@ -14,8 +14,8 @@ export function RoutesScreen() {
       </div>
       <div style={styles.sidePanel}>
         <div style={styles.header}>
-          <h2 style={styles.title}>Routes & Journeys</h2>
-          <span style={styles.demoTag}>Demo data</span>
+          <h2 style={styles.title}>Routes</h2>
+          {getConfig().useMockData && <span style={styles.demoTag}>Demo data</span>}
         </div>
 
         <div style={styles.section}>
@@ -28,44 +28,19 @@ export function RoutesScreen() {
                 </div>
                 <div style={styles.routeInfo}>
                   <span style={styles.routeName}>{route.name}</span>
-                  <span style={styles.routeFreq}>{route.frequency}</span>
+                  {route.frequency && <span style={styles.routeFreq}>{route.frequency}</span>}
                 </div>
-                <span style={styles.routeHours}>{route.operatingHours}</span>
+                {route.operatingHours && <span style={styles.routeHours}>{route.operatingHours}</span>}
               </div>
             ))}
           </div>
         </div>
 
         <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>Suggested Journeys</h3>
-          <div style={styles.journeyList}>
-            {mockJourneys.map((journey, i) => (
-              <button
-                key={journey.id}
-                style={{
-                  ...styles.journeyCard,
-                  animationDelay: `${i * 80}ms`,
-                }}
-                onClick={() => selectJourney(journey)}
-              >
-                <div style={styles.journeyTop}>
-                  <span className="tabular-nums" style={styles.journeyDuration}>{journey.totalDuration} min</span>
-                  {journey.tag && (
-                    <span style={styles.journeyTag}>{journey.tag}</span>
-                  )}
-                </div>
-                <div style={styles.journeyPath}>
-                  {journey.segments.map((seg, si) => (
-                    <span key={si} style={styles.pathSegment}>
-                      {seg.type === 'walk' ? '🚶' : seg.type === 'transfer' ? '↔' : '🚌'}
-                      {si < journey.segments.length - 1 && <ArrowRight size={12} style={styles.pathArrow} />}
-                    </span>
-                  ))}
-                </div>
-                <span style={styles.journeyFare}>{journey.fareLabel}</span>
-              </button>
-            ))}
-          </div>
+          <button style={styles.planJourneyBtn} onClick={() => navigate('search')}>
+            <Search size={16} />
+            <span>Plan a journey</span>
+          </button>
         </div>
       </div>
     </div>
@@ -105,6 +80,13 @@ const styles: Record<string, React.CSSProperties> = {
   routeName: { fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' },
   routeFreq: { fontSize: 12, color: 'var(--color-text-muted)' },
   routeHours: { fontSize: 11, color: 'var(--color-text-muted)', flexShrink: 0 },
+  planJourneyBtn: {
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    width: '100%', padding: '14px 24px',
+    background: 'var(--color-accent-primary)', color: '#FFFFFF',
+    border: 'none', borderRadius: 'var(--radius-full)',
+    fontSize: 15, fontWeight: 600, cursor: 'pointer',
+  },
   journeyList: { display: 'flex', flexDirection: 'column', gap: 8 },
   journeyCard: {
     display: 'flex', flexDirection: 'column', gap: 8, padding: 16,

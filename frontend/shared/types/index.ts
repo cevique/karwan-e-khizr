@@ -14,10 +14,10 @@ export interface Bus {
   longitude: number;
   heading: number;
   speed: number; // km/h
-  status: 'active' | 'delayed' | 'inactive';
-  nextStopId: string;
-  nextStopName: string;
-  eta: number; // minutes
+  status: 'scheduled' | 'active' | 'completed';
+  nextStopId: string | null;
+  nextStopName: string | null;
+  eta: number | null; // minutes
   vehicleNumber: string;
 }
 
@@ -36,11 +36,11 @@ export interface TransitRoute {
   name: string;
   shortName: string;
   color: string;
-  type: 'bus' | 'metro';
-  stops: string[]; // stop IDs in order
-  polyline: [number, number][]; // [lng, lat] pairs
-  frequency: string; // e.g., "Every 6-8 min"
-  operatingHours: string; // e.g., "6:00 AM – 10:00 PM"
+  type: 'bus' | 'metro' | 'feeder';
+  stops: string[]; // stop IDs in order - not available from the API today, always empty
+  polyline: [number, number][]; // [lng, lat] pairs - not available from the API today, always empty
+  frequency?: string; // e.g., "Every 6-8 min" - only present for mock data; the API doesn't expose this yet
+  operatingHours?: string; // e.g., "6:00 AM – 10:00 PM" - only present for mock data
 }
 
 export type JourneySegmentType = 'walk' | 'bus' | 'metro' | 'transfer';
@@ -54,7 +54,7 @@ export interface WalkSegment {
 }
 
 export interface TransitSegment {
-  type: 'bus' | 'metro';
+  type: 'bus' | 'metro' | 'feeder';
   routeId: string;
   routeName: string;
   routeShortName: string;
@@ -62,7 +62,7 @@ export interface TransitSegment {
   fromStop: { id: string; name: string; latitude: number; longitude: number };
   toStop: { id: string; name: string; latitude: number; longitude: number };
   duration: number; // minutes
-  stops: number; // number of stops
+  stops?: number; // number of stops - not available from the API today
   direction: string;
 }
 
@@ -80,6 +80,7 @@ export interface Journey {
   segments: JourneySegment[];
   totalDuration: number; // minutes
   totalWalkDistance: number; // meters
+  transferCount?: number;
   fare: number; // PKR
   fareLabel: string;
   tag?: 'fastest' | 'fewest-transfers' | 'least-walking' | 'recommended';

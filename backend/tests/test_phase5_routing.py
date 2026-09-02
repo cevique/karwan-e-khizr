@@ -446,6 +446,32 @@ class TestJourneySearchEngine:
             pytest.fail(f"Unexpected result type: {type(result)}")
 
     @pytest.mark.asyncio
+    async def test_search_adjacent_stops_succeeds_without_skipping(self, db_session: AsyncSession):
+        """Regression test: Saddar -> Marrir Chowk are directly adjacent on
+        the Red line, so this MUST find a route - no pytest.skip escape
+        hatch here. Catches bugs in _build_journey/response serialization
+        that only manifest on the success path (which
+        test_search_known_origin_destination can silently skip past if its
+        stop pair happens to have no route in the current dataset).
+        """
+        engine = JourneySearchEngine(db_session)
+        result = await engine.search(
+            origin="Saddar",
+            destination="Marrir Chowk",
+            objective="fastest",
+        )
+
+        assert isinstance(result, JourneySearchResponse), f"Expected a route, got {type(result)}: {result}"
+        assert len(result.journeys) > 0
+        journey = result.journeys[0]
+        assert len(journey.legs) > 0
+        assert journey.total_duration_s > 0
+        assert journey.fare is not None
+        for leg in journey.legs:
+            assert leg.start_lat is not None
+            assert leg.end_lat is not None
+
+    @pytest.mark.asyncio
     async def test_search_with_max_walk_filter(self, db_session: AsyncSession):
         engine = JourneySearchEngine(db_session)
         result = await engine.search(
@@ -547,6 +573,48 @@ class TestAPIEndpoint:
                 pytest.skip("No route found")
             else:
                 assert response.status_code in (200, 400, 404)
+
+    @pytest.mark.asyncio
+    async def test_journey_search_endpoint_success_without_skipping(self, db_session: AsyncSession):
+        """Regression test for two real, previously-hidden bugs that both
+        only manifested on this exact path (an actual successful search,
+        served through the real HTTP/FastAPI layer - not the engine called
+        directly):
+          1. app/routing/engine.py used `graph.graph.nodes` instead of
+             `graph.nodes` in _build_journey, crashing with AttributeError.
+          2. the endpoint's return type annotation was `-> dict` while it
+             actually returned a JourneySearchResponse model instance,
+             which failed FastAPI's response serialization.
+        Both were masked by other tests either calling the engine directly
+        (bypassing FastAPI's response validation entirely) or skipping
+        whenever their chosen stop pair happened to return "no route
+        found" - exactly the pair used in test_journey_search_endpoint
+        above. Saddar -> Marrir Chowk are directly adjacent on the Red
+        line, so this one must not skip.
+        """
+        from httpx import AsyncClient, ASGITransport
+        from app.main import app
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/api/v1/transit/journeys/search",
+                json={
+                    "origin": "Saddar",
+                    "destination": "Marrir Chowk",
+                    "objective": "fastest",
+                },
+            )
+
+            assert response.status_code == 200, response.text
+            data = response.json()
+            assert len(data["journeys"]) > 0
+            journey = data["journeys"][0]
+            assert len(journey["legs"]) > 0
+            assert journey["total_duration_s"] > 0
+            assert journey["fare"] is not None
+            assert "origin_resolved" in data
+            assert "destination_resolved" in data
 
     @pytest.mark.asyncio
     async def test_journey_search_endpoint_invalid_input(self):

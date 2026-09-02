@@ -1,6 +1,9 @@
-import { Settings, Globe, Bell, Moon, Shield, Info } from 'lucide-react';
+import { useApp } from '../App';
+import { Settings, Globe, Bell, Moon, Shield, Info, LogIn, LogOut, Ticket, UserCircle } from 'lucide-react';
 
 export function SettingsScreen() {
+  const { auth, navigate } = useApp();
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -14,6 +17,41 @@ export function SettingsScreen() {
           <h3 style={styles.brandName}>Karwan-e-Khizr</h3>
           <span className="urdu" style={styles.brandUrdu}>کاروانِ خِضر</span>
           <span style={styles.version}>v0.1.0 — Frontend Prototype</span>
+        </div>
+
+        <div style={styles.section}>
+          <h4 style={styles.sectionTitle}>Account</h4>
+          {auth.user ? (
+            <>
+              <div style={styles.settingRow}>
+                <UserCircle size={18} color="var(--color-text-secondary)" />
+                <div style={styles.settingInfo}>
+                  <span style={styles.settingLabel}>{auth.user.full_name ?? 'Signed in'}</span>
+                  <span style={styles.settingValue}>{auth.user.email}</span>
+                </div>
+              </div>
+              <button style={styles.settingRowBtn} onClick={() => navigate('tickets')}>
+                <Ticket size={18} color="var(--color-text-secondary)" />
+                <div style={styles.settingInfo}>
+                  <span style={styles.settingLabel}>My Tickets</span>
+                </div>
+              </button>
+              <button style={styles.settingRowBtn} onClick={auth.logout}>
+                <LogOut size={18} color="var(--color-error)" />
+                <div style={styles.settingInfo}>
+                  <span style={{ ...styles.settingLabel, color: 'var(--color-error)' }}>Sign out</span>
+                </div>
+              </button>
+            </>
+          ) : (
+            <button style={styles.settingRowBtn} onClick={() => navigate('auth')}>
+              <LogIn size={18} color="var(--color-accent-primary)" />
+              <div style={styles.settingInfo}>
+                <span style={{ ...styles.settingLabel, color: 'var(--color-accent-primary)' }}>Sign in</span>
+                <span style={styles.settingValue}>Buy and manage tickets</span>
+              </div>
+            </button>
+          )}
         </div>
 
         <div style={styles.section}>
@@ -100,6 +138,12 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
     background: 'var(--color-surface)', borderRadius: 'var(--radius-md)',
     marginBottom: 6, border: '1px solid var(--color-hairline)',
+  },
+  settingRowBtn: {
+    display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+    background: 'var(--color-surface)', borderRadius: 'var(--radius-md)',
+    marginBottom: 6, border: '1px solid var(--color-hairline)',
+    width: '100%', textAlign: 'left' as const, cursor: 'pointer',
   },
   settingInfo: { flex: 1, display: 'flex', flexDirection: 'column', gap: 1 },
   settingLabel: { fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)' },

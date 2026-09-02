@@ -1,7 +1,10 @@
-import { useState, useCallback, createContext, useContext } from 'react';
+import { useState, useCallback, useEffect, createContext, useContext } from 'react';
 import type { Bus, Stop, Journey, TransitRoute } from '@shared/types';
+import type { ApiUserPublic } from '@shared/types/api';
 import { initConfig } from '@shared/services/config';
 import { useTransitData } from '@shared/hooks/useTransitData';
+import { transitService } from '@shared/services/transit-service';
+import { ApiError } from '@shared/services/api-client';
 import { DesktopShell } from './components/shell/DesktopShell';
 import { MobileShell } from './components/shell/MobileShell';
 import { useMediaQuery } from './hooks/useMediaQuery';
@@ -9,11 +12,15 @@ import { useMediaQuery } from './hooks/useMediaQuery';
 // ── Initialise shared config from Vite env ──
 initConfig({
   apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
-  useMockData: import.meta.env.VITE_USE_MOCK_DATA !== 'false',
+  // Real backend endpoints exist now, so mock data is opt-in (set
+  // VITE_USE_MOCK_DATA=true to force it, e.g. for offline demos).
+  useMockData: import.meta.env.VITE_USE_MOCK_DATA === 'true',
 });
 
+const TOKEN_STORAGE_KEY = 'kek_auth_token';
+
 // ── App State ──
-export type Screen = 'home' | 'search' | 'routes' | 'journey-detail' | 'saved' | 'settings';
+export type Screen = 'home' | 'search' | 'routes' | 'journey-detail' | 'saved' | 'settings' | 'auth' | 'tickets';
 
 export interface AppState {
   screen: Screen;
@@ -33,6 +40,17 @@ interface TransitDataContext {
   transitError: Error | null;
 }
 
+interface AuthContext {
+  user: ApiUserPublic | null;
+  token: string | null;
+  loading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, fullName?: string) => Promise<void>;
+  logout: () => void;
+  clearError: () => void;
+}
+
 interface AppContextType {
   state: AppState;
   navigate: (screen: Screen) => void;
@@ -43,6 +61,7 @@ interface AppContextType {
   setSearchOrigin: (origin: string) => void;
   setSearchDestination: (dest: string) => void;
   transit: TransitDataContext;
+  auth: AuthContext;
 }
 
 const defaultState: AppState = {
@@ -69,6 +88,72 @@ export default function App() {
 
   // Fetch transit data through the service layer
   const { data: transitData, loading: transitLoading, error: transitError } = useTransitData();
+
+  // ── Auth state ──
+  const [token, setToken] = useState<string | null>(() => {
+    try { return localStorage.getItem(TOKEN_STORAGE_KEY); } catch { return null; }
+  });
+  const [user, setUser] = useState<ApiUserPublic | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  // Restore the user profile on load if a token is already stored.
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    transitService.getMe(token)
+      .then((u) => { if (!cancelled) setUser(u); })
+      .catch(() => {
+        // Stored token is no longer valid - drop it silently.
+        if (!cancelled) {
+          setToken(null);
+          try { localStorage.removeItem(TOKEN_STORAGE_KEY); } catch { /* ignore */ }
+        }
+      });
+    return () => { cancelled = true; };
+  }, [token]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    setAuthLoading(true);
+    setAuthError(null);
+    try {
+      const res = await transitService.login(email, password);
+      setToken(res.access_token);
+      setUser(res.user);
+      try { localStorage.setItem(TOKEN_STORAGE_KEY, res.access_token); } catch { /* ignore */ }
+    } catch (err) {
+      setAuthError(describeAuthError(err));
+      throw err;
+    } finally {
+      setAuthLoading(false);
+    }
+  }, []);
+
+  const register = useCallback(async (email: string, password: string, fullName?: string) => {
+    setAuthLoading(true);
+    setAuthError(null);
+    try {
+      await transitService.register(email, password, fullName);
+      // Registration doesn't return a session - log in right after.
+      const res = await transitService.login(email, password);
+      setToken(res.access_token);
+      setUser(res.user);
+      try { localStorage.setItem(TOKEN_STORAGE_KEY, res.access_token); } catch { /* ignore */ }
+    } catch (err) {
+      setAuthError(describeAuthError(err));
+      throw err;
+    } finally {
+      setAuthLoading(false);
+    }
+  }, []);
+
+  const logout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    try { localStorage.removeItem(TOKEN_STORAGE_KEY); } catch { /* ignore */ }
+  }, []);
+
+  const clearError = useCallback(() => setAuthError(null), []);
 
   const navigate = useCallback((screen: Screen) => {
     setState((prev) => ({ ...prev, screen, previousScreen: prev.screen }));
@@ -115,6 +200,11 @@ export default function App() {
     transitError,
   };
 
+  const authContext: AuthContext = {
+    user, token, loading: authLoading, error: authError,
+    login, register, logout, clearError,
+  };
+
   const contextValue: AppContextType = {
     state,
     navigate,
@@ -125,6 +215,7 @@ export default function App() {
     setSearchOrigin,
     setSearchDestination,
     transit: transitContext,
+    auth: authContext,
   };
 
   return (
@@ -132,4 +223,15 @@ export default function App() {
       {isDesktop ? <DesktopShell /> : <MobileShell />}
     </AppContext.Provider>
   );
+}
+
+function describeAuthError(err: unknown): string {
+  if (err instanceof ApiError) {
+    if (err.status === 401) return 'Incorrect email or password.';
+    if (err.status === 409) return 'An account with this email already exists.';
+    if (err.status === 422) return 'Please check the details you entered.';
+    const body = err.body as { detail?: string } | undefined;
+    if (typeof body?.detail === 'string') return body.detail;
+  }
+  return 'Something went wrong. Please try again.';
 }

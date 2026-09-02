@@ -1,19 +1,90 @@
 import { useState } from 'react';
 import { useApp } from '../App';
-import { Search, ArrowLeft, MapPin, TrainFront, Building2, X, ArrowUpDown, Clock, Loader2 } from 'lucide-react';
-import { mockSearchResults, mockJourneys } from '@shared/index';
-import { useSearchResults } from '@shared/hooks/useTransitData';
+import { Search, ArrowLeft, MapPin, TrainFront, Building2, X, ArrowUpDown, Clock, Loader2, AlertCircle, Sparkles, Send } from 'lucide-react';
+import { mockSearchResults } from '@shared/index';
+import type { Journey } from '@shared/types';
+import type { AssistantResult } from '@shared/services/transit-service';
+import { useSearchResults, useJourneySearch } from '@shared/hooks/useTransitData';
+import { AmbiguousLocationError, NoRouteFoundError, transitService } from '@shared/services/transit-service';
+
+function JourneyList({ journeys, onSelect }: { journeys: Journey[]; onSelect: (j: Journey) => void }) {
+  return (
+    <div style={styles.journeyList}>
+      {journeys.map((journey, i) => (
+        <button
+          key={journey.id}
+          style={{
+            ...styles.journeyCard,
+            animationDelay: `${i * 80}ms`,
+            ...(journey.tag === 'recommended' ? styles.journeyCardBest : {}),
+          }}
+          onClick={() => onSelect(journey)}
+        >
+          <div style={styles.journeyTop}>
+            <div style={styles.journeyDuration}>
+              <span className="tabular-nums" style={styles.durationNum}>{journey.totalDuration}</span>
+              <span style={styles.durationUnit}>min</span>
+            </div>
+            {journey.tag && (
+              <span style={{
+                ...styles.journeyTag,
+                ...(journey.tag === 'recommended' ? styles.tagRecommended :
+                   journey.tag === 'fastest' ? styles.tagFastest : styles.tagWalking),
+              }}>
+                {journey.tag}
+              </span>
+            )}
+          </div>
+          <div style={styles.journeySegments}>
+            {journey.segments.map((seg, si) => (
+              <span key={si} style={styles.segmentLabel}>
+                {seg.type === 'walk'
+                  ? `Walk ${seg.duration} min`
+                  : seg.type === 'transfer'
+                  ? `Transfer ${seg.duration} min`
+                  : seg.routeShortName}
+                {si < journey.segments.length - 1 && <span style={styles.segmentArrow}>→</span>}
+              </span>
+            ))}
+          </div>
+          <div style={styles.journeyMeta}>
+            <span style={styles.fareLabel}>{journey.fareLabel}</span>
+            <span style={styles.walkLabel}>
+              {(journey.totalWalkDistance / 1000).toFixed(1)} km walk
+              {journey.transferCount != null && journey.transferCount > 0
+                ? ` · ${journey.transferCount} transfer${journey.transferCount > 1 ? 's' : ''}`
+                : ''}
+            </span>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function SearchScreen() {
-  const { state, navigate, setSearchOrigin, setSearchDestination, selectJourney } = useApp();
+  const { state, navigate, setSearchOrigin, setSearchDestination, selectJourney, transit, auth } = useApp();
   const [query, setQuery] = useState('');
   const [activeField, setActiveField] = useState<'from' | 'to'>('to');
   const [showJourneys, setShowJourneys] = useState(false);
 
+  // "Ask" mode: free-text natural-language search via the AI assistant
+  const [askMode, setAskMode] = useState(false);
+  const [askQuery, setAskQuery] = useState('');
+  const [askLoading, setAskLoading] = useState(false);
+  const [askResult, setAskResult] = useState<AssistantResult | null>(null);
+  const [askErrorMsg, setAskErrorMsg] = useState<string | null>(null);
+
   // Use the service layer for search results
-  const { data: searchResults, loading: searchLoading } = useSearchResults(query);
+  const { data: searchResults } = useSearchResults(query);
   // Fall back to full list when query is empty
   const filtered = query.length > 0 ? searchResults : mockSearchResults;
+
+  const {
+    data: journeys,
+    loading: journeysLoading,
+    error: journeysError,
+  } = useJourneySearch(state.searchOrigin, state.searchDestination, transit.routes, transit.stops, showJourneys);
 
   const handleSelect = (name: string) => {
     if (activeField === 'from') setSearchOrigin(name);
@@ -33,6 +104,22 @@ export function SearchScreen() {
     setSearchDestination(tmp);
   };
 
+  const handleAsk = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!askQuery.trim() || askLoading) return;
+    setAskLoading(true);
+    setAskErrorMsg(null);
+    setAskResult(null);
+    try {
+      const result = await transitService.askAssistant(askQuery, transit.routes, transit.stops, auth.token ?? undefined);
+      setAskResult(result);
+    } catch {
+      setAskErrorMsg("Sorry, I couldn't reach the assistant. Please try again.");
+    } finally {
+      setAskLoading(false);
+    }
+  };
+
   const iconForType = (type: string) => {
     if (type === 'stop') return <MapPin size={16} color="var(--color-accent-secondary)" />;
     if (type === 'station') return <TrainFront size={16} color="var(--color-accent-primary)" />;
@@ -40,6 +127,16 @@ export function SearchScreen() {
   };
 
   if (showJourneys) {
+    let errorMessage: string | null = null;
+    if (journeysError instanceof AmbiguousLocationError) {
+      const candidateNames = journeysError.candidates.map((c) => c.name).join(', ');
+      errorMessage = `"${journeysError.field === 'origin' ? state.searchOrigin : state.searchDestination}" could mean several places: ${candidateNames}. Try being more specific.`;
+    } else if (journeysError instanceof NoRouteFoundError) {
+      errorMessage = journeysError.message || 'No route found between these two places.';
+    } else if (journeysError) {
+      errorMessage = 'Something went wrong finding journeys. Please try again.';
+    }
+
     return (
       <div style={styles.container}>
         <div style={styles.header}>
@@ -50,54 +147,94 @@ export function SearchScreen() {
         </div>
         <div style={styles.summaryBar}>
           <span style={styles.summaryText}>{state.searchOrigin} → {state.searchDestination}</span>
-          <span style={styles.demoTag}>Demo</span>
         </div>
-        <div style={styles.journeyList}>
-          {mockJourneys.map((journey, i) => (
-            <button
-              key={journey.id}
-              style={{
-                ...styles.journeyCard,
-                animationDelay: `${i * 80}ms`,
-                ...(journey.tag === 'recommended' ? styles.journeyCardBest : {}),
-              }}
-              onClick={() => selectJourney(journey)}
-            >
-              <div style={styles.journeyTop}>
-                <div style={styles.journeyDuration}>
-                  <span className="tabular-nums" style={styles.durationNum}>{journey.totalDuration}</span>
-                  <span style={styles.durationUnit}>min</span>
+        {journeysLoading && (
+          <div style={styles.stateMessage}>
+            <Loader2 size={20} className="spin" />
+            <span>Finding journeys…</span>
+          </div>
+        )}
+        {!journeysLoading && errorMessage && (
+          <div style={styles.stateMessage}>
+            <AlertCircle size={20} color="var(--color-error)" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+        {!journeysLoading && !errorMessage && journeys && journeys.length === 0 && (
+          <div style={styles.stateMessage}>
+            <span>No journeys found.</span>
+          </div>
+        )}
+        {!journeysLoading && !errorMessage && journeys && journeys.length > 0 && (
+          <JourneyList journeys={journeys} onSelect={selectJourney} />
+        )}
+      </div>
+    );
+  }
+
+  if (askMode) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <button style={styles.backBtn} onClick={() => setAskMode(false)}>
+            <ArrowLeft size={20} />
+          </button>
+          <h2 style={styles.headerTitle}>Ask Karwan-e-Khizr</h2>
+        </div>
+
+        <form style={styles.askForm} onSubmit={handleAsk}>
+          <div style={styles.askInputWrap}>
+            <Sparkles size={16} color="var(--color-accent-primary)" />
+            <input
+              style={styles.input}
+              placeholder="e.g. how do I get from Saddar to PIMS Hospital?"
+              value={askQuery}
+              onChange={(e) => setAskQuery(e.target.value)}
+              autoFocus
+            />
+          </div>
+          <button style={styles.askSubmitBtn} type="submit" disabled={askLoading || !askQuery.trim()}>
+            {askLoading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
+          </button>
+        </form>
+
+        <div style={styles.askResults}>
+          {askLoading && (
+            <div style={styles.stateMessage}>
+              <Loader2 size={20} className="spin" />
+              <span>Thinking…</span>
+            </div>
+          )}
+          {!askLoading && askErrorMsg && (
+            <div style={styles.stateMessage}>
+              <AlertCircle size={20} color="var(--color-error)" />
+              <span>{askErrorMsg}</span>
+            </div>
+          )}
+          {!askLoading && askResult && (
+            <>
+              <div style={styles.replyBubble}>{askResult.reply}</div>
+              {askResult.clarification && askResult.clarification.candidateNames.length > 0 && (
+                <div style={styles.clarificationBox}>
+                  <span style={styles.clarificationLabel}>Did you mean:</span>
+                  <div style={styles.clarificationChips}>
+                    {askResult.clarification.candidateNames.map((name) => (
+                      <button
+                        key={name}
+                        style={styles.clarificationChip}
+                        onClick={() => setAskQuery((q) => `${q} (${name})`)}
+                      >
+                        {name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                {journey.tag && (
-                  <span style={{
-                    ...styles.journeyTag,
-                    ...(journey.tag === 'recommended' ? styles.tagRecommended :
-                       journey.tag === 'fastest' ? styles.tagFastest : styles.tagWalking),
-                  }}>
-                    {journey.tag}
-                  </span>
-                )}
-              </div>
-              <div style={styles.journeySegments}>
-                {journey.segments.map((seg, si) => (
-                  <span key={si} style={styles.segmentLabel}>
-                    {seg.type === 'walk'
-                      ? `Walk ${(seg as any).duration} min`
-                      : seg.type === 'transfer'
-                      ? `Transfer ${(seg as any).duration} min`
-                      : (seg as any).routeShortName}
-                    {si < journey.segments.length - 1 && <span style={styles.segmentArrow}>→</span>}
-                  </span>
-                ))}
-              </div>
-              <div style={styles.journeyMeta}>
-                <span style={styles.fareLabel}>{journey.fareLabel}</span>
-                <span style={styles.walkLabel}>
-                  {(journey.totalWalkDistance / 1000).toFixed(1)} km walk
-                </span>
-              </div>
-            </button>
-          ))}
+              )}
+              {askResult.journeys && askResult.journeys.length > 0 && (
+                <JourneyList journeys={askResult.journeys} onSelect={selectJourney} />
+              )}
+            </>
+          )}
         </div>
       </div>
     );
@@ -110,6 +247,10 @@ export function SearchScreen() {
           <ArrowLeft size={20} />
         </button>
         <h2 style={styles.headerTitle}>Plan Journey</h2>
+        <button style={styles.askToggleBtn} onClick={() => setAskMode(true)} title="Ask in plain language">
+          <Sparkles size={16} />
+          <span>Ask</span>
+        </button>
       </div>
 
       <div style={styles.inputSection}>
@@ -243,6 +384,40 @@ const styles: Record<string, React.CSSProperties> = {
   headerTitle: {
     fontSize: 17,
     fontWeight: 600,
+    flex: 1,
+  },
+  askToggleBtn: {
+    display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px',
+    background: 'var(--color-accent-primary-muted)', color: 'var(--color-accent-primary)',
+    border: 'none', borderRadius: 'var(--radius-full)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+  },
+  askForm: {
+    display: 'flex', alignItems: 'center', gap: 10, padding: '16px 20px',
+    borderBottom: '1px solid var(--color-hairline)',
+  },
+  askInputWrap: {
+    flex: 1, display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px',
+    background: 'var(--color-surface)', borderRadius: 'var(--radius-md)',
+    border: '1.5px solid var(--color-hairline)',
+  },
+  askSubmitBtn: {
+    width: 44, height: 44, borderRadius: 'var(--radius-md)', border: 'none',
+    background: 'var(--color-accent-primary)', color: '#FFFFFF', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
+  askResults: { flex: 1, overflow: 'auto', padding: '16px 20px' },
+  replyBubble: {
+    padding: '14px 16px', background: 'var(--color-surface)',
+    borderRadius: 'var(--radius-md)', border: '1px solid var(--color-hairline)',
+    fontSize: 14, color: 'var(--color-text-primary)', lineHeight: 1.5, marginBottom: 12,
+  },
+  clarificationBox: { marginBottom: 12 },
+  clarificationLabel: { fontSize: 12, color: 'var(--color-text-muted)', fontWeight: 600 },
+  clarificationChips: { display: 'flex', flexWrap: 'wrap' as const, gap: 6, marginTop: 6 },
+  clarificationChip: {
+    padding: '6px 12px', borderRadius: 'var(--radius-full)',
+    border: '1px solid var(--color-hairline)', background: 'var(--color-surface)',
+    fontSize: 12, fontWeight: 500, color: 'var(--color-text-primary)', cursor: 'pointer',
   },
   inputSection: {
     padding: '20px',
@@ -430,6 +605,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 12,
     color: 'var(--color-text-muted)',
   },
+  stateMessage: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    padding: '24px 20px',
+    color: 'var(--color-text-muted)',
+    fontSize: 14,
+  },
   summaryBar: {
     display: 'flex',
     alignItems: 'center',
@@ -442,16 +625,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 14,
     fontWeight: 500,
     color: 'var(--color-text-primary)',
-  },
-  demoTag: {
-    fontSize: 10,
-    fontWeight: 600,
-    color: 'var(--color-text-muted)',
-    padding: '3px 8px',
-    background: 'var(--color-surface-hover)',
-    borderRadius: 'var(--radius-full)',
-    letterSpacing: '0.3px',
-    textTransform: 'uppercase' as const,
   },
   journeyList: {
     flex: 1,

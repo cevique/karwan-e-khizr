@@ -117,11 +117,44 @@ async def _resolve_fuzzy_stop(session: AsyncSession, text: str) -> list[Location
     return candidates[:5]
 
 
-async def _resolve_alias(text: str) -> list[LocationCandidate]:
-    stop_key = resolve_alias(text)
-    if not stop_key:
-        return []
+async def _resolve_alias(session: AsyncSession, text: str) -> list[LocationCandidate]:
+    """Resolve a known alias to a real transit stop.
 
+    ``STOP_ALIASES`` maps a canonical stop key (matching ``Stop.external_key``)
+    to a list of alias strings a user might type (e.g. "pims" -> "pims_hospital").
+    The canonical key must be looked up against the ``stops`` table itself -
+    it is NOT a landmark. ``LANDMARK_ALIASES``/``get_landmark_coords`` is a
+    separate, unrelated table of generic landmarks (malls, parks, sectors)
+    and must not be used here.
+    """
+    stop_key = resolve_alias(text)
+    if stop_key:
+        result = await session.execute(
+            select(Stop).where(Stop.external_key == stop_key)
+        )
+        stop = result.scalar_one_or_none()
+        if stop is not None and stop.location is not None:
+            from geoalchemy2.shape import to_shape
+
+            point = to_shape(stop.location)
+            lat, lon = point.y, point.x
+            if (
+                ISLAMABAD_BOUNDS["min_lat"] <= lat <= ISLAMABAD_BOUNDS["max_lat"]
+                and ISLAMABAD_BOUNDS["min_lon"] <= lon <= ISLAMABAD_BOUNDS["max_lon"]
+            ):
+                return [
+                    LocationCandidate(
+                        stop_id=stop.id,
+                        name=stop.name,
+                        lat=lat,
+                        lon=lon,
+                        match_confidence=0.9,
+                        match_type="fuzzy_stop",
+                    )
+                ]
+
+    # Fall back to the generic landmark table (malls, parks, sectors, etc.)
+    # for aliases that aren't tied to a specific transit stop.
     coords = get_landmark_coords(text)
     if not coords:
         return []
@@ -202,7 +235,7 @@ async def resolve_location(
         fuzzy = await _resolve_fuzzy_stop(session, text)
         all_candidates.extend(fuzzy)
 
-        alias = await _resolve_alias(text)
+        alias = await _resolve_alias(session, text)
         all_candidates.extend(alias)
 
         if not fuzzy and not alias:
