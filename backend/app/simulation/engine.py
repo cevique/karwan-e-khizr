@@ -145,6 +145,8 @@ class SimulationEngine:
 
             seg_distance = self._haversine_m(stop_a.lat, stop_a.lon, stop_b.lat, stop_b.lon)
             speed = seg_distance / total_travel_time if total_travel_time > 0 else 0.0
+            # Cap speed to realistic city bus range (0-50 km/h = ~13.9 m/s)
+            speed = min(speed, 13.9)
             bearing = self._bearing(stop_a.lat, stop_a.lon, stop_b.lat, stop_b.lon)
 
         next_stop = stop_b

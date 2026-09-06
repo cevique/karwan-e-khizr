@@ -69,12 +69,12 @@ Environment: Windows, Chrome, localhost:5173
 - [x] M2+M3: Locate Me + Layers
 - [x] M5: DEMO DATA hidden
 - [x] M12: Routes tab — bus/stops only highlight, no popup
-- [ ] N1: Bus popup card doesn't update on poll
-- [ ] N2: Buses/stops/routes not on roads
+- [x] N1: Bus popup card doesn't update on poll
+- [x] N2: Buses/stops/routes not on roads
 - [ ] N3: Some routes show 0 stops
-- [ ] N4: Mobile nav bar hidden
-- [ ] N5: Locate Me goes to Peru
-- [ ] N6: "Next: Unknown" still appearing
+- [x] N4: Mobile nav bar hidden
+- [x] N5: Locate Me goes to Peru
+- [x] N6: "Next: Unknown" still appearing
 - [ ] M4: Search bar navigates away
 - [ ] M8: Settings items non-functional
 - [ ] M10: PKR 0.00 fares
