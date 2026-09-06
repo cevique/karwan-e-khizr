@@ -63,7 +63,7 @@ export function JourneyDetailScreen() {
         ...styles.sidePanel,
         ...(isDesktop
           ? { width: 380, height: '100%', borderLeft: '1px solid var(--color-hairline)', flexShrink: 0 }
-          : { position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%', height: '60vh', borderTop: '1px solid var(--color-hairline)', borderRadius: '16px 16px 0 0', zIndex: 20 }
+          : { position: 'fixed', bottom: 60, left: 0, right: 0, width: '100%', height: '60vh', borderTop: '1px solid var(--color-hairline)', borderRadius: '16px 16px 0 0', zIndex: 20 }
         ),
       }}>
         <div style={styles.header}>
