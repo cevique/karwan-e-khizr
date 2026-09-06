@@ -136,8 +136,10 @@ class SimulationEngine:
                 fraction = min(1.0, travel_time_in_segment / total_travel_time)
 
             if route_geometry and len(route_geometry) >= 2:
+                # Use overall elapsed fraction along the full route geometry
+                overall_fraction = min(1.0, elapsed_s / total_duration)
                 lat, lon = self._interpolate_along_geometry(
-                    route_geometry, fraction
+                    route_geometry, overall_fraction
                 )
             else:
                 lat = stop_a.lat + (stop_b.lat - stop_a.lat) * fraction

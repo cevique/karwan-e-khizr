@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import httpx
 from datetime import datetime, timezone
 from typing import Optional, Protocol
 
@@ -18,6 +19,73 @@ from app.eta.predictor import ETAPredictor, NoOpETAPredictor
 from app.eta.features import extract_eta_features
 from app.simulation.engine import SimulationEngine
 from app.simulation.schemas import StopTimeEntry
+
+# In-memory cache for OSRM route geometry
+_geometry_cache: dict[int, list[tuple[float, float]]] = {}
+
+
+async def _fetch_route_geometry(route_id: int) -> list[tuple[float, float]]:
+    """Fetch road-following geometry from OSRM for a route's stops."""
+    if route_id in _geometry_cache:
+        return _geometry_cache[route_id]
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            # Get route stops from the transit catalog service
+            from app.core.database import AsyncSessionLocal
+            async with AsyncSessionLocal() as session:
+                query = (
+                    select(RouteStop, Stop)
+                    .join(Stop, RouteStop.stop_id == Stop.id)
+                    .where(RouteStop.route_id == route_id)
+                    .order_by(RouteStop.sequence)
+                )
+                rows = (await session.execute(query)).all()
+                stops = []
+                for rs, stop in rows:
+                    if stop.location is not None:
+                        from geoalchemy2.shape import to_shape
+                        point = to_shape(stop.location)
+                        stops.append((point.x, point.y))  # (lon, lat)
+
+            if len(stops) < 2:
+                return []
+
+            coords_str = ";".join(f"{lon},{lat}" for lon, lat in stops)
+            url = f"http://router.project-osrm.org/route/v1/driving/{coords_str}?overview=full&geometries=geojson"
+            resp = await client.get(url)
+            resp.raise_for_status()
+            data = resp.json()
+
+            if data.get("code") == "Ok" and data.get("routes"):
+                coords = [
+                    (c[1], c[0]) for c in data["routes"][0]["geometry"]["coordinates"]
+                ]
+                _geometry_cache[route_id] = coords
+                return coords
+    except Exception:
+        pass
+
+    # Fallback to straight-line stop coordinates
+    try:
+        async with AsyncSessionLocal() as session:
+            query = (
+                select(RouteStop, Stop)
+                .join(Stop, RouteStop.stop_id == Stop.id)
+                .where(RouteStop.route_id == route_id)
+                .order_by(RouteStop.sequence)
+            )
+            rows = (await session.execute(query)).all()
+            coords = []
+            for rs, stop in rows:
+                if stop.location is not None:
+                    from geoalchemy2.shape import to_shape
+                    point = to_shape(stop.location)
+                    coords.append((point.x, point.y))
+            _geometry_cache[route_id] = coords
+            return coords
+    except Exception:
+        return []
 
 
 class VehicleLocationProvider(Protocol):
@@ -70,7 +138,8 @@ class SimulatedVehicleLocationProvider:
         total_duration = stops[-1].arrival_offset_s + SimulationEngine.DEFAULT_DWELL_S
         if total_duration > 0:
             elapsed_s = elapsed_s % total_duration
-        pos_data = self._engine.compute_position_at(stops, elapsed_s)
+        geometry = await _fetch_route_geometry(trip.route_id)
+        pos_data = self._engine.compute_position_at(stops, elapsed_s, route_geometry=geometry if geometry else None)
 
         return {
             "id": vehicle.id,
@@ -155,6 +224,7 @@ class SimulatedVehicleLocationProvider:
             route_name = route.short_name if route else "Unknown"
 
             vehicles = await self._get_or_create_vehicle(trip, route_name)
+            geometry = await _fetch_route_geometry(trip.route_id)
             for vehicle in vehicles:
                 active_trips.append({
                     "vehicle": vehicle,
@@ -162,6 +232,7 @@ class SimulatedVehicleLocationProvider:
                     "route_name": route_name,
                     "stops": stops,
                     "total_duration": total_duration,
+                    "geometry": geometry,
                 })
 
         # Commit any newly created vehicles so they persist across requests
@@ -195,12 +266,13 @@ class SimulatedVehicleLocationProvider:
         stops = trip_info["stops"]
         route_name = trip_info["route_name"]
         total_duration = trip_info["total_duration"]
+        geometry = trip_info.get("geometry", [])
 
         elapsed_s = (now - trip.scheduled_start_time.replace(tzinfo=timezone.utc)).total_seconds()
         # Loop the trip: when elapsed exceeds total_duration, wrap around
         if total_duration > 0:
             elapsed_s = elapsed_s % total_duration
-        pos_data = self._engine.compute_position_at(stops, elapsed_s)
+        pos_data = self._engine.compute_position_at(stops, elapsed_s, route_geometry=geometry if geometry else None)
 
         return {
             "id": vehicle.id,
