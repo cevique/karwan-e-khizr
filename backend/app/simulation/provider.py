@@ -164,6 +164,10 @@ class SimulatedVehicleLocationProvider:
                     "total_duration": total_duration,
                 })
 
+        # Commit any newly created vehicles so they persist across requests
+        if active_trips:
+            await self._db.commit()
+
         return active_trips
 
     async def _get_or_create_vehicle(self, trip: Trip, route_name: str) -> list[Vehicle]:
