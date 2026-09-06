@@ -61,6 +61,6 @@ Environment: Windows, Chrome, localhost:5173
 - [ ] M9: Ammar Chowk hardcoded (already removed from defaultState)
 - [ ] M10: PKR 0.00 fares
 - [ ] M11: Live Tracking placeholder
-- [ ] M12: Routes tab — bus/stops only highlight, no popup
+- [x] M12: Routes tab — bus/stops only highlight, no popup
 - [ ] M13: Doesn't remember last screen on refresh
 - [ ] L1-L4: Polish items
