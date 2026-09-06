@@ -67,6 +67,9 @@ class SimulatedVehicleLocationProvider:
         route_name = route.short_name if route else "Unknown"
 
         elapsed_s = (now - trip.scheduled_start_time.replace(tzinfo=timezone.utc)).total_seconds()
+        total_duration = stops[-1].arrival_offset_s + SimulationEngine.DEFAULT_DWELL_S
+        if total_duration > 0:
+            elapsed_s = elapsed_s % total_duration
         pos_data = self._engine.compute_position_at(stops, elapsed_s)
 
         return {
@@ -147,8 +150,6 @@ class SimulatedVehicleLocationProvider:
 
             if elapsed_s < -300:
                 continue
-            if elapsed_s > total_duration + 60:
-                continue
 
             route = await self._db.get(Route, trip.route_id)
             route_name = route.short_name if route else "Unknown"
@@ -160,6 +161,7 @@ class SimulatedVehicleLocationProvider:
                     "trip": trip,
                     "route_name": route_name,
                     "stops": stops,
+                    "total_duration": total_duration,
                 })
 
         return active_trips
@@ -188,8 +190,12 @@ class SimulatedVehicleLocationProvider:
         trip = trip_info["trip"]
         stops = trip_info["stops"]
         route_name = trip_info["route_name"]
+        total_duration = trip_info["total_duration"]
 
         elapsed_s = (now - trip.scheduled_start_time.replace(tzinfo=timezone.utc)).total_seconds()
+        # Loop the trip: when elapsed exceeds total_duration, wrap around
+        if total_duration > 0:
+            elapsed_s = elapsed_s % total_duration
         pos_data = self._engine.compute_position_at(stops, elapsed_s)
 
         return {

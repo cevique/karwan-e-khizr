@@ -44,6 +44,17 @@ Environment: Windows, Chrome, localhost:5173
 | L3 | Journey | "G-9 Markaz" duplicate warning | "could mean several places: G-9 Markaz, G-9 Markaz" |
 | L4 | All | No error feedback for failed searches | Just says "No transit route found" with no suggestion |
 
+## New bugs (reported 2026-09-07)
+
+| # | Screen | Bug | Details |
+|---|---|---|---|
+| N1 | Home | Bus popup card doesn't update on poll | When bus popup is open, the card data (next stop, speed, ETA) doesn't refresh on 8s interval — only nearby buses list updates |
+| N2 | All | Buses/stops/routes not on roads | Straight lines between stops instead of following actual road geometry |
+| N3 | Routes | Some routes show 0 stops | Routes with no route_stops data in DB show empty stop list |
+| N4 | Mobile | Nav bar hidden on Home/Routes | Bottom nav not visible because bottom sheet overlay covers it (z-index issue) |
+| N5 | Home | Locate Me goes to Peru | After granting permission, second click flies to wrong location (Peru) instead of Rawalpindi |
+| N6 | Home | "Next: Unknown" still appearing | Some buses still show Unknown for next stop name |
+
 ---
 
 ## Fix Progress
@@ -56,11 +67,17 @@ Environment: Windows, Chrome, localhost:5173
 - [x] M7: Settings layout
 - [x] M1+M6: Bus card interaction
 - [x] M2+M3: Locate Me + Layers
-- [ ] M4: Search bar navigates away (should be inline autocomplete)
-- [ ] M8: Settings items non-functional (Language, Theme, etc.)
-- [ ] M9: Ammar Chowk hardcoded (already removed from defaultState)
+- [x] M5: DEMO DATA hidden
+- [x] M12: Routes tab — bus/stops only highlight, no popup
+- [ ] N1: Bus popup card doesn't update on poll
+- [ ] N2: Buses/stops/routes not on roads
+- [ ] N3: Some routes show 0 stops
+- [ ] N4: Mobile nav bar hidden
+- [ ] N5: Locate Me goes to Peru
+- [ ] N6: "Next: Unknown" still appearing
+- [ ] M4: Search bar navigates away
+- [ ] M8: Settings items non-functional
 - [ ] M10: PKR 0.00 fares
 - [ ] M11: Live Tracking placeholder
-- [x] M12: Routes tab — bus/stops only highlight, no popup
 - [ ] M13: Doesn't remember last screen on refresh
 - [ ] L1-L4: Polish items

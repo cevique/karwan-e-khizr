@@ -48,6 +48,8 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'var(--color-surface)',
     borderTop: '1px solid var(--color-hairline)',
     paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+    zIndex: 30,
+    position: 'relative',
   },
   item: {
     flex: 1,
