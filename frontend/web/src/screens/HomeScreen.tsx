@@ -124,7 +124,7 @@ export function HomeScreen() {
               style={{
                 ...styles.busCard,
                 animationDelay: `${i * 60}ms`,
-                ...(state.selectedBus?.id === bus.id ? styles.busCardActive : {}),
+                ...(state.selectedBus?.id === bus.id ? styles.busCardActive : styles.busCardInactive),
               }}
               onClick={() => {
                 selectBus(state.selectedBus?.id === bus.id ? null : bus);
@@ -361,6 +361,10 @@ const styles: Record<string, React.CSSProperties> = {
   busCardActive: {
     borderColor: 'var(--color-accent-primary)',
     boxShadow: '0 0 0 1px var(--color-accent-primary)',
+  },
+  busCardInactive: {
+    borderColor: 'var(--color-hairline)',
+    boxShadow: 'none',
   },
   busCardTop: {
     display: 'flex',

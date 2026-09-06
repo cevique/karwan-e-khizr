@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import Map, { Source, Layer, NavigationControl } from 'react-map-gl/maplibre';
 import type { MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -16,6 +16,17 @@ export function MapView({ style, interactive = true }: MapViewProps) {
 
   const { vehicles, stops, routes } = transit;
   const routeStops = state.routeStops;
+
+  // Fly to selected bus position
+  useEffect(() => {
+    if (state.selectedBus && mapRef.current) {
+      mapRef.current.flyTo({
+        center: [state.selectedBus.longitude, state.selectedBus.latitude],
+        zoom: 15,
+        duration: 800,
+      });
+    }
+  }, [state.selectedBus]);
 
   const handleBusClick = useCallback((e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];

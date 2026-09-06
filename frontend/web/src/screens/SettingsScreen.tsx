@@ -1,11 +1,16 @@
 import { useApp } from '../App';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { Settings, Globe, Bell, Moon, Shield, Info, LogIn, LogOut, Ticket, UserCircle } from 'lucide-react';
 
 export function SettingsScreen() {
   const { auth, navigate } = useApp();
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   return (
-    <div style={styles.container}>
+    <div style={{
+      ...styles.container,
+      ...(isDesktop ? { maxWidth: 640, margin: '0 auto' } : {}),
+    }}>
       <div style={styles.header}>
         <h2 style={styles.title}>Settings</h2>
       </div>
@@ -107,8 +112,7 @@ export function SettingsScreen() {
 const styles: Record<string, React.CSSProperties> = {
   container: {
     flex: 1, display: 'flex', flexDirection: 'column', height: '100%',
-    background: 'var(--color-bg)', maxWidth: 'var(--content-max-width)',
-    margin: '0 auto', width: '100%',
+    background: 'var(--color-bg)', width: '100%',
   },
   header: {
     padding: '20px 20px 12px', borderBottom: '1px solid var(--color-hairline)',
