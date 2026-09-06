@@ -188,7 +188,7 @@ export interface TransitData {
 }
 
 export function useTransitData(): AsyncResult<TransitData> & { refetch: () => void } {
-  return useAsyncData(async (signal) => {
+  const result = useAsyncData(async (signal) => {
     const [routes, stops] = await Promise.all([
       transitService.getRoutes(signal),
       transitService.getStops(signal),
@@ -196,6 +196,14 @@ export function useTransitData(): AsyncResult<TransitData> & { refetch: () => vo
     const vehicles = await transitService.getVehicles(signal, routes, stops);
     return { routes, stops, vehicles };
   }, []);
+
+  // Poll vehicles every 8 seconds for live position updates
+  useEffect(() => {
+    const id = setInterval(() => result.refetch(), 8000);
+    return () => clearInterval(id);
+  }, [result.refetch]);
+
+  return result;
 }
 
 export type { JourneyObjective };

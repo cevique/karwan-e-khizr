@@ -30,8 +30,8 @@ class StopSummary(BaseModel):
     id: int
     name: str
     external_key: Optional[str] = None
-    lat: float
-    lon: float
+    lat: Optional[float] = None
+    lon: Optional[float] = None
     zone_id: Optional[str] = None
     coordinate_confidence: Optional[str] = None
 

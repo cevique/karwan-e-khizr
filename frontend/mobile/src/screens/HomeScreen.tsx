@@ -29,11 +29,13 @@ export function HomeScreen() {
 
   const stopFeatures: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
-    features: stops.map(stop => ({
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: [stop.longitude, stop.latitude] },
-      properties: { id: stop.id, type: stop.type },
-    })),
+    features: stops
+      .filter(stop => stop.latitude != null && stop.longitude != null)
+      .map(stop => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [stop.longitude!, stop.latitude!] },
+        properties: { id: stop.id, type: stop.type },
+      })),
   };
 
   return (

@@ -25,8 +25,8 @@ export interface Stop {
   id: string;
   name: string;
   nameUrdu?: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   routeIds: string[];
   type: 'bus-stop' | 'metro-station' | 'terminal';
 }

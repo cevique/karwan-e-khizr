@@ -41,11 +41,13 @@ export function MapView({ style, interactive = true }: MapViewProps) {
 
   const stopFeatures = {
     type: 'FeatureCollection' as const,
-    features: stops.map(stop => ({
-      type: 'Feature' as const,
-      geometry: { type: 'Point' as const, coordinates: [stop.longitude, stop.latitude] },
-      properties: { id: stop.id, type: stop.type, selected: state.selectedStop?.id === stop.id },
-    })),
+    features: stops
+      .filter(stop => stop.latitude != null && stop.longitude != null)
+      .map(stop => ({
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: [stop.longitude!, stop.latitude!] },
+        properties: { id: stop.id, type: stop.type, selected: state.selectedStop?.id === stop.id },
+      })),
   };
 
   return (

@@ -91,8 +91,8 @@ class TransitCatalogService:
         limit: int = 200,
         offset: int = 0,
     ) -> StopListResponse:
-        query = select(Stop).where(Stop.location.is_not(None))
-        count_query = select(func.count()).select_from(Stop).where(Stop.location.is_not(None))
+        query = select(Stop)
+        count_query = select(func.count()).select_from(Stop)
 
         if search:
             pattern = f"%{search}%"
@@ -106,14 +106,19 @@ class TransitCatalogService:
 
         summaries = []
         for stop in stops:
-            point = to_shape(stop.location)
+            lat = None
+            lon = None
+            if stop.location is not None:
+                point = to_shape(stop.location)
+                lat = point.y
+                lon = point.x
             summaries.append(
                 StopSummary(
                     id=stop.id,
                     name=stop.name,
                     external_key=stop.external_key,
-                    lat=point.y,
-                    lon=point.x,
+                    lat=lat,
+                    lon=lon,
                     zone_id=stop.zone_id,
                     coordinate_confidence=stop.coordinate_confidence,
                 )
@@ -124,16 +129,21 @@ class TransitCatalogService:
     async def get_stop(self, stop_id: int) -> StopSummary:
         result = await self.session.execute(select(Stop).where(Stop.id == stop_id))
         stop = result.scalar_one_or_none()
-        if stop is None or stop.location is None:
+        if stop is None:
             raise NotFoundError(f"Stop {stop_id} not found")
 
-        point = to_shape(stop.location)
+        lat = None
+        lon = None
+        if stop.location is not None:
+            point = to_shape(stop.location)
+            lat = point.y
+            lon = point.x
         return StopSummary(
             id=stop.id,
             name=stop.name,
             external_key=stop.external_key,
-            lat=point.y,
-            lon=point.x,
+            lat=lat,
+            lon=lon,
             zone_id=stop.zone_id,
             coordinate_confidence=stop.coordinate_confidence,
         )
