@@ -75,6 +75,9 @@ Environment: Windows, Chrome, localhost:5173
 - [x] N4: Mobile nav bar hidden
 - [x] N5: Locate Me goes to Peru
 - [x] N6: "Next: Unknown" still appearing
+- [x] AI/ML: ETA model trained and active (LightGBM, R²=0.999)
+- [x] Simulation: Buses follow road polylines via OSRM geometry
+- [x] All 200 stops geocoded with coordinates
 - [ ] M4: Search bar navigates away
 - [ ] M8: Settings items non-functional
 - [ ] M10: PKR 0.00 fares
