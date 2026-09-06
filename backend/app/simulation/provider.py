@@ -172,6 +172,9 @@ class SimulatedVehicleLocationProvider:
             return None
 
         elapsed_s = (now - trip.scheduled_start_time.replace(tzinfo=timezone.utc)).total_seconds()
+        total_duration = stops[-1].arrival_offset_s + SimulationEngine.DEFAULT_DWELL_S
+        if total_duration > 0:
+            elapsed_s = elapsed_s % total_duration
         eta_data = self._engine.compute_eta_at(stops, elapsed_s)
         if eta_data is None:
             return None

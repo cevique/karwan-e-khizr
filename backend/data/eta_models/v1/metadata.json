@@ -1,0 +1,39 @@
+{
+  "version": "v1",
+  "trained_at": "2026-09-06T21:50:14.528029+00:00",
+  "source": "synthetic",
+  "sample_count": 742,
+  "feature_columns": [
+    "route_id",
+    "stop_id",
+    "hour_of_day",
+    "day_of_week_encoded",
+    "scheduled_duration_s",
+    "distance_remaining_m",
+    "delay_seconds"
+  ],
+  "evaluation": {
+    "lightgbm": {
+      "mae": 8.429821848652127,
+      "rmse": 12.485630324129202,
+      "r2": 0.9996254191456684
+    },
+    "linear": {
+      "mae": 230.0330920946529,
+      "rmse": 298.52204302788437,
+      "r2": 0.7858700370189229
+    },
+    "baseline_mae": 977.8590604026846
+  },
+  "feature_importances": {
+    "route_id": 270803463.2580795,
+    "stop_id": 132788364.93367767,
+    "hour_of_day": 1832866186.6269188,
+    "day_of_week_encoded": 4984.133208274841,
+    "scheduled_duration_s": 0.0,
+    "distance_remaining_m": 48710834.504813194,
+    "delay_seconds": 0.0
+  },
+  "lightgbm_model_path": "E:\\IoT\\Arduino\\Projects\\karwan-e-khizr\\backend\\data\\eta_models\\v1\\lightgbm_model.txt",
+  "linear_model_path": "E:\\IoT\\Arduino\\Projects\\karwan-e-khizr\\backend\\data\\eta_models\\v1\\linear_model.joblib"
+}
