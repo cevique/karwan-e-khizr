@@ -55,6 +55,12 @@ Environment: Windows, Chrome, localhost:5173
 - [x] C6: Save journey feature
 - [x] M7: Settings layout
 - [x] M1+M6: Bus card interaction
-- [ ] M2+M3: Locate Me + Layers
-- [ ] M4+M9: Search UX
-- [ ] M5, M8, M10-M13, L1-L4: Polish
+- [x] M2+M3: Locate Me + Layers
+- [ ] M4: Search bar navigates away (should be inline autocomplete)
+- [ ] M8: Settings items non-functional (Language, Theme, etc.)
+- [ ] M9: Ammar Chowk hardcoded (already removed from defaultState)
+- [ ] M10: PKR 0.00 fares
+- [ ] M11: Live Tracking placeholder
+- [ ] M12: Routes tab — bus/stops only highlight, no popup
+- [ ] M13: Doesn't remember last screen on refresh
+- [ ] L1-L4: Polish items
