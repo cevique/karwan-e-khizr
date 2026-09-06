@@ -12,21 +12,23 @@ interface MapViewProps {
 
 export function MapView({ style, interactive = true }: MapViewProps) {
   const mapRef = useRef<MapRef>(null);
-  const { selectBus, selectStop, state, transit } = useApp();
+  const { selectBus, selectStop, state, selectedBus, transit } = useApp();
+  const prevSelectedBusId = useRef<string | null>(null);
 
   const { vehicles, stops, routes } = transit;
   const routeStops = state.routeStops;
 
-  // Fly to selected bus position
+  // Fly to selected bus only when the selection ID changes (not on data refresh)
   useEffect(() => {
-    if (state.selectedBus && mapRef.current) {
+    if (selectedBus && mapRef.current && selectedBus.id !== prevSelectedBusId.current) {
       mapRef.current.flyTo({
-        center: [state.selectedBus.longitude, state.selectedBus.latitude],
+        center: [selectedBus.longitude, selectedBus.latitude],
         zoom: 15,
         duration: 800,
       });
     }
-  }, [state.selectedBus]);
+    prevSelectedBusId.current = selectedBus?.id ?? null;
+  }, [selectedBus?.id]);
 
   // Listen for custom flyTo events (e.g., from Locate Me button)
   useEffect(() => {

@@ -4,7 +4,7 @@ import { useMediaQuery } from '../hooks/useMediaQuery';
 import { Search, Bus, Clock, Gauge, ChevronRight, LocateFixed, Layers, Loader2, AlertTriangle } from 'lucide-react';
 
 export function HomeScreen() {
-  const { navigate, state, selectBus, selectStop, transit } = useApp();
+  const { navigate, state, selectedBus, selectBus, selectStop, transit } = useApp();
   const buses = transit.vehicles;
   const loading = transit.transitLoading;
   const error = transit.transitError;
@@ -53,26 +53,26 @@ export function HomeScreen() {
         </div>
 
         {/* Selected bus/stop card overlay on map */}
-        {state.selectedBus && (
+        {selectedBus && (
           <div style={styles.floatingCard} onClick={() => {}}>
             <div style={styles.cardHeader}>
-              <div style={{ ...styles.routeBadge, background: state.selectedBus.routeColor }}>
-                {state.selectedBus.routeName.split(' ').pop()}
+              <div style={{ ...styles.routeBadge, background: selectedBus.routeColor }}>
+                {selectedBus.routeName.split(' ').pop()}
               </div>
-              <span style={styles.cardTitle}>{state.selectedBus.routeName}</span>
+              <span style={styles.cardTitle}>{selectedBus.routeName}</span>
             </div>
             <div style={styles.cardDetail}>
               <span style={styles.cardLabel}>Next stop:</span>
-              <span style={styles.cardValue}>{state.selectedBus.nextStopName ?? 'Unknown'}</span>
+              <span style={styles.cardValue}>{selectedBus.nextStopName ?? 'Unknown'}</span>
             </div>
             <div style={styles.cardMeta}>
               <span className="tabular-nums" style={styles.cardChip}>
-                <Clock size={12} /> {state.selectedBus.eta != null ? `${state.selectedBus.eta} min` : '—'}
+                <Clock size={12} /> {selectedBus.eta != null ? `${selectedBus.eta} min` : '—'}
               </span>
               <span className="tabular-nums" style={styles.cardChip}>
-                <Gauge size={12} /> {state.selectedBus.speed} km/h
+                <Gauge size={12} /> {selectedBus.speed} km/h
               </span>
-              {state.selectedBus.status === 'scheduled' && (
+              {selectedBus.status === 'scheduled' && (
                 <span style={styles.delayBadge}>Not yet en route</span>
               )}
             </div>
@@ -139,10 +139,10 @@ export function HomeScreen() {
               style={{
                 ...styles.busCard,
                 animationDelay: `${i * 60}ms`,
-                ...(state.selectedBus?.id === bus.id ? styles.busCardActive : styles.busCardInactive),
+                ...(selectedBus?.id === bus.id ? styles.busCardActive : styles.busCardInactive),
               }}
               onClick={() => {
-                selectBus(state.selectedBus?.id === bus.id ? null : bus);
+                selectBus(selectedBus?.id === bus.id ? null : bus);
               }}
             >
               <div style={styles.busCardTop}>

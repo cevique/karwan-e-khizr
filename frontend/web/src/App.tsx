@@ -25,7 +25,7 @@ export type Screen = 'home' | 'search' | 'routes' | 'journey-detail' | 'saved' |
 export interface AppState {
   screen: Screen;
   previousScreen: Screen | null;
-  selectedBus: Bus | null;
+  selectedBusId: string | null;
   selectedStop: Stop | null;
   selectedJourney: Journey | null;
   selectedRoute: TransitRoute | null;
@@ -55,6 +55,7 @@ interface AuthContext {
 
 interface AppContextType {
   state: AppState;
+  selectedBus: Bus | null;
   navigate: (screen: Screen) => void;
   goBack: () => void;
   selectBus: (bus: Bus | null) => void;
@@ -74,7 +75,7 @@ interface AppContextType {
 const defaultState: AppState = {
   screen: 'home',
   previousScreen: null,
-  selectedBus: null,
+  selectedBusId: null,
   selectedStop: null,
   selectedJourney: null,
   selectedRoute: null,
@@ -208,7 +209,7 @@ export default function App() {
   }, []);
 
   const selectBus = useCallback((bus: Bus | null) => {
-    setState((prev) => ({ ...prev, selectedBus: bus, selectedStop: null }));
+    setState((prev) => ({ ...prev, selectedBusId: bus?.id ?? null, selectedStop: null }));
   }, []);
 
   const selectStop = useCallback((stop: Stop | null) => {
@@ -257,6 +258,9 @@ export default function App() {
     transitError,
   };
 
+  // Derive selectedBus from live vehicle data so the popup updates on every poll
+  const selectedBus = transitContext.vehicles.find(v => v.id === state.selectedBusId) ?? null;
+
   const authContext: AuthContext = {
     user, token, loading: authLoading, error: authError,
     login, register, logout, clearError,
@@ -264,6 +268,7 @@ export default function App() {
 
   const contextValue: AppContextType = {
     state,
+    selectedBus,
     navigate,
     goBack,
     selectBus,

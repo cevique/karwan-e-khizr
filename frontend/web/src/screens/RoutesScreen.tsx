@@ -5,7 +5,7 @@ import { ArrowLeft, Route, Search, Clock, Gauge } from 'lucide-react';
 import { getConfig } from '@shared/services/config';
 
 export function RoutesScreen() {
-  const { navigate, transit, state, selectRoute } = useApp();
+  const { navigate, transit, state, selectedBus, selectRoute } = useApp();
   const routes = transit.routes;
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const selectedRoute = state.selectedRoute;
@@ -15,24 +15,24 @@ export function RoutesScreen() {
     <div style={{ ...styles.container, flexDirection: isDesktop ? 'row' : 'column' }}>
       <div style={styles.mapArea}>
         <MapView />
-        {state.selectedBus && (
+        {selectedBus && (
           <div style={styles.floatingCard}>
             <div style={styles.cardHeader}>
-              <div style={{ ...styles.routeBadge, background: state.selectedBus.routeColor }}>
-                {state.selectedBus.routeName.split(' ').pop()}
+              <div style={{ ...styles.routeBadge, background: selectedBus.routeColor }}>
+                {selectedBus.routeName.split(' ').pop()}
               </div>
-              <span style={styles.cardTitle}>{state.selectedBus.routeName}</span>
+              <span style={styles.cardTitle}>{selectedBus.routeName}</span>
             </div>
             <div style={styles.cardDetail}>
               <span style={styles.cardLabel}>Next stop:</span>
-              <span style={styles.cardValue}>{state.selectedBus.nextStopName ?? 'Unknown'}</span>
+              <span style={styles.cardValue}>{selectedBus.nextStopName ?? 'Unknown'}</span>
             </div>
             <div style={styles.cardMeta}>
               <span className="tabular-nums" style={styles.cardChip}>
-                <Clock size={12} /> {state.selectedBus.eta != null ? `${state.selectedBus.eta} min` : '—'}
+                <Clock size={12} /> {selectedBus.eta != null ? `${selectedBus.eta} min` : '—'}
               </span>
               <span className="tabular-nums" style={styles.cardChip}>
-                <Gauge size={12} /> {state.selectedBus.speed} km/h
+                <Gauge size={12} /> {selectedBus.speed} km/h
               </span>
             </div>
           </div>
