@@ -74,8 +74,16 @@ async def _resolve_exact_stop(session: AsyncSession, text: str) -> list[Location
     stops = result.scalars().all()
 
     candidates = []
+    seen_names = set()
     for stop in stops:
         if stop.location is not None:
+            # Deduplicate by name: if multiple stops share the exact same name,
+            # return only the first one. This prevents "G-9 Markaz could mean
+            # several places: G-9 Markaz, G-9 Markaz" confusion.
+            if stop.name in seen_names:
+                continue
+            seen_names.add(stop.name)
+
             from geoalchemy2.shape import to_shape
             point = to_shape(stop.location)
             candidates.append(
