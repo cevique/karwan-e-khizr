@@ -63,6 +63,10 @@ interface AppContextType {
   selectJourney: (journey: Journey | null) => void;
   setSearchOrigin: (origin: string) => void;
   setSearchDestination: (dest: string) => void;
+  savedJourneys: Journey[];
+  saveJourney: (journey: Journey) => void;
+  unsaveJourney: (journeyId: string) => void;
+  isJourneySaved: (journeyId: string) => boolean;
   transit: TransitDataContext;
   auth: AuthContext;
 }
@@ -79,6 +83,8 @@ const defaultState: AppState = {
   searchDestination: '',
 };
 
+const SAVED_JOURNEYS_KEY = 'kek_saved_journeys';
+
 const AppContext = createContext<AppContextType | null>(null);
 
 export function useApp() {
@@ -90,6 +96,35 @@ export function useApp() {
 export default function App() {
   const [state, setState] = useState<AppState>(defaultState);
   const isDesktop = useMediaQuery('(min-width: 768px)');
+
+  // Saved journeys (persisted in localStorage)
+  const [savedJourneys, setSavedJourneys] = useState<Journey[]>(() => {
+    try {
+      const raw = localStorage.getItem(SAVED_JOURNEYS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
+
+  const saveJourney = useCallback((journey: Journey) => {
+    setSavedJourneys((prev) => {
+      if (prev.some(j => j.id === journey.id)) return prev;
+      const next = [...prev, journey];
+      try { localStorage.setItem(SAVED_JOURNEYS_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, []);
+
+  const unsaveJourney = useCallback((journeyId: string) => {
+    setSavedJourneys((prev) => {
+      const next = prev.filter(j => j.id !== journeyId);
+      try { localStorage.setItem(SAVED_JOURNEYS_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, []);
+
+  const isJourneySaved = useCallback((journeyId: string) => {
+    return savedJourneys.some(j => j.id === journeyId);
+  }, [savedJourneys]);
 
   // Fetch transit data through the service layer
   const { data: transitData, loading: transitLoading, error: transitError } = useTransitData();
@@ -237,6 +272,10 @@ export default function App() {
     selectJourney,
     setSearchOrigin,
     setSearchDestination,
+    savedJourneys,
+    saveJourney,
+    unsaveJourney,
+    isJourneySaved,
     transit: transitContext,
     auth: authContext,
   };

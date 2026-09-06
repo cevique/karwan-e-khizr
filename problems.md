@@ -51,7 +51,7 @@ Environment: Windows, Chrome, localhost:5173
 - [x] C1+C2: Vehicle simulation fix
 - [x] C4: Mobile map layout fix
 - [x] C3: Routes clickable
-- [ ] C5: Journey routing failures
+- [x] C5: Journey routing failures
 - [ ] C6: Save journey feature
 - [ ] M7: Settings layout
 - [ ] M1+M6: Bus card interaction

@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import { ArrowLeft, Footprints, Bus, TrainFront, ArrowRightLeft, Navigation, Clock, MapPin, Ticket, Loader2, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Footprints, Bus, TrainFront, ArrowRightLeft, Navigation, Clock, MapPin, Ticket, Loader2, CheckCircle2, Heart } from 'lucide-react';
 import type { JourneySegment, WalkSegment, TransitSegment, TransferSegment } from '@shared/types';
 import { transitService } from '@shared/services/transit-service';
 import { ApiError } from '@shared/services/api-client';
 
 export function JourneyDetailScreen() {
-  const { state, goBack, navigate, auth } = useApp();
+  const { state, goBack, navigate, auth, saveJourney, unsaveJourney, isJourneySaved } = useApp();
   const journey = state.selectedJourney;
   const [purchaseState, setPurchaseState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
@@ -74,6 +74,16 @@ export function JourneyDetailScreen() {
             <h2 style={styles.headerTitle}>Journey Details</h2>
             <span className="tabular-nums" style={styles.headerDuration}>{journey.totalDuration} min</span>
           </div>
+          <button
+            style={styles.saveBtn}
+            onClick={() => isJourneySaved(journey.id) ? unsaveJourney(journey.id) : saveJourney(journey)}
+          >
+            <Heart
+              size={20}
+              fill={isJourneySaved(journey.id) ? 'var(--color-accent-primary)' : 'none'}
+              color={isJourneySaved(journey.id) ? 'var(--color-accent-primary)' : 'var(--color-text-muted)'}
+            />
+          </button>
         </div>
 
         {(journey.tag || journey.fareLabel || journey.transferCount != null) && (
@@ -217,6 +227,11 @@ const styles: Record<string, React.CSSProperties> = {
   backBtn: {
     width: 36, height: 36, borderRadius: 'var(--radius-sm)', border: 'none',
     background: 'transparent', color: 'var(--color-text-primary)', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+  },
+  saveBtn: {
+    width: 36, height: 36, borderRadius: 'var(--radius-sm)', border: 'none',
+    background: 'transparent', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   headerInfo: { flex: 1 },
