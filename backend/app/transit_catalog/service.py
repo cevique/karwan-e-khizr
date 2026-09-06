@@ -1,3 +1,4 @@
+import httpx
 from geoalchemy2.shape import to_shape
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,6 +9,7 @@ from app.db.models.route import Route
 from app.db.models.route_stop import RouteStop
 from app.db.models.stop import Stop
 from app.transit_catalog.schemas import (
+    RouteGeometryResponse,
     RouteListResponse,
     RouteStopItem,
     RouteStopsResponse,
@@ -15,6 +17,9 @@ from app.transit_catalog.schemas import (
     StopListResponse,
     StopSummary,
 )
+
+# Simple in-memory cache for route geometries (route_id -> coordinates)
+_geometry_cache: dict[int, list[list[float]]] = {}
 
 
 class TransitCatalogService:
@@ -191,3 +196,38 @@ class TransitCatalogService:
             color=route.color,
             stops=stops,
         )
+
+    async def get_route_geometry(self, route_id: int) -> RouteGeometryResponse:
+        """Fetch road-following geometry from OSRM for a route's stops."""
+        if route_id in _geometry_cache:
+            return RouteGeometryResponse(
+                route_id=route_id,
+                coordinates=_geometry_cache[route_id],
+            )
+
+        stops_resp = await self.get_route_stops(route_id)
+        valid_stops = [(s.lon, s.lat) for s in stops_resp.stops if s.lat is not None and s.lon is not None]
+
+        if len(valid_stops) < 2:
+            return RouteGeometryResponse(route_id=route_id, coordinates=[])
+
+        coords_str = ";".join(f"{lon},{lat}" for lon, lat in valid_stops)
+        url = f"http://router.project-osrm.org/route/v1/driving/{coords_str}?overview=full&geometries=geojson"
+
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                resp = await client.get(url)
+                resp.raise_for_status()
+                data = resp.json()
+
+            if data.get("code") == "Ok" and data.get("routes"):
+                coords = data["routes"][0]["geometry"]["coordinates"]
+                _geometry_cache[route_id] = coords
+                return RouteGeometryResponse(route_id=route_id, coordinates=coords)
+        except Exception:
+            pass
+
+        # Fallback to straight lines
+        coords = [list(c) for c in valid_stops]
+        _geometry_cache[route_id] = coords
+        return RouteGeometryResponse(route_id=route_id, coordinates=coords)

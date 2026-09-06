@@ -30,6 +30,7 @@ export interface AppState {
   selectedJourney: Journey | null;
   selectedRoute: TransitRoute | null;
   routeStops: RouteStops | null;
+  routeGeometry: [number, number][];
   searchOrigin: string;
   searchDestination: string;
 }
@@ -80,6 +81,7 @@ const defaultState: AppState = {
   selectedJourney: null,
   selectedRoute: null,
   routeStops: null,
+  routeGeometry: [],
   searchOrigin: '',
   searchDestination: '',
 };
@@ -218,15 +220,18 @@ export default function App() {
 
   const selectRoute = useCallback(async (route: TransitRoute | null) => {
     if (!route) {
-      setState((prev) => ({ ...prev, selectedRoute: null, routeStops: null }));
+      setState((prev) => ({ ...prev, selectedRoute: null, routeStops: null, routeGeometry: [] }));
       return;
     }
-    setState((prev) => ({ ...prev, selectedRoute: route, routeStops: null }));
+    setState((prev) => ({ ...prev, selectedRoute: route, routeStops: null, routeGeometry: [] }));
     try {
-      const data = await transitService.getRouteStops(route.id);
+      const [data, geometry] = await Promise.all([
+        transitService.getRouteStops(route.id),
+        transitService.getRouteGeometry(route.id),
+      ]);
       setState((prev) => {
         if (prev.selectedRoute?.id !== route.id) return prev;
-        return { ...prev, routeStops: data };
+        return { ...prev, routeStops: data, routeGeometry: geometry };
       });
     } catch {
       // Silently handle - stops just won't show

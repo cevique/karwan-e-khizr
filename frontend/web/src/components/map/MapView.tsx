@@ -17,6 +17,7 @@ export function MapView({ style, interactive = true }: MapViewProps) {
 
   const { vehicles, stops, routes } = transit;
   const routeStops = state.routeStops;
+  const routeGeometry = state.routeGeometry;
 
   // Fly to selected bus only when the selection ID changes (not on data refresh)
   useEffect(() => {
@@ -92,10 +93,17 @@ export function MapView({ style, interactive = true }: MapViewProps) {
       })),
   };
 
-  // Route polyline from stop coordinates
+  // Route polyline: prefer road-following geometry from OSRM, fallback to straight lines
   const routeLineFeatures = {
     type: 'FeatureCollection' as const,
-    features: routeStops && routeStops.stops.length >= 2 ? [{
+    features: routeGeometry.length > 0 ? [{
+      type: 'Feature' as const,
+      geometry: {
+        type: 'LineString' as const,
+        coordinates: routeGeometry,
+      },
+      properties: {},
+    }] : (routeStops && routeStops.stops.length >= 2 ? [{
       type: 'Feature' as const,
       geometry: {
         type: 'LineString' as const,
@@ -104,7 +112,7 @@ export function MapView({ style, interactive = true }: MapViewProps) {
           .map(s => [s.lon!, s.lat!]),
       },
       properties: {},
-    }] : [],
+    }] : []),
   };
 
   return (

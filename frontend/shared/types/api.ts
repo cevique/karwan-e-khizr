@@ -59,6 +59,11 @@ export interface ApiRouteStopsResponse {
   stops: ApiRouteStop[];
 }
 
+export interface ApiRouteGeometryResponse {
+  route_id: number;
+  coordinates: [number, number][];
+}
+
 // ── Realtime vehicles (GET /transit/realtime/vehicles) ──
 
 export interface ApiVehiclePosition {

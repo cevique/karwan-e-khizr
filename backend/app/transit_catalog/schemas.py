@@ -58,3 +58,8 @@ class RouteStopsResponse(BaseModel):
     route_name: str
     color: Optional[str] = None
     stops: list[RouteStopItem]
+
+
+class RouteGeometryResponse(BaseModel):
+    route_id: int
+    coordinates: list[list[float]]  # [[lon, lat], ...]

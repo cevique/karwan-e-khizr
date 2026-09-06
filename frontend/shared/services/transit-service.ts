@@ -29,6 +29,7 @@ import type {
   ApiStopListResponse,
   ApiStop,
   ApiRouteStopsResponse,
+  ApiRouteGeometryResponse,
   ApiVehiclePositionResponse,
   ApiVehiclePosition,
   ApiVehicleETA,
@@ -352,6 +353,15 @@ class TransitService {
     } catch (error) {
       if (error instanceof ApiError && error.status === 404) return null;
       throw error;
+    }
+  }
+
+  async getRouteGeometry(routeId: string): Promise<[number, number][]> {
+    try {
+      const res = await apiClient.get<ApiRouteGeometryResponse>(`/transit/routes/${encodeURIComponent(routeId)}/geometry`);
+      return res.coordinates;
+    } catch {
+      return [];
     }
   }
 
