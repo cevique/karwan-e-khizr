@@ -1,7 +1,7 @@
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import { ArrowLeft, Route, Search } from 'lucide-react';
+import { ArrowLeft, Route, Search, Clock, Gauge } from 'lucide-react';
 import { getConfig } from '@shared/services/config';
 
 export function RoutesScreen() {
@@ -15,6 +15,36 @@ export function RoutesScreen() {
     <div style={{ ...styles.container, flexDirection: isDesktop ? 'row' : 'column' }}>
       <div style={styles.mapArea}>
         <MapView />
+        {state.selectedBus && (
+          <div style={styles.floatingCard}>
+            <div style={styles.cardHeader}>
+              <div style={{ ...styles.routeBadge, background: state.selectedBus.routeColor }}>
+                {state.selectedBus.routeName.split(' ').pop()}
+              </div>
+              <span style={styles.cardTitle}>{state.selectedBus.routeName}</span>
+            </div>
+            <div style={styles.cardDetail}>
+              <span style={styles.cardLabel}>Next stop:</span>
+              <span style={styles.cardValue}>{state.selectedBus.nextStopName ?? 'Unknown'}</span>
+            </div>
+            <div style={styles.cardMeta}>
+              <span className="tabular-nums" style={styles.cardChip}>
+                <Clock size={12} /> {state.selectedBus.eta != null ? `${state.selectedBus.eta} min` : '—'}
+              </span>
+              <span className="tabular-nums" style={styles.cardChip}>
+                <Gauge size={12} /> {state.selectedBus.speed} km/h
+              </span>
+            </div>
+          </div>
+        )}
+        {state.selectedStop && (
+          <div style={styles.floatingCard}>
+            <div style={styles.cardHeader}>
+              <div style={styles.stopDot} />
+              <span style={styles.cardTitle}>{state.selectedStop.name}</span>
+            </div>
+          </div>
+        )}
       </div>
       <div style={{
         ...styles.sidePanel,
@@ -159,4 +189,24 @@ const styles: Record<string, React.CSSProperties> = {
   pathSegment: { display: 'flex', alignItems: 'center', gap: 4, fontSize: 14 },
   pathArrow: { color: 'var(--color-text-muted)', marginLeft: 4 },
   journeyFare: { fontSize: 14, fontWeight: 600, color: 'var(--color-accent-primary)' },
+  floatingCard: {
+    position: 'absolute', bottom: 16, left: 16, right: 16,
+    padding: 14, background: 'var(--color-surface)',
+    borderRadius: 'var(--radius-md)', border: '1px solid var(--color-hairline)',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 10,
+  },
+  cardHeader: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 },
+  cardTitle: { fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' },
+  cardDetail: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 },
+  cardLabel: { fontSize: 12, color: 'var(--color-text-muted)' },
+  cardValue: { fontSize: 13, fontWeight: 500, color: 'var(--color-text-secondary)' },
+  cardMeta: { display: 'flex', gap: 8 },
+  cardChip: {
+    display: 'flex', alignItems: 'center', gap: 4,
+    fontSize: 12, color: 'var(--color-text-secondary)',
+  },
+  stopDot: {
+    width: 10, height: 10, borderRadius: '50%',
+    background: 'var(--color-accent-primary)', flexShrink: 0,
+  },
 };
