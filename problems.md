@@ -48,7 +48,7 @@ Environment: Windows, Chrome, localhost:5173
 
 ## Fix Progress
 
-- [ ] C1+C2: Vehicle simulation fix
+- [x] C1+C2: Vehicle simulation fix
 - [ ] C4: Mobile map layout fix
 - [ ] C3: Routes clickable
 - [ ] C5: Journey routing failures

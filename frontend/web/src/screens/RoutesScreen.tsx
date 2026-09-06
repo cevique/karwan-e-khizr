@@ -1,18 +1,26 @@
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { Route, Search } from 'lucide-react';
 import { getConfig } from '@shared/services/config';
 
 export function RoutesScreen() {
   const { navigate, transit } = useApp();
   const routes = transit.routes;
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, flexDirection: isDesktop ? 'row' : 'column' }}>
       <div style={styles.mapArea}>
         <MapView />
       </div>
-      <div style={styles.sidePanel}>
+      <div style={{
+        ...styles.sidePanel,
+        ...(isDesktop
+          ? { width: 380, height: '100%', borderLeft: '1px solid var(--color-hairline)', flexShrink: 0 }
+          : { position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%', height: '50vh', borderTop: '1px solid var(--color-hairline)', borderRadius: '16px 16px 0 0', zIndex: 20 }
+        ),
+      }}>
         <div style={styles.header}>
           <h2 style={styles.title}>Routes</h2>
           {getConfig().useMockData && <span style={styles.demoTag}>Demo data</span>}
@@ -51,8 +59,7 @@ const styles: Record<string, React.CSSProperties> = {
   container: { display: 'flex', flex: 1, height: '100%', overflow: 'hidden' },
   mapArea: { flex: 1, position: 'relative', minWidth: 0 },
   sidePanel: {
-    width: 380, height: '100%', borderLeft: '1px solid var(--color-hairline)',
-    background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', overflow: 'auto', flexShrink: 0,
+    background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', overflow: 'auto',
   },
   header: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 12px',

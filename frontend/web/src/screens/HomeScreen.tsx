@@ -1,5 +1,6 @@
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { Search, Bus, Clock, Gauge, ChevronRight, LocateFixed, Layers, Loader2, AlertTriangle } from 'lucide-react';
 
 export function HomeScreen() {
@@ -7,9 +8,10 @@ export function HomeScreen() {
   const buses = transit.vehicles;
   const loading = transit.transitLoading;
   const error = transit.transitError;
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, flexDirection: isDesktop ? 'row' : 'column' }}>
       {/* Map area */}
       <div style={styles.mapArea}>
         <MapView />
@@ -76,8 +78,14 @@ export function HomeScreen() {
         )}
       </div>
 
-      {/* Side panel (desktop) / bottom content area (mobile handled by MobileShell) */}
-      <div style={styles.sidePanel}>
+      {/* Side panel (desktop) / bottom sheet (mobile) */}
+      <div style={{
+        ...styles.sidePanel,
+        ...(isDesktop
+          ? { width: 380, height: '100%', borderLeft: '1px solid var(--color-hairline)', flexShrink: 0 }
+          : { position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%', height: '45vh', borderTop: '1px solid var(--color-hairline)', borderRadius: '16px 16px 0 0', zIndex: 20 }
+        ),
+      }}>
         <div style={styles.panelHeader}>
           <h2 style={styles.panelTitle}>Nearby Buses</h2>
           {transit.transitError && (
@@ -303,14 +311,10 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 4,
   },
   sidePanel: {
-    width: 380,
-    height: '100%',
-    borderLeft: '1px solid var(--color-hairline)',
     background: 'var(--color-bg)',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
-    flexShrink: 0,
   },
   panelHeader: {
     display: 'flex',
