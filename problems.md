@@ -53,8 +53,8 @@ Environment: Windows, Chrome, localhost:5173
 - [x] C3: Routes clickable
 - [x] C5: Journey routing failures
 - [x] C6: Save journey feature
-- [ ] M7: Settings layout
-- [ ] M1+M6: Bus card interaction
+- [x] M7: Settings layout
+- [x] M1+M6: Bus card interaction
 - [ ] M2+M3: Locate Me + Layers
 - [ ] M4+M9: Search UX
 - [ ] M5, M8, M10-M13, L1-L4: Polish

@@ -28,6 +28,22 @@ export function MapView({ style, interactive = true }: MapViewProps) {
     }
   }, [state.selectedBus]);
 
+  // Listen for custom flyTo events (e.g., from Locate Me button)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail && mapRef.current) {
+        mapRef.current.flyTo({
+          center: [detail.lng, detail.lat],
+          zoom: detail.zoom ?? 14,
+          duration: 800,
+        });
+      }
+    };
+    window.addEventListener('map-flyto', handler);
+    return () => window.removeEventListener('map-flyto', handler);
+  }, []);
+
   const handleBusClick = useCallback((e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
     if (!feature?.properties) return;

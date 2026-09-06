@@ -26,10 +26,28 @@ export function HomeScreen() {
 
         {/* Map controls */}
         <div style={styles.mapControls}>
-          <button style={styles.mapControlBtn} title="Locate me">
+          <button
+            style={styles.mapControlBtn}
+            title="Locate me"
+            onClick={() => {
+              if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                  (pos) => {
+                    const mapEl = document.querySelector('.maplibregl-canvas')?.closest('[data-map]');
+                    // FlyTo is handled via MapView by dispatching a custom event
+                    window.dispatchEvent(new CustomEvent('map-flyto', {
+                      detail: { lng: pos.coords.longitude, lat: pos.coords.latitude, zoom: 15 },
+                    }));
+                  },
+                  () => {},
+                  { enableHighAccuracy: true, timeout: 5000 },
+                );
+              }
+            }}
+          >
             <LocateFixed size={18} />
           </button>
-          <button style={styles.mapControlBtn} title="Map layers">
+          <button style={styles.mapControlBtn} title="Map layers (coming soon)">
             <Layers size={18} />
           </button>
         </div>
@@ -90,9 +108,6 @@ export function HomeScreen() {
           <h2 style={styles.panelTitle}>Nearby Buses</h2>
           {transit.transitError && (
             <span style={styles.errorTag}>Using offline data</span>
-          )}
-          {!transit.transitError && (
-            <span style={styles.demoTag}>Demo data</span>
           )}
         </div>
 
