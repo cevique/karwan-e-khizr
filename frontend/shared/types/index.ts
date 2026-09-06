@@ -95,3 +95,18 @@ export interface SearchResult {
   longitude: number;
   subtitle?: string;
 }
+
+export interface RouteStop {
+  stopId: string;
+  stopName: string;
+  lat?: number;
+  lon?: number;
+  sequence: number;
+}
+
+export interface RouteStops {
+  routeId: string;
+  routeName: string;
+  color?: string;
+  stops: RouteStop[];
+}

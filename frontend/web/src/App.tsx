@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, createContext, useContext } from 'react';
-import type { Bus, Stop, Journey, TransitRoute } from '@shared/types';
+import type { Bus, Stop, Journey, TransitRoute, RouteStops } from '@shared/types';
 import type { ApiUserPublic } from '@shared/types/api';
 import { initConfig } from '@shared/services/config';
 import { useTransitData } from '@shared/hooks/useTransitData';
@@ -28,6 +28,8 @@ export interface AppState {
   selectedBus: Bus | null;
   selectedStop: Stop | null;
   selectedJourney: Journey | null;
+  selectedRoute: TransitRoute | null;
+  routeStops: RouteStops | null;
   searchOrigin: string;
   searchDestination: string;
 }
@@ -57,6 +59,7 @@ interface AppContextType {
   goBack: () => void;
   selectBus: (bus: Bus | null) => void;
   selectStop: (stop: Stop | null) => void;
+  selectRoute: (route: TransitRoute | null) => void;
   selectJourney: (journey: Journey | null) => void;
   setSearchOrigin: (origin: string) => void;
   setSearchDestination: (dest: string) => void;
@@ -70,7 +73,9 @@ const defaultState: AppState = {
   selectedBus: null,
   selectedStop: null,
   selectedJourney: null,
-  searchOrigin: 'Ammar Chowk',
+  selectedRoute: null,
+  routeStops: null,
+  searchOrigin: '',
   searchDestination: '',
 };
 
@@ -175,6 +180,23 @@ export default function App() {
     setState((prev) => ({ ...prev, selectedStop: stop, selectedBus: null }));
   }, []);
 
+  const selectRoute = useCallback(async (route: TransitRoute | null) => {
+    if (!route) {
+      setState((prev) => ({ ...prev, selectedRoute: null, routeStops: null }));
+      return;
+    }
+    setState((prev) => ({ ...prev, selectedRoute: route, routeStops: null }));
+    try {
+      const data = await transitService.getRouteStops(route.id);
+      setState((prev) => {
+        if (prev.selectedRoute?.id !== route.id) return prev;
+        return { ...prev, routeStops: data };
+      });
+    } catch {
+      // Silently handle - stops just won't show
+    }
+  }, []);
+
   const selectJourney = useCallback((journey: Journey | null) => {
     setState((prev) => ({
       ...prev,
@@ -211,6 +233,7 @@ export default function App() {
     goBack,
     selectBus,
     selectStop,
+    selectRoute,
     selectJourney,
     setSearchOrigin,
     setSearchDestination,

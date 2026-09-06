@@ -15,6 +15,7 @@ export function MapView({ style, interactive = true }: MapViewProps) {
   const { selectBus, selectStop, state, transit } = useApp();
 
   const { vehicles, stops, routes } = transit;
+  const routeStops = state.routeStops;
 
   const handleBusClick = useCallback((e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
@@ -50,6 +51,33 @@ export function MapView({ style, interactive = true }: MapViewProps) {
       })),
   };
 
+  // Route stops highlight layer
+  const routeStopFeatures = {
+    type: 'FeatureCollection' as const,
+    features: (routeStops?.stops ?? [])
+      .filter(s => s.lat != null && s.lon != null)
+      .map((s, i) => ({
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: [s.lon!, s.lat!] },
+        properties: { id: s.stopId, name: s.stopName, sequence: i + 1 },
+      })),
+  };
+
+  // Route polyline from stop coordinates
+  const routeLineFeatures = {
+    type: 'FeatureCollection' as const,
+    features: routeStops && routeStops.stops.length >= 2 ? [{
+      type: 'Feature' as const,
+      geometry: {
+        type: 'LineString' as const,
+        coordinates: routeStops.stops
+          .filter(s => s.lat != null && s.lon != null)
+          .map(s => [s.lon!, s.lat!]),
+      },
+      properties: {},
+    }] : [],
+  };
+
   return (
     <Map
       ref={mapRef}
@@ -74,25 +102,49 @@ export function MapView({ style, interactive = true }: MapViewProps) {
     >
       {interactive && <NavigationControl position="bottom-right" showCompass={false} />}
 
-      {/* Route polylines - only routes with real geometry data (most don't yet; see DATA_GAPS.md) */}
-      {routes.filter(route => route.polyline.length >= 2).map(route => (
-        <Source key={route.id} id={route.id} type="geojson" data={{
-          type: 'Feature',
-          geometry: { type: 'LineString', coordinates: route.polyline },
-          properties: {},
-        }}>
+      {/* Selected route polyline */}
+      {routeStops && (
+        <Source id="route-line" type="geojson" data={routeLineFeatures}>
           <Layer
-            id={`${route.id}-line`}
+            id="route-line-layer"
             type="line"
             paint={{
-              'line-color': route.color,
-              'line-width': 3,
-              'line-opacity': 0.6,
+              'line-color': routeStops.color ?? '#1B8A4A',
+              'line-width': 4,
+              'line-opacity': 0.8,
             }}
             layout={{ 'line-cap': 'round', 'line-join': 'round' }}
           />
         </Source>
-      ))}
+      )}
+
+      {/* Selected route stop markers */}
+      {routeStops && (
+        <Source id="route-stops" type="geojson" data={routeStopFeatures}>
+          <Layer
+            id="route-stop-markers"
+            type="circle"
+            paint={{
+              'circle-radius': 10,
+              'circle-color': routeStops.color ?? '#1B8A4A',
+              'circle-stroke-width': 3,
+              'circle-stroke-color': '#FFFFFF',
+            }}
+          />
+          <Layer
+            id="route-stop-labels"
+            type="symbol"
+            layout={{
+              'text-field': ['get', 'sequence'],
+              'text-size': 10,
+              'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            }}
+            paint={{
+              'text-color': '#FFFFFF',
+            }}
+          />
+        </Source>
+      )}
 
       {/* Stop markers */}
       <Source id="stops" type="geojson" data={stopFeatures}>

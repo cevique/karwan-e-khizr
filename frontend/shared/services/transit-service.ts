@@ -28,6 +28,7 @@ import type {
   ApiRoute,
   ApiStopListResponse,
   ApiStop,
+  ApiRouteStopsResponse,
   ApiVehiclePositionResponse,
   ApiVehiclePosition,
   ApiVehicleETA,
@@ -329,6 +330,27 @@ class TransitService {
         logFallback('getStop', error);
         return mockStops.find((s) => s.id === id) ?? null;
       }
+      throw error;
+    }
+  }
+
+  async getRouteStops(routeId: string): Promise<import('../types').RouteStops | null> {
+    try {
+      const res = await apiClient.get<ApiRouteStopsResponse>(`/transit/routes/${encodeURIComponent(routeId)}/stops`);
+      return {
+        routeId: String(res.route_id),
+        routeName: res.route_name,
+        color: res.color ?? undefined,
+        stops: res.stops.map((s) => ({
+          stopId: String(s.stop_id),
+          stopName: s.stop_name,
+          lat: s.lat ?? undefined,
+          lon: s.lon ?? undefined,
+          sequence: s.sequence ?? 0,
+        })),
+      };
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 404) return null;
       throw error;
     }
   }

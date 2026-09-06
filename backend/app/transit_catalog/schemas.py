@@ -41,3 +41,20 @@ class StopListResponse(BaseModel):
     total: int
     limit: int
     offset: int
+
+
+class RouteStopItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    stop_id: int
+    stop_name: str
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    sequence: Optional[int] = None
+
+
+class RouteStopsResponse(BaseModel):
+    route_id: int
+    route_name: str
+    color: Optional[str] = None
+    stops: list[RouteStopItem]

@@ -44,6 +44,21 @@ export interface ApiStopListResponse {
   offset: number;
 }
 
+export interface ApiRouteStop {
+  stop_id: number;
+  stop_name: string;
+  lat: number | null;
+  lon: number | null;
+  sequence: number | null;
+}
+
+export interface ApiRouteStopsResponse {
+  route_id: number;
+  route_name: string;
+  color: string | null;
+  stops: ApiRouteStop[];
+}
+
 // ── Realtime vehicles (GET /transit/realtime/vehicles) ──
 
 export interface ApiVehiclePosition {

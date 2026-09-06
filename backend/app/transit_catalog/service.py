@@ -5,9 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import NotFoundError
 from app.db.models.agency import Agency
 from app.db.models.route import Route
+from app.db.models.route_stop import RouteStop
 from app.db.models.stop import Stop
 from app.transit_catalog.schemas import (
     RouteListResponse,
+    RouteStopItem,
+    RouteStopsResponse,
     RouteSummary,
     StopListResponse,
     StopSummary,
@@ -146,4 +149,45 @@ class TransitCatalogService:
             lon=lon,
             zone_id=stop.zone_id,
             coordinate_confidence=stop.coordinate_confidence,
+        )
+
+    async def get_route_stops(self, route_id: int) -> RouteStopsResponse:
+        route_result = await self.session.execute(
+            select(Route).where(Route.id == route_id)
+        )
+        route = route_result.scalar_one_or_none()
+        if route is None:
+            raise NotFoundError(f"Route {route_id} not found")
+
+        query = (
+            select(RouteStop, Stop)
+            .join(Stop, RouteStop.stop_id == Stop.id)
+            .where(RouteStop.route_id == route_id)
+            .order_by(RouteStop.sequence)
+        )
+        rows = (await self.session.execute(query)).all()
+
+        stops = []
+        for route_stop, stop in rows:
+            lat = None
+            lon = None
+            if stop.location is not None:
+                point = to_shape(stop.location)
+                lat = point.y
+                lon = point.x
+            stops.append(
+                RouteStopItem(
+                    stop_id=stop.id,
+                    stop_name=stop.name,
+                    lat=lat,
+                    lon=lon,
+                    sequence=route_stop.sequence,
+                )
+            )
+
+        return RouteStopsResponse(
+            route_id=route.id,
+            route_name=route.long_name or route.short_name,
+            color=route.color,
+            stops=stops,
         )

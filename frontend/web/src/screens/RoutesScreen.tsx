@@ -1,13 +1,15 @@
 import { useApp } from '../App';
 import { MapView } from '../components/map/MapView';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import { Route, Search } from 'lucide-react';
+import { ArrowLeft, Route, Search } from 'lucide-react';
 import { getConfig } from '@shared/services/config';
 
 export function RoutesScreen() {
-  const { navigate, transit } = useApp();
+  const { navigate, transit, state, selectRoute } = useApp();
   const routes = transit.routes;
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const selectedRoute = state.selectedRoute;
+  const routeStops = state.routeStops;
 
   return (
     <div style={{ ...styles.container, flexDirection: isDesktop ? 'row' : 'column' }}>
@@ -21,35 +23,69 @@ export function RoutesScreen() {
           : { position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%', height: '50vh', borderTop: '1px solid var(--color-hairline)', borderRadius: '16px 16px 0 0', zIndex: 20 }
         ),
       }}>
-        <div style={styles.header}>
-          <h2 style={styles.title}>Routes</h2>
-          {getConfig().useMockData && <span style={styles.demoTag}>Demo data</span>}
-        </div>
-
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>Transit Lines</h3>
-          <div style={styles.routeList}>
-            {routes.map(route => (
-              <div key={route.id} style={styles.routeItem}>
-                <div style={{ ...styles.routeBadge, background: route.color }}>
-                  {route.shortName}
+        {selectedRoute ? (
+          <>
+            <div style={styles.header}>
+              <button style={styles.backBtn} onClick={() => selectRoute(null)}>
+                <ArrowLeft size={20} />
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ ...styles.routeBadge, background: selectedRoute.color }}>
+                  {selectedRoute.shortName}
                 </div>
-                <div style={styles.routeInfo}>
-                  <span style={styles.routeName}>{route.name}</span>
-                  {route.frequency && <span style={styles.routeFreq}>{route.frequency}</span>}
-                </div>
-                {route.operatingHours && <span style={styles.routeHours}>{route.operatingHours}</span>}
+                <span style={styles.title}>{selectedRoute.name}</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div style={styles.section}>
-          <button style={styles.planJourneyBtn} onClick={() => navigate('search')}>
-            <Search size={16} />
-            <span>Plan a journey</span>
-          </button>
-        </div>
+            </div>
+            <div style={styles.section}>
+              <h3 style={styles.sectionTitle}>Stops ({routeStops?.stops.length ?? '…'})</h3>
+              <div style={styles.routeList}>
+                {routeStops?.stops.map((stop, i) => (
+                  <div key={stop.stopId} style={styles.routeItem}>
+                    <div style={styles.stopNumber}>{i + 1}</div>
+                    <div style={styles.routeInfo}>
+                      <span style={styles.routeName}>{stop.stopName}</span>
+                    </div>
+                  </div>
+                ))}
+                {!routeStops && (
+                  <div style={{ padding: 20, textAlign: 'center', color: 'var(--color-text-muted)' }}>
+                    Loading stops…
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={styles.header}>
+              <h2 style={styles.title}>Routes</h2>
+              {getConfig().useMockData && <span style={styles.demoTag}>Demo data</span>}
+            </div>
+            <div style={styles.section}>
+              <h3 style={styles.sectionTitle}>Transit Lines</h3>
+              <div style={styles.routeList}>
+                {routes.map(route => (
+                  <div key={route.id} style={{ ...styles.routeItem, cursor: 'pointer' }} onClick={() => selectRoute(route)}>
+                    <div style={{ ...styles.routeBadge, background: route.color }}>
+                      {route.shortName}
+                    </div>
+                    <div style={styles.routeInfo}>
+                      <span style={styles.routeName}>{route.name}</span>
+                      {route.frequency && <span style={styles.routeFreq}>{route.frequency}</span>}
+                    </div>
+                    {route.operatingHours && <span style={styles.routeHours}>{route.operatingHours}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={styles.section}>
+              <button style={styles.planJourneyBtn} onClick={() => navigate('search')}>
+                <Search size={16} />
+                <span>Plan a journey</span>
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -62,7 +98,12 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', overflow: 'auto',
   },
   header: {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 12px',
+    display: 'flex', alignItems: 'center', gap: 8, padding: '20px 20px 12px',
+  },
+  backBtn: {
+    width: 36, height: 36, borderRadius: 'var(--radius-sm)', border: 'none',
+    background: 'transparent', color: 'var(--color-text-primary)', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   title: { fontSize: 17, fontWeight: 600 },
   demoTag: {
@@ -82,6 +123,11 @@ const styles: Record<string, React.CSSProperties> = {
   routeBadge: {
     padding: '4px 10px', borderRadius: 'var(--radius-full)', color: '#FFF',
     fontSize: 12, fontWeight: 700, letterSpacing: '0.3px',
+  },
+  stopNumber: {
+    width: 24, height: 24, borderRadius: '50%', background: 'var(--color-surface-hover)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: 11, fontWeight: 600, color: 'var(--color-text-muted)', flexShrink: 0,
   },
   routeInfo: { flex: 1, display: 'flex', flexDirection: 'column', gap: 2 },
   routeName: { fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' },

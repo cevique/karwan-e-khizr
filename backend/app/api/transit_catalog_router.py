@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.transit_catalog.schemas import (
     RouteListResponse,
+    RouteStopsResponse,
     RouteSummary,
     StopListResponse,
     StopSummary,
@@ -35,6 +36,15 @@ async def get_route(
 ) -> RouteSummary:
     service = TransitCatalogService(session)
     return await service.get_route(route_id)
+
+
+@router.get("/routes/{route_id}/stops", response_model=RouteStopsResponse)
+async def get_route_stops(
+    route_id: int,
+    session: AsyncSession = Depends(get_db),
+) -> RouteStopsResponse:
+    service = TransitCatalogService(session)
+    return await service.get_route_stops(route_id)
 
 
 @router.get("/stops", response_model=StopListResponse)
