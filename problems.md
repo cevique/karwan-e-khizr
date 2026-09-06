@@ -52,7 +52,7 @@ Environment: Windows, Chrome, localhost:5173
 - [x] C4: Mobile map layout fix
 - [x] C3: Routes clickable
 - [x] C5: Journey routing failures
-- [ ] C6: Save journey feature
+- [x] C6: Save journey feature
 - [ ] M7: Settings layout
 - [ ] M1+M6: Bus card interaction
 - [ ] M2+M3: Locate Me + Layers
