@@ -6,7 +6,7 @@ import { getConfig } from '@shared/services/config';
 
 export function RoutesScreen() {
   const { navigate, transit, state, selectedBus, selectRoute } = useApp();
-  const routes = transit.routes;
+  const routes = transit.routes.filter(r => r.hasStops !== false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const selectedRoute = state.selectedRoute;
   const routeStops = state.routeStops;

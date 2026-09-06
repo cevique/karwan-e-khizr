@@ -18,6 +18,7 @@ export interface ApiRoute {
   color: string | null;
   text_color: string | null;
   has_geometry: boolean;
+  has_stops: boolean;
 }
 
 export interface ApiRouteListResponse {

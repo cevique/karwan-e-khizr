@@ -41,7 +41,19 @@ class TransitCatalogService:
         limit: int = 100,
         offset: int = 0,
     ) -> RouteListResponse:
-        query = select(Route, Agency.name).join(Agency, Route.agency_id == Agency.id)
+        # Subquery to check if a route has stops
+        from sqlalchemy import literal_column
+        route_stops_count = (
+            select(RouteStop.route_id, func.count().label("stop_count"))
+            .group_by(RouteStop.route_id)
+            .subquery()
+        )
+
+        query = (
+            select(Route, Agency.name, func.coalesce(route_stops_count.c.stop_count, 0))
+            .join(Agency, Route.agency_id == Agency.id)
+            .outerjoin(route_stops_count, Route.id == route_stops_count.c.route_id)
+        )
         count_query = select(func.count()).select_from(Route)
 
         if route_type is not None:
@@ -64,8 +76,9 @@ class TransitCatalogService:
                 color=route.color,
                 text_color=route.text_color,
                 has_geometry=route.path is not None,
+                has_stops=stop_count > 0,
             )
-            for route, agency_name in rows
+            for route, agency_name, stop_count in rows
         ]
 
         return RouteListResponse(routes=summaries, total=total, limit=limit, offset=offset)

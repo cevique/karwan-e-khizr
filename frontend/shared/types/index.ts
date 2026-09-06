@@ -41,6 +41,7 @@ export interface TransitRoute {
   polyline: [number, number][]; // [lng, lat] pairs - not available from the API today, always empty
   frequency?: string; // e.g., "Every 6-8 min" - only present for mock data; the API doesn't expose this yet
   operatingHours?: string; // e.g., "6:00 AM – 10:00 PM" - only present for mock data
+  hasStops?: boolean;
 }
 
 export type JourneySegmentType = 'walk' | 'bus' | 'metro' | 'transfer';

@@ -15,6 +15,7 @@ class RouteSummary(BaseModel):
     color: Optional[str] = None
     text_color: Optional[str] = None
     has_geometry: bool = False
+    has_stops: bool = False
 
 
 class RouteListResponse(BaseModel):

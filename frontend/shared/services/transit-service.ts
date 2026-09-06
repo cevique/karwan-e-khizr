@@ -141,9 +141,7 @@ function adaptRoute(r: ApiRoute): TransitRoute {
     type: r.route_type,
     stops: [],
     polyline: [],
-    // frequency/operatingHours intentionally omitted: not exposed by the
-    // API yet (the underlying data exists in the seed dataset but hasn't
-    // been modelled into the routes table).
+    hasStops: r.has_stops,
   };
 }
 

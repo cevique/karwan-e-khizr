@@ -71,7 +71,7 @@ Environment: Windows, Chrome, localhost:5173
 - [x] M12: Routes tab — bus/stops only highlight, no popup
 - [x] N1: Bus popup card doesn't update on poll
 - [x] N2: Buses/stops/routes not on roads
-- [ ] N3: Some routes show 0 stops
+- [x] N3: Some routes show 0 stops
 - [x] N4: Mobile nav bar hidden
 - [x] N5: Locate Me goes to Peru
 - [x] N6: "Next: Unknown" still appearing
