@@ -93,25 +93,31 @@ async def _resolve_exact_stop(session: AsyncSession, text: str) -> list[Location
 
 async def _resolve_fuzzy_stop(session: AsyncSession, text: str) -> list[LocationCandidate]:
     normalized = _normalize(text)
-    result = await session.execute(select(Stop).where(Stop.location.is_not(None)))
+    result = await session.execute(select(Stop))
     stops = result.scalars().all()
 
     candidates = []
     for stop in stops:
         score = _fuzzy_match_score(text, stop.name)
         if score >= 0.6:
-            from geoalchemy2.shape import to_shape
-            point = to_shape(stop.location)
-            candidates.append(
-                LocationCandidate(
-                    stop_id=stop.id,
-                    name=stop.name,
-                    lat=point.y,
-                    lon=point.x,
-                    match_confidence=score,
-                    match_type="fuzzy_stop",
+            lat = None
+            lon = None
+            if stop.location is not None:
+                from geoalchemy2.shape import to_shape
+                point = to_shape(stop.location)
+                lat = point.y
+                lon = point.x
+            if lat is not None and lon is not None:
+                candidates.append(
+                    LocationCandidate(
+                        stop_id=stop.id,
+                        name=stop.name,
+                        lat=lat,
+                        lon=lon,
+                        match_confidence=score,
+                        match_type="fuzzy_stop",
+                    )
                 )
-            )
 
     candidates.sort(key=lambda c: c.match_confidence, reverse=True)
     return candidates[:5]
