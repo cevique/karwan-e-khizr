@@ -26,18 +26,18 @@ class Settings(BaseSettings):
 
     # Request #1 - Intent LLM (project owner's credentials)
     REQUEST1_GEMINI_API_KEY: str = Field(default="", description="Primary Intent LLM API key")
-    REQUEST1_GEMINI_MODEL: str = Field(default="gemini-1.5-flash", description="Gemini model for Request #1")
+    REQUEST1_GEMINI_MODEL: str = Field(default="gemini-3.6-flash", description="Gemini model for Request #1")
     REQUEST1_GEMINI_BASE_URL: str = Field(default="https://generativelanguage.googleapis.com/v1beta", description="Gemini API base URL")
     REQUEST1_GROQ_API_KEY: str = Field(default="", description="Fallback Intent LLM API key")
-    REQUEST1_GROQ_MODEL: str = Field(default="llama-3.1-70b-versatile", description="Groq model for Request #1")
+    REQUEST1_GROQ_MODEL: str = Field(default="openai/gpt-oss-120b", description="Groq model for Request #1")
     REQUEST1_GROQ_BASE_URL: str = Field(default="https://api.groq.com/openai/v1", description="Groq API base URL")
 
     # Request #2 - Response LLM (second contributor's credentials)
     REQUEST2_GEMINI_API_KEY: str = Field(default="", description="Primary Response LLM API key")
-    REQUEST2_GEMINI_MODEL: str = Field(default="gemini-1.5-flash", description="Gemini model for Request #2")
+    REQUEST2_GEMINI_MODEL: str = Field(default="gemini-3.6-flash", description="Gemini model for Request #2")
     REQUEST2_GEMINI_BASE_URL: str = Field(default="https://generativelanguage.googleapis.com/v1beta", description="Gemini API base URL")
     REQUEST2_GROQ_API_KEY: str = Field(default="", description="Fallback Response LLM API key")
-    REQUEST2_GROQ_MODEL: str = Field(default="llama-3.1-70b-versatile", description="Groq model for Request #2")
+    REQUEST2_GROQ_MODEL: str = Field(default="openai/gpt-oss-120b", description="Groq model for Request #2")
     REQUEST2_GROQ_BASE_URL: str = Field(default="https://api.groq.com/openai/v1", description="Groq API base URL")
 
     # Speech-to-text (voice input only)

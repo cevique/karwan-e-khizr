@@ -14,7 +14,7 @@ export interface AppConfig {
 let config: AppConfig = {
   apiUrl: 'http://localhost:8000/api/v1',
   useMockData: true,
-  requestTimeoutMs: 10000,
+  requestTimeoutMs: 60000,
 };
 
 /** Initialise the frontend configuration. Call once at app startup. */

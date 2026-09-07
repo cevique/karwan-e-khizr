@@ -49,7 +49,7 @@ class GroqResponseProvider:
         payload = {
             "model": self.model,
             "messages": [
-                {"role": "system", "content": RESPONSE_SYSTEM_PROMPT},
+                {"role": "system", "content": str(RESPONSE_SYSTEM_PROMPT)},
                 {"role": "user", "content": f"Authoritative JSON:\n{json.dumps(authoritative_json, ensure_ascii=False)}"},
             ],
             "temperature": 0.3,
@@ -65,7 +65,22 @@ class GroqResponseProvider:
             response.raise_for_status()
             data = response.json()
 
-            text_response = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+            choices = data.get("choices", [])
+            if not choices:
+                raise ProviderError(
+                    message="Groq returned empty choices array",
+                    provider="groq",
+                    details={"response": data},
+                )
+            message = choices[0].get("message", {})
+            text_response = message.get("content", "").strip()
+
+            if not text_response:
+                raise ProviderError(
+                    message="Groq returned empty content",
+                    provider="groq",
+                    details={"choices": choices},
+                )
 
             return ResponseLLMResult(
                 text_response=text_response,
@@ -74,17 +89,18 @@ class GroqResponseProvider:
             )
 
         except httpx.HTTPStatusError as e:
+            error_body = e.response.text
             if e.response.status_code == 429:
                 raise ProviderError(
                     message="Groq rate limit exceeded",
                     provider="groq",
-                    details={"status_code": e.response.status_code},
+                    details={"status_code": e.response.status_code, "error_body": error_body},
                 )
             else:
                 raise ProviderError(
-                    message=f"Groq API error: {e.response.status_code}",
+                    message=f"Groq API error: {e.response.status_code} - {error_body}",
                     provider="groq",
-                    details={"status_code": e.response.status_code},
+                    details={"status_code": e.response.status_code, "error_body": error_body},
                 )
         except httpx.TimeoutException:
             raise ProviderError(

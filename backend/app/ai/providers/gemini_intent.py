@@ -65,9 +65,29 @@ class GeminiIntentProvider:
             response.raise_for_status()
             data = response.json()
 
-            content = data.get("candidates", [{}])[0].get("content", {})
-            parts = content.get("parts", [{}])
+            candidates = data.get("candidates", [])
+            if not candidates:
+                raise ProviderError(
+                    message="Gemini returned empty candidates (likely safety filter blocked)",
+                    provider="gemini",
+                    details={"response": data},
+                )
+            content = candidates[0].get("content", {})
+            parts = content.get("parts", [])
+            if not parts:
+                raise ProviderError(
+                    message="Gemini returned empty parts array",
+                    provider="gemini",
+                    details={"candidates": candidates},
+                )
             raw_text = parts[0].get("text", "").strip()
+
+            if not raw_text:
+                raise ProviderError(
+                    message="Gemini returned empty text response",
+                    provider="gemini",
+                    details={"candidates": candidates},
+                )
 
             parsed = json.loads(raw_text)
             intent = IntentResult(**parsed)
@@ -85,17 +105,18 @@ class GeminiIntentProvider:
                 details={"raw_response": raw_text if "raw_text" in locals() else "N/A"},
             )
         except httpx.HTTPStatusError as e:
+            error_body = e.response.text
             if e.response.status_code == 429:
                 raise ProviderError(
                     message="Gemini rate limit exceeded",
                     provider="gemini",
-                    details={"status_code": e.response.status_code},
+                    details={"status_code": e.response.status_code, "error_body": error_body},
                 )
             else:
                 raise ProviderError(
-                    message=f"Gemini API error: {e.response.status_code}",
+                    message=f"Gemini API error: {e.response.status_code} - {error_body}",
                     provider="gemini",
-                    details={"status_code": e.response.status_code},
+                    details={"status_code": e.response.status_code, "error_body": error_body},
                 )
         except httpx.TimeoutException:
             raise ProviderError(
