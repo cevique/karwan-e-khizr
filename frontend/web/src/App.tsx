@@ -193,7 +193,11 @@ export default function App() {
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
-    try { localStorage.removeItem(TOKEN_STORAGE_KEY); } catch { /* ignore */ }
+    setSavedJourneys([]);
+    try {
+      localStorage.removeItem(TOKEN_STORAGE_KEY);
+      localStorage.removeItem(SAVED_JOURNEYS_KEY);
+    } catch { /* ignore */ }
   }, []);
 
   const clearError = useCallback(() => setAuthError(null), []);
