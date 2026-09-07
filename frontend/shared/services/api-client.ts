@@ -35,15 +35,32 @@ export class TimeoutError extends Error {
 
 function buildUrl(path: string, params?: Record<string, string | number | boolean | undefined>): string {
   const base = getConfig().apiUrl.replace(/\/$/, '');
-  const url = new URL(`${base}${path}`);
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        url.searchParams.set(key, String(value));
-      }
-    });
+  const fullPath = `${base}${path}`;
+  const isRelative = fullPath.startsWith('/');
+
+  // Build query string manually for relative URLs (new URL() requires absolute)
+  let url: string;
+  if (isRelative) {
+    url = fullPath;
+    if (params) {
+      const qs = Object.entries(params)
+        .filter(([, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+        .join('&');
+      if (qs) url += `?${qs}`;
+    }
+  } else {
+    const u = new URL(fullPath);
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          u.searchParams.set(key, String(value));
+        }
+      });
+    }
+    url = u.toString();
   }
-  return url.toString();
+  return url;
 }
 
 async function executeRequest<T>(
