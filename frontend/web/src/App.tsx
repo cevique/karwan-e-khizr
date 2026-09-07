@@ -238,13 +238,41 @@ export default function App() {
     }
   }, []);
 
-  const selectJourney = useCallback((journey: Journey | null) => {
+  const selectJourney = useCallback(async (journey: Journey | null) => {
+    if (!journey) {
+      setState((prev) => ({
+        ...prev,
+        selectedJourney: null,
+        selectedRoute: null,
+        routeStops: null,
+        routeGeometry: [],
+      }));
+      return;
+    }
     setState((prev) => ({
       ...prev,
       selectedJourney: journey,
-      screen: journey ? 'journey-detail' : prev.screen,
-      previousScreen: journey ? prev.screen : prev.previousScreen,
+      routeStops: null,
+      routeGeometry: [],
+      screen: 'journey-detail',
+      previousScreen: prev.screen,
     }));
+    // Load polyline for the first transit segment's route
+    const transitSeg = journey.segments.find((s): s is import('@shared/types').TransitSegment => s.type !== 'walk' && s.type !== 'transfer');
+    if (transitSeg) {
+      try {
+        const [data, geometry] = await Promise.all([
+          transitService.getRouteStops(transitSeg.routeId),
+          transitService.getRouteGeometry(transitSeg.routeId),
+        ]);
+        setState((prev) => {
+          if (prev.selectedJourney?.id !== journey.id) return prev;
+          return { ...prev, routeStops: data, routeGeometry: geometry };
+        });
+      } catch {
+        // Silently handle - polyline just won't show
+      }
+    }
   }, []);
 
   const setSearchOrigin = useCallback((origin: string) => {
