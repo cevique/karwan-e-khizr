@@ -261,21 +261,29 @@ export default function App() {
       screen: 'journey-detail',
       previousScreen: prev.screen,
     }));
-    // Load polyline for the first transit segment's route
-    const transitSeg = journey.segments.find((s): s is import('@shared/types').TransitSegment => s.type !== 'walk' && s.type !== 'transfer');
-    if (transitSeg) {
-      try {
-        const [data, geometry] = await Promise.all([
-          transitService.getRouteStops(transitSeg.routeId),
-          transitService.getRouteGeometry(transitSeg.routeId),
-        ]);
-        setState((prev) => {
-          if (prev.selectedJourney?.id !== journey.id) return prev;
-          return { ...prev, routeStops: data, routeGeometry: geometry };
-        });
-      } catch {
-        // Silently handle - polyline just won't show
-      }
+    // Load polyline for each transit segment and clip to the journey portion
+    const transitSegs = journey.segments.filter(
+      (s): s is import('@shared/types').TransitSegment => s.type !== 'walk' && s.type !== 'transfer',
+    );
+    if (transitSegs.length === 0) return;
+    // Use the first transit segment for the map polyline
+    const seg = transitSegs[0];
+    try {
+      const [data, geometry] = await Promise.all([
+        transitService.getRouteStops(seg.routeId),
+        transitService.getRouteGeometry(seg.routeId),
+      ]);
+      const clipped = clipGeometryToSegment(
+        geometry,
+        [seg.fromStop.longitude, seg.fromStop.latitude],
+        [seg.toStop.longitude, seg.toStop.latitude],
+      );
+      setState((prev) => {
+        if (prev.selectedJourney?.id !== journey.id) return prev;
+        return { ...prev, routeStops: data, routeGeometry: clipped };
+      });
+    } catch {
+      // Silently handle - polyline just won't show
     }
   }, []);
 
@@ -338,4 +346,30 @@ function describeAuthError(err: unknown): string {
     if (typeof body?.detail === 'string') return body.detail;
   }
   return 'Something went wrong. Please try again.';
+}
+
+/** Find the index of the closest point in `coords` to `target`. */
+function closestIndex(coords: [number, number][], target: [number, number]): number {
+  let best = 0;
+  let bestDist = Infinity;
+  for (let i = 0; i < coords.length; i++) {
+    const dx = coords[i][0] - target[0];
+    const dy = coords[i][1] - target[1];
+    const d = dx * dx + dy * dy;
+    if (d < bestDist) { bestDist = d; best = i; }
+  }
+  return best;
+}
+
+/** Clip a full route geometry to the portion between two stops. */
+function clipGeometryToSegment(
+  geometry: [number, number][],
+  from: [number, number],
+  to: [number, number],
+): [number, number][] {
+  if (geometry.length === 0) return [];
+  const i = closestIndex(geometry, from);
+  const j = closestIndex(geometry, to);
+  const [start, end] = i <= j ? [i, j] : [j, i];
+  return geometry.slice(start, end + 1);
 }
