@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useApp } from '../App';
-import { Search, ArrowLeft, MapPin, TrainFront, Building2, X, ArrowUpDown, Clock, Loader2, AlertCircle, Sparkles, Send } from 'lucide-react';
+import { Search, ArrowLeft, MapPin, TrainFront, Building2, X, ArrowUpDown, Clock, Loader2, AlertCircle, Sparkles, Send, Mic, Square } from 'lucide-react';
 import { mockSearchResults } from '@shared/index';
 import type { Journey } from '@shared/types';
 import type { AssistantResult } from '@shared/services/transit-service';
@@ -75,6 +75,19 @@ export function SearchScreen() {
   const [askResult, setAskResult] = useState<AssistantResult | null>(null);
   const [askErrorMsg, setAskErrorMsg] = useState<string | null>(null);
 
+  // Voice recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordingChunksRef = useRef<Blob[]>([]);
+
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
+    };
+  }, []);
+
   // Use the service layer for search results
   const { data: searchResults } = useSearchResults(query);
   // Fall back to full list when query is empty
@@ -117,6 +130,48 @@ export function SearchScreen() {
       setAskErrorMsg("Sorry, I couldn't reach the assistant. Please try again.");
     } finally {
       setAskLoading(false);
+    }
+  };
+
+  const handleToggleRecording = async () => {
+    if (isRecording) {
+      mediaRecorderRef.current?.stop();
+      setIsRecording(false);
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      recordingChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) recordingChunksRef.current.push(e.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(recordingChunksRef.current, { type: 'audio/webm' });
+        if (blob.size === 0) return;
+        setAskLoading(true);
+        setAskErrorMsg(null);
+        setAskResult(null);
+        try {
+          const result = await transitService.askAssistantWithAudio(
+            blob, 'voice.webm', transit.routes, transit.stops, auth.token ?? undefined,
+          );
+          setAskResult(result);
+        } catch {
+          setAskErrorMsg("Sorry, I couldn't reach the assistant. Please try again.");
+        } finally {
+          setAskLoading(false);
+        }
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch {
+      setAskErrorMsg('Micro permission denied. Please allow mic access and try again.');
     }
   };
 
@@ -193,6 +248,18 @@ export function SearchScreen() {
               autoFocus
             />
           </div>
+          <button
+            type="button"
+            style={{
+              ...styles.askVoiceBtn,
+              ...(isRecording ? styles.askVoiceBtnActive : {}),
+            }}
+            onClick={handleToggleRecording}
+            disabled={askLoading}
+            title={isRecording ? 'Stop recording' : 'Speak your query'}
+          >
+            {isRecording ? <Square size={16} /> : <Mic size={16} />}
+          </button>
           <button style={styles.askSubmitBtn} type="submit" disabled={askLoading || !askQuery.trim()}>
             {askLoading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
           </button>
@@ -404,6 +471,18 @@ const styles: Record<string, React.CSSProperties> = {
     width: 44, height: 44, borderRadius: 'var(--radius-md)', border: 'none',
     background: 'var(--color-accent-primary)', color: '#FFFFFF', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
+  askVoiceBtn: {
+    width: 44, height: 44, borderRadius: 'var(--radius-md)',
+    border: '1.5px solid var(--color-hairline)', background: 'var(--color-surface)',
+    color: 'var(--color-text-secondary)', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+    transition: 'all var(--duration-fast) var(--ease-smooth)',
+  },
+  askVoiceBtnActive: {
+    background: 'var(--color-error)', color: '#FFFFFF',
+    borderColor: 'var(--color-error)',
+    animation: 'pulse 1.5s ease-in-out infinite',
   },
   askResults: { flex: 1, overflow: 'auto', padding: '16px 20px' },
   replyBubble: {

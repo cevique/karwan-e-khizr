@@ -651,6 +651,26 @@ class TransitService {
     signal?: AbortSignal,
   ): Promise<AssistantResult> {
     const res = await this.converseWithText(message, token, signal);
+    return this.adaptConverseResponse(res, routes, stops);
+  }
+
+  async askAssistantWithAudio(
+    audio: Blob,
+    filename: string,
+    routes: TransitRoute[],
+    stops: Stop[],
+    token?: string,
+    signal?: AbortSignal,
+  ): Promise<AssistantResult> {
+    const res = await this.converseWithAudio(audio, filename, token, signal);
+    return this.adaptConverseResponse(res, routes, stops);
+  }
+
+  private adaptConverseResponse(
+    res: ApiConverseResponse,
+    routes: TransitRoute[],
+    stops: Stop[],
+  ): AssistantResult {
     const routesById = new Map(routes.map((r) => [Number(r.id), r]));
     const stopsById = new Map(stops.map((s) => [Number(s.id), s]));
 
