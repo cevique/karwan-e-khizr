@@ -47,7 +47,8 @@ const styles: Record<string, React.CSSProperties> = {
   shell: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100vh',
+    height: '100dvh',
+    height: '-webkit-fill-available',
     width: '100vw',
     overflow: 'hidden',
   },
@@ -55,5 +56,6 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflow: 'hidden',
     position: 'relative',
+    minHeight: 0,
   },
 };
