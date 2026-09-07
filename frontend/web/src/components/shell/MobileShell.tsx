@@ -34,7 +34,7 @@ export function MobileShell() {
   };
 
   return (
-    <div style={styles.shell}>
+    <div className="mobile-shell" style={styles.shell}>
       <div style={styles.screen}>
         {renderScreen()}
       </div>
@@ -47,8 +47,6 @@ const styles: Record<string, React.CSSProperties> = {
   shell: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100dvh',
-    height: '-webkit-fill-available',
     width: '100vw',
     overflow: 'hidden',
   },

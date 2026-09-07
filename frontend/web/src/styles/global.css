@@ -192,3 +192,11 @@ body {
 .spin {
   animation: spin 1s linear infinite;
 }
+
+/* Mobile shell: use dynamic viewport height so the bottom nav stays
+   visible.  100vh on mobile includes browser chrome (URL bar) which
+   pushes content below the visible area. */
+.mobile-shell {
+  height: 100dvh;
+  height: -webkit-fill-available;
+}
